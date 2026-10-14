@@ -1,0 +1,65 @@
+[
+  {
+    "frame": 1,
+    "control_degrees": 0.0,
+    "north_degrees": 0.0,
+    "south_degrees": 0.0,
+    "boat_y": -46.0
+  },
+  {
+    "frame": 120,
+    "control_degrees": 0.0,
+    "north_degrees": 0.0,
+    "south_degrees": 0.0,
+    "boat_y": -44.765625
+  },
+  {
+    "frame": 204,
+    "control_degrees": 34.0,
+    "north_degrees": -33.99999866940647,
+    "south_degrees": 33.99999866940647,
+    "boat_y": -39.872344970703125
+  },
+  {
+    "frame": 288,
+    "control_degrees": 68.0,
+    "north_degrees": -67.99999733881295,
+    "south_degrees": 67.99999733881295,
+    "boat_y": -27.0
+  },
+  {
+    "frame": 360,
+    "control_degrees": 68.0,
+    "north_degrees": -67.99999733881295,
+    "south_degrees": 67.99999733881295,
+    "boat_y": -4.575937747955322
+  },
+  {
+    "frame": 456,
+    "control_degrees": 68.0,
+    "north_degrees": -67.99999733881295,
+    "south_degrees": 67.99999733881295,
+    "boat_y": 27.0
+  },
+  {
+    "frame": 540,
+    "control_degrees": 34.0,
+    "north_degrees": -33.99999866940647,
+    "south_degrees": 33.99999866940647,
+    "boat_y": 42.04306411743164
+  },
+  {
+    "frame": 624,
+    "control_degrees": 0.0,
+    "north_degrees": 0.0,
+    "south_degrees": 0.0,
+    "boat_y": 46.0
+  },
+  {
+    "frame": 720,
+    "control_degrees": 0.0,
+    "north_degrees": 0.0,
+    "south_degrees": 0.0,
+    "boat_y": 46.0
+  }
+]

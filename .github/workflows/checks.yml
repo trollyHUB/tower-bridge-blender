@@ -1,0 +1,45 @@
+name: Project checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out sources
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.13'
+      - name: Check Python syntax
+        run: python -m compileall -q build_tower_bridge.py render_tower_bridge.py tools/package_release.py
+      - name: Read project metadata
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for path in sorted(Path('Tower_Bridge').glob('*.json')):
+              json.loads(path.read_text(encoding='utf-8'))
+              print(f'OK: {path}')
+          PY
+      - name: Check PowerShell syntax
+        shell: pwsh
+        run: |
+          $syntaxTokens = $null
+          $syntaxErrors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            (Join-Path $PWD 'scripts/project.ps1'),
+            [ref]$syntaxTokens,
+            [ref]$syntaxErrors
+          ) | Out-Null
+          if ($syntaxErrors.Count -gt 0) {
+            $syntaxErrors | ForEach-Object { Write-Error $_.Message }
+            exit 1
+          }

@@ -1,0 +1,47 @@
+# Local investigation, rendered frame sequences, logs and Blender profiles.
+/research/
+/.cache/
+/tmp/
+/temp/
+*.log
+
+# Generated distribution files and video exports are attached to GitHub releases.
+*.zip
+*.mp4
+*.mov
+*.avi
+/Tower_Bridge/animation_frames/
+/Tower_Bridge/renders/preview*.png
+/Tower_Bridge/renders/eevee_*.png
+
+# Blender backup files. The editable .blend itself is versioned with Git LFS.
+*.blend[0-9]
+*.blend[0-9][0-9]
+*.blend@
+*.blend.autosave
+
+# Python and editor files.
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.idea/
+.vscode/
+
+# Local credentials and operating-system metadata.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Future simulation caches; keep their configuration in source files.
+blendcache_*/
+*.bphys
+*.vdb
+*.abc
