@@ -1,0 +1,72 @@
+{
+  "version": "1.2.0",
+  "fps": 24,
+  "duration_seconds": 60,
+  "seed": 1894,
+  "opening_degrees": 68,
+  "render": {
+    "width": 1920,
+    "height": 1080,
+    "preview_scale": 25,
+    "samples": 16,
+    "preview_samples": 4,
+    "device": "auto",
+    "engine": "EEVEE",
+    "still_samples": 32
+  },
+  "features": {
+    "traffic": true,
+    "city": true,
+    "river": true,
+    "lighting": true
+  },
+  "wind": {
+    "strength": 0.12,
+    "direction": [
+      1,
+      0.3,
+      0
+    ]
+  },
+  "water": {
+    "level": 0.9,
+    "amplitude": 0.075,
+    "current": [
+      0,
+      0.12
+    ],
+    "wake_lifetime": 4
+  },
+  "traffic": {
+    "speed": 18,
+    "minimum_gap": 4,
+    "stop_line": 55,
+    "recycle": true,
+    "headlight_power": 120,
+    "bus_stop": true,
+    "vehicles_per_direction": 3
+  },
+  "people": {
+    "bank_walkers": 2,
+    "passengers_per_stop": 1,
+    "cafe_visitors": 1,
+    "stride_length": 0.4
+  },
+  "lighting": {
+    "mode": "day",
+    "lantern_power": 650,
+    "tower_power": 4200,
+    "walkway_power": 1400,
+    "dock_power": 400,
+    "stop_power": 300,
+    "cafe_power": 250,
+    "day_strength": 1,
+    "night_strength": 1
+  },
+  "weather": {
+    "preset": "overcast"
+  },
+  "population": {
+    "preset": "sparse"
+  }
+}

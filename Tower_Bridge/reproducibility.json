@@ -1,59 +1,59 @@
 {
-  "primary_file_sha256": "c30270a906f951bf95853b0fb981a43b1acf5367890d4641849183c00951a30b",
+  "primary_file_sha256": "e5ec6391b69995f0c3f394e44dfab7e912c132cafc80698c577717816130c2d2",
   "primary_file_unchanged": true,
   "passed": true,
   "blender_version": "5.2.1 LTS",
   "execution": "CPU only; no renders",
   "scope": "Same configuration and seed, independently rebuilt in research/repro_smoke. Sorted non-camera object names/types/parents; mesh topology, vertex coordinates, polygon material indices, material names, shape-key coordinates; world matrices at four frames. Coordinates quantized to 1e-6. Excludes camera objects, active camera/frame, scene metadata, UI state, file bytes, shader node graphs, light energy and animation between samples.",
   "primary": {
-    "configuration_sha256": "95bddf37c8ea5397a06c290f486a2cabd9c141127b9b58dc9f5f3a921188ce6e",
-    "object_mesh_sha256": "093be91622425bcdfd5b1c027e17e5284ebad9b33d0525b7bc84bf24108f343e",
-    "objects": 1677,
-    "unique_meshes": 724,
+    "configuration_sha256": "ebceaee7b0d1764d3036aa089e57298b4c642e560daa0cd8aad8d1ef0e5e0ecb",
+    "object_mesh_sha256": "2b7be03648bd48f7bb13e17b2a9456457aa0f993b0564fa3233bbc0f14abed98",
+    "objects": 1701,
+    "unique_meshes": 726,
     "samples": [
       {
         "frame": 1,
-        "world_matrices_sha256": "6dfd812955a2947256737d88cc7f25a06f53879768c8b1e4605f06fd42ca4413"
+        "world_matrices_sha256": "1704f09b8c55ed35f1bc5585b88bbde6b8ab5954f4563275eb7fcd7b2280ff53"
       },
       {
         "frame": 360,
-        "world_matrices_sha256": "37f99ba4ab1bde8fb42c1d86a34c1cfdc9ed2846c4175dbc9a55a2101243ead3"
+        "world_matrices_sha256": "01e7ac4e84c06db22300dfd43463c7408faa624b4df9334a1cdbf899157c7a19"
       },
       {
         "frame": 720,
-        "world_matrices_sha256": "533e2213f39b708db0d5f93fd53865d7cd1af53f2113a268e85c1027fd977684"
+        "world_matrices_sha256": "fd7260a48034a2c8621adee564a6d0859630e919ca5b01e5c4ff2eb88f4a2075"
       },
       {
         "frame": 1440,
-        "world_matrices_sha256": "e0e5674dc4db1ab51b48343b7c82754b94820f4f58444a8f8698d7d45e6cf00a"
+        "world_matrices_sha256": "d174e81b366ce674d1500e20984163707b6272e6e7aeb071fa1062697c9edea7"
       }
     ],
-    "semantic_sha256": "3931dc94f725206b013ee63a7a2590f83d1ae22bd4d50abb33de9fec432ac3b1"
+    "semantic_sha256": "d939d560735803a335bc606ccfe5739e65574220b95d3e0de6251e1cb98cae20"
   },
   "rebuilt": {
-    "configuration_sha256": "95bddf37c8ea5397a06c290f486a2cabd9c141127b9b58dc9f5f3a921188ce6e",
-    "object_mesh_sha256": "093be91622425bcdfd5b1c027e17e5284ebad9b33d0525b7bc84bf24108f343e",
-    "objects": 1677,
-    "unique_meshes": 724,
+    "configuration_sha256": "ebceaee7b0d1764d3036aa089e57298b4c642e560daa0cd8aad8d1ef0e5e0ecb",
+    "object_mesh_sha256": "2b7be03648bd48f7bb13e17b2a9456457aa0f993b0564fa3233bbc0f14abed98",
+    "objects": 1701,
+    "unique_meshes": 726,
     "samples": [
       {
         "frame": 1,
-        "world_matrices_sha256": "6dfd812955a2947256737d88cc7f25a06f53879768c8b1e4605f06fd42ca4413"
+        "world_matrices_sha256": "1704f09b8c55ed35f1bc5585b88bbde6b8ab5954f4563275eb7fcd7b2280ff53"
       },
       {
         "frame": 360,
-        "world_matrices_sha256": "37f99ba4ab1bde8fb42c1d86a34c1cfdc9ed2846c4175dbc9a55a2101243ead3"
+        "world_matrices_sha256": "01e7ac4e84c06db22300dfd43463c7408faa624b4df9334a1cdbf899157c7a19"
       },
       {
         "frame": 720,
-        "world_matrices_sha256": "533e2213f39b708db0d5f93fd53865d7cd1af53f2113a268e85c1027fd977684"
+        "world_matrices_sha256": "fd7260a48034a2c8621adee564a6d0859630e919ca5b01e5c4ff2eb88f4a2075"
       },
       {
         "frame": 1440,
-        "world_matrices_sha256": "e0e5674dc4db1ab51b48343b7c82754b94820f4f58444a8f8698d7d45e6cf00a"
+        "world_matrices_sha256": "d174e81b366ce674d1500e20984163707b6272e6e7aeb071fa1062697c9edea7"
       }
     ],
-    "semantic_sha256": "3931dc94f725206b013ee63a7a2590f83d1ae22bd4d50abb33de9fec432ac3b1"
+    "semantic_sha256": "d939d560735803a335bc606ccfe5739e65574220b95d3e0de6251e1cb98cae20"
   },
   "differing_objects": [],
   "samples": [

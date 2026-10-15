@@ -1,0 +1,25 @@
+{
+  "passed": true,
+  "size": [
+    1920,
+    1080
+  ],
+  "renderer": "Cycles CPU 16 samples; denoised",
+  "images": [
+    {
+      "label": "Clear_Busy",
+      "scene_sha256": "e5ec6391b69995f0c3f394e44dfab7e912c132cafc80698c577717816130c2d2",
+      "image_sha256": "8abef5f8367389311eb361db23f2286e5f4535a498af0b8405478817aa856f2a"
+    },
+    {
+      "label": "Clear_Standard",
+      "scene_sha256": "632b2b00ea2cceb4f0e72a94b427df17b5d67488375224850731a565a5123155",
+      "image_sha256": "0bd91976595c897ccf97c29c0d7d0ea2c2f835c0037cf0d5bcb4883d850d7b83"
+    },
+    {
+      "label": "Overcast_Sparse",
+      "scene_sha256": "5ad0da55a3aeef087090552b2a35648a384faba46cfbaeb0faf73a9393d6fc54",
+      "image_sha256": "8e1a0acb02914f1b7e369f62654f36e015b234606d66a9f489da2b6809a5b9e5"
+    }
+  ]
+}

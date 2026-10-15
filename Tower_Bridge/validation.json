@@ -60,7 +60,7 @@
     ],
     "minimum_actual_body_gap_m": 3.923980712890625,
     "closest_queued_front_direction_coordinate_m": -56.46200180053711,
-    "maximum_wheel_distance_error_m": 3.0517578125e-05,
+    "maximum_wheel_distance_error_m": 3.6621093750022204e-05,
     "checks": [
       "evaluated_mesh_bounds",
       "full_body_span_clearance",
@@ -70,7 +70,8 @@
       "signal_interlock",
       "wheel_distance",
       "no_reverse",
-      "hidden_portal_recycling"
+      "hidden_portal_recycling",
+      "bus_stop_doors"
     ]
   },
   "environment": {
@@ -262,6 +263,6 @@
       }
     ]
   },
-  "deterministic_transform_sha256": "4d9851e1103ff98a84d75d33714b8e2b532a8c5a601a5b1314a98ce973d5dc92",
-  "scene_sha256": "c30270a906f951bf95853b0fb981a43b1acf5367890d4641849183c00951a30b"
+  "deterministic_transform_sha256": "3f5e3230f95edb5687b421784868303b9e003939bd65cd735a959c3a83273e45",
+  "scene_sha256": "e5ec6391b69995f0c3f394e44dfab7e912c132cafc80698c577717816130c2d2"
 }

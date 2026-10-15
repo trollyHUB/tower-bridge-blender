@@ -1,10 +1,10 @@
 """Validated configuration shared by build, render, scripts and packaging."""
-import json, math
+import json, math, os
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
 def load_config(path=None):
-    cfg=json.loads(Path(path or ROOT/'config/scene.json').read_text(encoding='utf-8-sig'))
+    cfg=json.loads(Path(path or os.environ.get('TOWER_BRIDGE_CONFIG') or ROOT/'config/scene.json').read_text(encoding='utf-8-sig'))
     frame_count(cfg)
     if not 0<=cfg['wind']['strength']<=.5:raise ValueError('wind.strength must be between 0 and .5')
     if len(cfg['wind']['direction'])<2 or not all(math.isfinite(v) for v in cfg['wind']['direction']):raise ValueError('Invalid wind direction')
@@ -12,6 +12,12 @@ def load_config(path=None):
     if not .5<=cfg['water']['level']<=1.5:raise ValueError('water.level must remain .5..1.5m for the dock and bridge datum')
     if not 0<=cfg['water']['amplitude']<=.15:raise ValueError('Invalid wave amplitude')
     traffic=cfg['traffic']
+    count=traffic.get('vehicles_per_direction',7)
+    if not isinstance(count,int) or isinstance(count,bool) or not 3<=count<=7:raise ValueError('vehicles_per_direction must be 3..7')
+    if not isinstance(traffic.get('bus_stop',True),bool):raise ValueError('bus_stop must be boolean')
+    from .presets import WEATHER,DENSITY
+    if cfg.get('weather',{}).get('preset','clear') not in WEATHER:raise ValueError('Unknown weather preset')
+    if cfg.get('population',{}).get('preset','busy') not in DENSITY:raise ValueError('Unknown population preset')
     if not 13<=traffic['speed']<=26 or not 2<=traffic['minimum_gap']<=8 or not 55<=traffic['stop_line']<=65:raise ValueError('Traffic calibration: speed13..26, gap2..8, stop_line55..65')
     if not 0<=cfg['people']['bank_walkers']<=12:raise ValueError('bank_walkers must be 0..12')
     for key,limit in [('bank_walkers',12),('passengers_per_stop',5),('cafe_visitors',4)]:

@@ -3,6 +3,7 @@ import hashlib
 import json
 import sys
 import time
+import os
 from pathlib import Path
 import bpy
 
@@ -10,8 +11,8 @@ ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 from scene_components.render_manifest import sha, make_identity, cache_directory, png_size, check_frames
 from scene_components.settings import load_config, frame_count
-OUT = ROOT / 'Tower_Bridge'
-CONFIG = ROOT / 'config' / 'scene.json'
+OUT = Path(os.environ.get('TOWER_BRIDGE_OUTPUT', str(ROOT / 'Tower_Bridge')))
+CONFIG = Path(os.environ.get('TOWER_BRIDGE_CONFIG', str(ROOT / 'config' / 'scene.json')))
 cfg = load_config(CONFIG)
 FPS = int(cfg['fps'])
 COUNT = frame_count(cfg)

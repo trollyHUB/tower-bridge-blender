@@ -1,7 +1,7 @@
 """Original editable Tower Bridge study. Run with Blender 5.2 --background --python.
 All geometry and materials are generated locally; no downloaded mesh is included.
 """
-import bpy, math, json, random, sys, time
+import bpy, math, json, random, sys, time, os
 from pathlib import Path
 from mathutils import Vector
 from math import sin, cos, pi
@@ -9,7 +9,7 @@ from math import sin, cos, pi
 ROOT=Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT))
 from scene_components.scenario import CONFIG, END, FPS, opening, boat_y, frame, PHASES, linear_keys
-OUT=ROOT/'Tower_Bridge'
+OUT=Path(os.environ.get('TOWER_BRIDGE_OUTPUT',str(ROOT/'Tower_Bridge')))
 OUT.mkdir(exist_ok=True)
 (OUT/'renders').mkdir(exist_ok=True)
 bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -534,6 +534,8 @@ cameras.build(globals())
 if CONFIG['features'].get('lighting'):
     from scene_components import lighting
     lighting.build(globals())
+from scene_components import presets
+presets.build(globals())
 from scene_components import finish
 finish.build(globals())
 linear_keys()

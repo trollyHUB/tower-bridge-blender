@@ -1,4 +1,5 @@
 """Story cameras and named editing bookmarks."""
+import math
 from .scenario import frame, END
 
 def build(g):
@@ -13,6 +14,10 @@ def build(g):
     for seconds,cam in [(0,anim),(8,traffic),(18,hero),(26,water),(36,hero),(44,traffic),(50,city),(55,evening)]:
         marker=scene.timeline_markers.new('SHOT | '+cam.name,frame=max(1,frame(seconds)+ (1 if seconds else 0)));marker.camera=cam
     if g['CONFIG']['traffic'].get('bus_stop',True):
-        marker=scene.timeline_markers.new('SHOT | Bus dwell and doors',frame=frame(14.65));marker.camera=bus
-        marker=scene.timeline_markers.new('SHOT | Gates closing',frame=frame(17));marker.camera=traffic
+        from .traffic import bus_stop_times
+        _,arrival,departure,_=bus_stop_times()
+        start=max(1,round((arrival-2.5)*END/1440))
+        end=min(END,math.ceil((departure+5)*END/1440))
+        marker=scene.timeline_markers.new('SHOT | Bus dwell and doors',frame=start);marker.camera=bus
+        marker=scene.timeline_markers.new('SHOT | Gates closing',frame=end);marker.camera=traffic if departure+5<432 else hero
     scene.camera=anim

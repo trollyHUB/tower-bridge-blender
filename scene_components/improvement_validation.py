@@ -27,7 +27,7 @@ def validate(scene):
     previous={}
     headlights=[o for o in scene.objects if o.type=='LIGHT' and 'headlight ' in o.name]
     stats['headlight_count']=len(headlights)
-    if CONFIG['features'].get('traffic'):assert len(headlights)==28, ('actual headlight count',len(headlights))
+    if CONFIG['features'].get('traffic'):assert len(headlights)==4*CONFIG['traffic'].get('vehicles_per_direction',7), ('actual headlight count',len(headlights))
     if CONFIG['features'].get('city'):
         people=CONFIG.get('people',{})
         waiting=[o for o in scene.objects if o.get('role')=='bus_stop_waiting']

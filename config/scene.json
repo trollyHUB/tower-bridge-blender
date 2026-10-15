@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "fps": 24,
   "duration_seconds": 60,
   "seed": 1894,
@@ -42,7 +42,9 @@
     "minimum_gap": 4,
     "stop_line": 55,
     "recycle": true,
-    "headlight_power": 120
+    "headlight_power": 120,
+    "bus_stop": true,
+    "vehicles_per_direction": 7
   },
   "people": {
     "bank_walkers": 8,
@@ -60,5 +62,11 @@
     "cafe_power": 250,
     "day_strength": 1,
     "night_strength": 1
+  },
+  "weather": {
+    "preset": "clear"
+  },
+  "population": {
+    "preset": "busy"
   }
 }
