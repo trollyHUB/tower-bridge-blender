@@ -1,48 +1,52 @@
 {
   "passed": true,
-  "scene_sha256": "c30270a906f951bf95853b0fb981a43b1acf5367890d4641849183c00951a30b",
+  "scene_sha256": "12620344f8363ba948cff7e8130e722bc7c47d9c77e1c36cf64852a109d5c0ba",
   "images": {
     "Tower_Bridge_Open.png": {
       "size": [
         1920,
         1080
       ],
-      "sha256": "03263427ff1ff364b34fd6a7c8a31924297c57d30baadc6b2e2250aca8e1b34f"
+      "sha256": "ddb6358e1bbe4d48d44f2918dd187c1ebeef1f285ebad123a56c766fbcd51b49"
     },
     "Tower_Bridge_Closed.png": {
       "size": [
         1920,
         1080
       ],
-      "sha256": "9ca6ddd43eee46157ba98d0aee15f683948c3de7f41dcda90a3dca093b0cb62d"
+      "sha256": "84bd1d48879f1cc418d8fe33413bae6682664c3cd3d0fac72f09b500610a8f13"
     },
     "Tower_Bridge_City.png": {
       "size": [
         1920,
         1080
       ],
-      "sha256": "37c29eca92636f11fc98f200ccc66194a66f44962daf0d1e34f9399195bd5e1a"
+      "sha256": "aebaef930693399e5a53d82c5eb67f6f987500a28a67c4a91e0ce9cc00c2f418"
     },
     "Tower_Bridge_Water.png": {
       "size": [
         1920,
         1080
       ],
-      "sha256": "28c9cd89d5264bb47ac379f5514dfcc6f5a88dcbfbcd92c7e9068ea8877b6774"
+      "sha256": "82e7568d800ad8f763a617c6ca6d55fc415c384287abe5492c044c52ba3e1c1f"
     },
     "Tower_Bridge_Evening.png": {
       "size": [
         1920,
         1080
       ],
-      "sha256": "a8621cf8283451922ecdb7bdee0b506cfd24174bf42f0d961c1873b0a9c97b3e"
+      "sha256": "ace4c933306f830862330666e75b9d062d3a9d437f1d45e61aebe37348dcc780"
     },
     "Tower_Bridge_Detail.png": {
       "size": [
         1920,
         1080
       ],
-      "sha256": "261094d15c77486bf980faefbcf0f31899c89671d692e06e454adb40b33757b5"
+      "sha256": "12191bfafdfd911850f32cd311bdb1a816f796b778dd7ac5fc4504ffc2d9d96f"
     }
-  }
+  },
+  "render_source_scene_sha256": "e5ec6391b69995f0c3f394e44dfab7e912c132cafc80698c577717816130c2d2",
+  "render_device": "Cycles CPU 32 samples, 4 threads",
+  "camera_only_reuse_proof": "camera_patch_validation.json",
+  "scope": "Six freshly rendered CPU stills from pre-correction scene. Exact normalized datablock proof establishes that only unused Camera09 changed; these six requested cameras and every other render input are unchanged."
 }
