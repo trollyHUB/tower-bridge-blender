@@ -5,8 +5,12 @@ from PIL import Image,ImageDraw,ImageFont
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
 from scene_components.settings import load_config,frame_count
 from scene_components.render_manifest import sha,check_frames
-parser=argparse.ArgumentParser();parser.add_argument('--profile',choices=['preview','final'],default='preview');args=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('--profile',choices=['preview','final'],default='preview');parser.add_argument('--through',type=int);args=parser.parse_args()
 cfg=load_config();count=frame_count(cfg)
+total=count
+if args.through is not None:
+    assert 1<=args.through<=count
+    count=args.through
 candidates=[]
 for path in (ROOT/'research/render_runs').glob('*/manifest.json'):
     manifest=json.loads(path.read_text(encoding='utf-8'))
@@ -26,7 +30,7 @@ for first in range(1,count+1,96):
         draw.text((x+4,y+3),f'{frame:04d} / {(frame-1)/cfg["fps"]:.2f}s',font=font,fill='white')
     path=target/f'{args.profile}_{first:04d}_{end:04d}.jpg';sheet.save(path,quality=92)
     pages.append({'first':first,'last':end,'path':str(path.relative_to(ROOT)),'sha256':sha(path)})
-report={'profile':args.profile,'identity':identity,'frames_in_sheets':count,'pages':pages,
+report={'profile':args.profile,'identity':identity,'frames_in_sheets':count,'total_frames':total,'complete':count==total,'pages':pages,
         'scope':'Every rendered frame laid out in time order. Generation alone does not assert visual acceptance.'}
 (target/f'{args.profile}_sheets.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
 print(json.dumps({'frames':count,'pages':len(pages),'directory':str(target)}))

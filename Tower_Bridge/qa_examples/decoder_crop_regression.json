@@ -1,0 +1,16 @@
+{
+  "expected_rejection": true,
+  "cause": "Native-size VSE movie strip was center-cropped at a smaller decode output before explicit fit scaling was added.",
+  "frames_checked": 120,
+  "mean_rgb_error_255": 38.70073121388753,
+  "p95_rgb_error_255": 54.7956729888916,
+  "maximum_rgb_error_255": 55.45823669433594,
+  "worst_frame": 64,
+  "threshold_rgb_error_255": 8,
+  "scene_sha256": "19951b37bbe97273c79b751183685f3225edaaa0ed654a7c26df36bca5e13d35",
+  "video_sha256": "5e41359edc20668cb0a0a458977d207e5b678003947800f6ad75e84c65461675",
+  "fixed_by": "Fit movie strip transform to decoded output size; encoder and rendered frames unchanged.",
+  "pair_image": "decoder_crop_regression.png",
+  "pair_layout": "Left: source downsample. Right: actual original cropped decode. Both images from frame64 before the fix.",
+  "pair_sha256": "1a8a79fb5bc4c6bb2daae3959f3d10fef5ce81b94d6fd6686acf687b9a0385dd"
+}

@@ -1,0 +1,494 @@
+{
+  "passed": true,
+  "scope": "Alternate-configuration integration proof using exact listed source SHA-256: CPU-only 120 frames at 12 fps, 320x180. All build/finalize/scene validation/preview and final rendering/encoding/seven-phase and full decode/stills/release packaging/portable-open steps passed. Separate review-proxy tools also passed. Automated integrity and geometry checks, not a claim of visual inspection of every video frame.",
+  "configuration": {
+    "version": "1.1.0",
+    "fps": 12,
+    "duration_seconds": 10,
+    "seed": 1894,
+    "opening_degrees": 68,
+    "render": {
+      "width": 320,
+      "height": 180,
+      "preview_scale": 100,
+      "samples": 1,
+      "preview_samples": 1,
+      "device": "cpu",
+      "engine": "EEVEE",
+      "still_samples": 1
+    },
+    "features": {
+      "traffic": true,
+      "city": true,
+      "river": true,
+      "lighting": true
+    },
+    "wind": {
+      "strength": 0,
+      "direction": [
+        1,
+        0.3,
+        0
+      ]
+    },
+    "water": {
+      "level": 1,
+      "amplitude": 0.075,
+      "current": [
+        0,
+        0.12
+      ],
+      "wake_lifetime": 4
+    },
+    "traffic": {
+      "speed": 20,
+      "minimum_gap": 3,
+      "stop_line": 60,
+      "recycle": true,
+      "headlight_power": 120
+    },
+    "people": {
+      "bank_walkers": 4,
+      "passengers_per_stop": 3,
+      "cafe_visitors": 4,
+      "stride_length": 0.4
+    },
+    "lighting": {
+      "mode": "evening",
+      "lantern_power": 650,
+      "tower_power": 4200,
+      "walkway_power": 1400,
+      "dock_power": 400,
+      "stop_power": 300,
+      "cafe_power": 250,
+      "day_strength": 1,
+      "night_strength": 1
+    }
+  },
+  "source_sha256": {
+    "build_tower_bridge.py": "84ed2809bc3a3a24188c021d8dee781a00cff30ef5a7980dea4077f3b3b9ce9c",
+    "render_tower_bridge.py": "2e0a0008771adb5792c0fa82e3be03f2b6c46d8fa8d73557dd9885fedef023db",
+    "scene_components/__init__.py": "cf92cc39cba7a6be56120a2397412157eee4f458118acd0a9916a8a136b1b341",
+    "scene_components/architecture.py": "127fe65f97943a0a3072fd7a3a70617dca079b5bce80493a7d1487d6c2a42085",
+    "scene_components/cameras.py": "4ee65cc8ff213d5788bc2b61fbda56a880dab5e6d8c02c45a892cc8fc345d7c7",
+    "scene_components/city.py": "1846d34d95cc370ac754d64934890b5e92e37480b60ba387b4ffcf8b6d0613b5",
+    "scene_components/environment_validation.py": "9fe033e54fb574be727219ea3c4f8427f86cb151879d25efa2df5920cfe9fcee",
+    "scene_components/finish.py": "2bfe58bcafafd359e30cbc4347fca43915e443ea2585844d28707f5ffab246a8",
+    "scene_components/improvement_validation.py": "e0c720e3d16d2c16978f8b065f461922e0f33ea1af3c9fb630e8786dcc021f10",
+    "scene_components/lighting.py": "2196084f63739fe14910ca2f5fd503a7eddc6c181c405336b0fd8a4333e16029",
+    "scene_components/people_math.py": "6b5e2670bd14ef4feade4d029b4409c736ce83aed32f9e46b1b28253bd950106",
+    "scene_components/practical_lighting.py": "95f8505c2707cc3176338ef08f98932570ffd8d3739bbae1346b5784f426c942",
+    "scene_components/render_manifest.py": "39fff39f6981f6e8f2d5e1607fe0f56f7e36de9c57314cc87af092ecec25e410",
+    "scene_components/river.py": "6a0dac16b4caab176ac1d6f42ce16ce4b6fa8bd8ae0864787e3f0eddc16a7e75",
+    "scene_components/scenario.py": "3a36242754aed1819268f959e4c998db949deadea051de06fb1c1fbe9f49077b",
+    "scene_components/settings.py": "8b189b68c742fb3327973109ef2cd9702e64cc115c0f3dffd044c3b8d7a850a9",
+    "scene_components/traffic.py": "4f6dbf1e79a30f048d991a7644cdc053948e0e6c840c4d4d90a7981632f9e83d",
+    "scene_components/traffic_validation.py": "f869a7d656374ac795cc3b18e316b148c11f8895e41507c369f32f25b90903f1",
+    "scene_components/validation.py": "7d8563eeab5c27b3969d27837d7e37bef751e89183b45e6291223a5c6fb566e5",
+    "scene_components/water_math.py": "9f3dae0b33b34966bef75ba246c24cae883cc0e34394e17437dbce878bf54115",
+    "scene_components/wind.py": "a2e204b5980bbafc58f0f2a2da6487a6b804b77ca85ae26074af4881f3f0deed"
+  },
+  "timings_seconds": {
+    "Build": 6.25,
+    "Finalize": 2.442,
+    "Validate": 39.782,
+    "Preview": 211.6811153000017,
+    "PreviewEncode": 3.525617399995099,
+    "Animation": 361.8659822000045,
+    "Encode": 2.5332500000076834,
+    "VideoCheck": 1.8541796999925282,
+    "FullDecode": 1.8832946999900742,
+    "Stills": 13.59650060000422,
+    "StillsVerify": 0.080053500001668,
+    "Package": 0.39710200000263285,
+    "Portable": 2.140606900007697
+  },
+  "checks": {
+    "scene": {
+      "passed": true,
+      "frames_checked": 120,
+      "hinge_samples": [
+        {
+          "frame": 1,
+          "angle": 0.0
+        },
+        {
+          "frame": 120,
+          "angle": 0.0
+        }
+      ],
+      "raised_max_z": 38.78480529785156,
+      "traffic": {
+        "passed": true,
+        "frames_checked": 120,
+        "vehicle_count": 14,
+        "vehicle_types": [
+          "bus",
+          "car",
+          "taxi",
+          "truck"
+        ],
+        "minimum_actual_body_gap_m": 2.923980712890625,
+        "closest_queued_front_direction_coordinate_m": -61.46200180053711,
+        "maximum_wheel_distance_error_m": 3.6621093748578915e-05,
+        "checks": [
+          "evaluated_mesh_bounds",
+          "full_body_span_clearance",
+          "stop_lines",
+          "barrier_intersections",
+          "barrier_timing",
+          "signal_interlock",
+          "wheel_distance",
+          "no_reverse",
+          "hidden_portal_recycling"
+        ]
+      },
+      "environment": {
+        "passed": true,
+        "pedestrian_count": 16,
+        "walking_pedestrian_count": 6,
+        "stationary_people_count": 10,
+        "person_vehicle_scope": "Every frame, complete descendant mesh world AABBs for all walking and stationary people versus all visible cars",
+        "pedestrian_frames_checked": 120,
+        "building_groups_checked": 8,
+        "static_obstacle_bvh_queries": 9683,
+        "static_obstacle_scope": "All people versus unparented city building, street, garden and furniture mesh triangles above 10.55m; cafe-owned parented chairs excluded; AABB broad phase then triangle BVH overlap; no penetration-depth or swept-volume proof",
+        "vessel_surface_sample_count": 20,
+        "vessel_surface_sample_frames": [
+          1,
+          13,
+          16,
+          25,
+          27,
+          28,
+          36,
+          37,
+          49,
+          52,
+          60,
+          61,
+          72,
+          73,
+          85,
+          88,
+          92,
+          97,
+          109,
+          120
+        ],
+        "vessel_surface_test_scope": "World-space triangle intersections with moving leaves; sampled every 12 frames and phase boundaries",
+        "minimum_launch_closed_deck_vertical_margin_m": 4.437024831771851,
+        "minimum_waiting_sailboat_channel_distance_m": 22.978050231933594,
+        "minimum_vessel_fixed_walkway_vertical_margin_m": 17.934999465942383,
+        "direct_seek_checks": 40,
+        "maximum_direct_seek_matrix_error": 0.0
+      },
+      "improvements": {
+        "configuration_roundtrip": true,
+        "water_mesh_samples": 84,
+        "vessel_pose_frames": 480,
+        "max_water_mesh_height_error_m": 0.0,
+        "max_buoyancy_contact_error_m": 1.4901161415892261e-09,
+        "max_foot_target_error_m": 7.688768146799611e-06,
+        "max_stance_slide_m": 7.62939453125e-06,
+        "planted_foot_frame_checks": 972,
+        "wake_age_samples": 1218,
+        "headlight_count": 28,
+        "scope": "Vessel buoyancy and foot contact every integer frame; evaluated triangulated water and wake age sampled every 6 frames plus endpoint; no subframe swept collision proof",
+        "distinct_gait_phases": 6,
+        "walking_people": 6,
+        "waiting_passengers": 6,
+        "cafe_visitors": 4,
+        "practical_light_roles": {
+          "lantern": 40,
+          "tower": 6,
+          "walkway": 6,
+          "dock": 4,
+          "bus_stop": 2,
+          "cafe": 2
+        }
+      },
+      "practical_lights": {
+        "count": 40,
+        "mode": "evening",
+        "endpoint_checks": [
+          {
+            "frame": 1,
+            "energy": 650.0
+          },
+          {
+            "frame": 120,
+            "energy": 650.0
+          }
+        ]
+      },
+      "deterministic_transform_sha256": "cba8c54346b23e9c32bbce32fa5065d99061e9b4db63f245de2aa07e308a8856",
+      "scene_sha256": "19951b37bbe97273c79b751183685f3225edaaa0ed654a7c26df36bca5e13d35"
+    },
+    "video": {
+      "frames": 120,
+      "size": [
+        320,
+        180
+      ],
+      "fps": 12.0,
+      "bytes": 218750,
+      "video_sha256": "5e41359edc20668cb0a0a458977d207e5b678003947800f6ad75e84c65461675",
+      "identity": {
+        "scene_sha256": "19951b37bbe97273c79b751183685f3225edaaa0ed654a7c26df36bca5e13d35",
+        "config_sha256": "b131f525aa81c957caf02417e0ae1501456761b4d3a2115d3e0030041416c5e4",
+        "implementation_sha256": "2e0a0008771adb5792c0fa82e3be03f2b6c46d8fa8d73557dd9885fedef023db",
+        "profile": "final",
+        "fps": 12,
+        "frames": 120,
+        "size": [
+          320,
+          180
+        ],
+        "blender_version": "5.2.1 LTS",
+        "manifest_implementation_sha256": "39fff39f6981f6e8f2d5e1607fe0f56f7e36de9c57314cc87af092ecec25e410"
+      },
+      "decoded_frames": [
+        1,
+        20,
+        40,
+        60,
+        80,
+        100,
+        120
+      ]
+    },
+    "full_decode": {
+      "passed": true,
+      "mode": "full_decode",
+      "decoded_count": 120,
+      "frames": 120,
+      "fps": 12.0,
+      "size": [
+        320,
+        180
+      ],
+      "decode_size": [
+        192,
+        108
+      ],
+      "scene_sha256": "19951b37bbe97273c79b751183685f3225edaaa0ed654a7c26df36bca5e13d35",
+      "config_sha256": "b131f525aa81c957caf02417e0ae1501456761b4d3a2115d3e0030041416c5e4",
+      "video_sha256": "5e41359edc20668cb0a0a458977d207e5b678003947800f6ad75e84c65461675",
+      "identity": {
+        "scene_sha256": "19951b37bbe97273c79b751183685f3225edaaa0ed654a7c26df36bca5e13d35",
+        "config_sha256": "b131f525aa81c957caf02417e0ae1501456761b4d3a2115d3e0030041416c5e4",
+        "implementation_sha256": "2e0a0008771adb5792c0fa82e3be03f2b6c46d8fa8d73557dd9885fedef023db",
+        "profile": "final",
+        "fps": 12,
+        "frames": 120,
+        "size": [
+          320,
+          180
+        ],
+        "blender_version": "5.2.1 LTS",
+        "manifest_implementation_sha256": "39fff39f6981f6e8f2d5e1607fe0f56f7e36de9c57314cc87af092ecec25e410"
+      },
+      "blender_version": "5.2.1 LTS",
+      "scope": "Every configured frame decoded by Blender VSE; PNG CRC and complete pixel streams checked. No claim of visual inspection."
+    },
+    "stills": {
+      "passed": true,
+      "scene_sha256": "19951b37bbe97273c79b751183685f3225edaaa0ed654a7c26df36bca5e13d35",
+      "images": {
+        "Tower_Bridge_Open.png": {
+          "size": [
+            320,
+            180
+          ],
+          "sha256": "c3199552904c0f14dd2c8598667eb1cdf82c95e726d1f4d5f2a49d6ac5d731cc"
+        },
+        "Tower_Bridge_Closed.png": {
+          "size": [
+            320,
+            180
+          ],
+          "sha256": "6af62cfa7ecf400640dfa9c67025bef613ad2e2cd072e677f6e11ddaf4cdcf97"
+        },
+        "Tower_Bridge_City.png": {
+          "size": [
+            320,
+            180
+          ],
+          "sha256": "9a5806eaf7299aae5ec0c08d6c4afa20fb42271c7a13308faae24989f2b198b7"
+        },
+        "Tower_Bridge_Water.png": {
+          "size": [
+            320,
+            180
+          ],
+          "sha256": "faf90d00b2d7d36f724af8df40dfb3d9372dd2a1bee6b398719bb184161c1bdc"
+        },
+        "Tower_Bridge_Evening.png": {
+          "size": [
+            320,
+            180
+          ],
+          "sha256": "1ce9a4d7f203cf233138e5412a409a1bfab13eec2fa7170049cd98b8c9f246a8"
+        },
+        "Tower_Bridge_Detail.png": {
+          "size": [
+            320,
+            180
+          ],
+          "sha256": "e9c1559732efbfaea854b70058331a6f7e7b71433b5f027c0c94cc6b1e0d9739"
+        }
+      }
+    },
+    "portable": {
+      "passed": true,
+      "extracted_scene_sha256": "19951b37bbe97273c79b751183685f3225edaaa0ed654a7c26df36bca5e13d35",
+      "checked_frames": [
+        1,
+        36,
+        60,
+        88,
+        120
+      ],
+      "frames": 120,
+      "fps": 12,
+      "external_textures_missing": false,
+      "archive_crc_check": true,
+      "animation_drivers_evaluated": true
+    },
+    "review_proxy": {
+      "passed": true,
+      "profile": "review_proxy",
+      "method": "downsample_final",
+      "source_identity": {
+        "scene_sha256": "19951b37bbe97273c79b751183685f3225edaaa0ed654a7c26df36bca5e13d35",
+        "config_sha256": "b131f525aa81c957caf02417e0ae1501456761b4d3a2115d3e0030041416c5e4",
+        "implementation_sha256": "2e0a0008771adb5792c0fa82e3be03f2b6c46d8fa8d73557dd9885fedef023db",
+        "profile": "final",
+        "fps": 12,
+        "frames": 120,
+        "size": [
+          320,
+          180
+        ],
+        "blender_version": "5.2.1 LTS",
+        "manifest_implementation_sha256": "39fff39f6981f6e8f2d5e1607fe0f56f7e36de9c57314cc87af092ecec25e410"
+      },
+      "frames": 120,
+      "fps": 12.0,
+      "size": [
+        320,
+        180
+      ],
+      "video_sha256": "35f658694487c9baceb3c0f8b31cb174482fda90b3fb4fb8080f77e2ac29e6c5",
+      "bytes": 218750,
+      "proxy_manifest_sha256": "8a0cca444c8314391c3a463c6f7632fc20fafaf50b41e9385da204889184a1e2",
+      "scope": "All proxy and source frame hashes verified; encoded from downsampled final frames. No separate low-sample rendering claim."
+    },
+    "video_pixels": {
+      "passed": true,
+      "frames_checked": 120,
+      "decode_size": [
+        192,
+        108
+      ],
+      "mean_rgb_error_255": 2.5126733342806498,
+      "p95_rgb_error_255": 3.930414927005768,
+      "maximum_rgb_error_255": 4.075842380523682,
+      "worst_frame": 100,
+      "threshold_rgb_error_255": 8,
+      "scene_sha256": "19951b37bbe97273c79b751183685f3225edaaa0ed654a7c26df36bca5e13d35",
+      "video_sha256": "5e41359edc20668cb0a0a458977d207e5b678003947800f6ad75e84c65461675",
+      "identity": {
+        "scene_sha256": "19951b37bbe97273c79b751183685f3225edaaa0ed654a7c26df36bca5e13d35",
+        "config_sha256": "b131f525aa81c957caf02417e0ae1501456761b4d3a2115d3e0030041416c5e4",
+        "implementation_sha256": "2e0a0008771adb5792c0fa82e3be03f2b6c46d8fa8d73557dd9885fedef023db",
+        "profile": "final",
+        "fps": 12,
+        "frames": 120,
+        "size": [
+          320,
+          180
+        ],
+        "blender_version": "5.2.1 LTS",
+        "manifest_implementation_sha256": "39fff39f6981f6e8f2d5e1607fe0f56f7e36de9c57314cc87af092ecec25e410"
+      },
+      "visual_contact_pages": [
+        {
+          "first": 1,
+          "last": 96,
+          "file": "encoded_0001_0096.jpg",
+          "sha256": "be72245f8ec605bb9587f108ea7c3f4f5fce44100c8dfba98bc834e288ec5897"
+        },
+        {
+          "first": 97,
+          "last": 120,
+          "file": "encoded_0097_0120.jpg",
+          "sha256": "191355c4ec63c3a275ffdc7671226f0be8ff096269e90270fb9b9942c9c9bc00"
+        }
+      ],
+      "scope": "Every decoded frame compared to Lanczos-downsampled render source at decode resolution. Global RGB mean absolute error threshold 8/255; not exact full-resolution fidelity or small-object motion proof. Contact pages are generated for separate visual review."
+    }
+  },
+  "archive_bytes": 6772230,
+  "qa_tool_source_sha256": {
+    "tools/assemble_comparison.py": "3cf8503c9afd3e9e4164c000f6a6af61394260dd74e81b0e3770545e8bbc159d",
+    "tools/assemble_evolution.py": "f39ea24924797cc25b481923483a200956b32263a26fb4a2c299c93ff1483676",
+    "tools/check_bascule_overlaps.py": "70987fa132c06c003326e2b431fa49a7938baa99ce94d16d00283fd2702477d7",
+    "tools/check_release.py": "5f2545f2b5e87898d5fbd8f594d0ba436493bde47fb872fba4069e24b206ef78",
+    "tools/check_reproducibility.py": "7d397d8fc7e2da34826a4b61da7f505621fbf93e079412bef1701e8fbabf89f4",
+    "tools/check_video_full.py": "6cd7a588d57d80baa91e5afd22a73d72b2f90b50f1074082b623770031b33598",
+    "tools/diagnose_scene.py": "4ae211752cd5302b2b0cb3408cb516dd3c9635ef815971b59517ef2d9da90f0b",
+    "tools/encode_review_proxy.py": "e36b3bc30e9868dca87c7e8aebc613cb5278e6bc0be48a1c7260952d312adb22",
+    "tools/make_contact_sheets.py": "2c660d6883d3af82b50dcca55de457ad4f0380b71fcf5533235c538947d47444",
+    "tools/make_review_proxy.py": "22affad07bfdfd975826f35e1fb46d80782d3ba63ffb4085632639ae7e974c8b",
+    "tools/package_release.py": "c241581121e7a15bdc60ca73ed0f56154c54424e8bc28ff2af9a52e75acbf32d",
+    "tools/render_comparison.py": "92da16935bdcd2637e576cca2ac2e1a78d622f569203f97691692ae97c11780c",
+    "tools/verify_stills.py": "72de5a2ba17361f66eec1c5f872cf317b102e7e3a0c9c7e6bd69ba54ab006ecf",
+    "tools/verify_video_pixels.py": "4d93ed63697cb8a2feeb1beefd0c17e93ac368ddb667dbed058a53d0048bf643"
+  },
+  "source_matches_current_main": true,
+  "cpu_thread_limit_after_resume": 2,
+  "render_cache_resumed": true,
+  "timing_scope": "Recorded successful invocations; render caches resumed after interruptions, whose elapsed time is excluded. Full decode, pixel QA, release packaging and enhanced portable-open were repeated successfully after the decode-fit fix; repeat timings are omitted.",
+  "pure_tests": {
+    "main": {
+      "ran": 40,
+      "passed": 40
+    },
+    "alternate_configuration": {
+      "ran": 40,
+      "passed": 40
+    }
+  },
+  "negative_full_decode_gate_tests": {
+    "missing": {
+      "rejected": true,
+      "exit_code": 1
+    },
+    "incomplete": {
+      "rejected": true,
+      "exit_code": 1
+    },
+    "stale_video": {
+      "rejected": true,
+      "exit_code": 1
+    }
+  },
+  "negative_crop_regression": {
+    "expected_rejection": true,
+    "cause": "Native-size VSE movie strip was center-cropped at a smaller decode output before explicit fit scaling was added.",
+    "frames_checked": 120,
+    "mean_rgb_error_255": 38.70073121388753,
+    "p95_rgb_error_255": 54.7956729888916,
+    "maximum_rgb_error_255": 55.45823669433594,
+    "worst_frame": 64,
+    "threshold_rgb_error_255": 8,
+    "scene_sha256": "19951b37bbe97273c79b751183685f3225edaaa0ed654a7c26df36bca5e13d35",
+    "video_sha256": "5e41359edc20668cb0a0a458977d207e5b678003947800f6ad75e84c65461675",
+    "fixed_by": "Fit movie strip transform to decoded output size; encoder and rendered frames unchanged.",
+    "pair_image": "decoder_crop_regression.png",
+    "pair_layout": "Left: source downsample. Right: actual original cropped decode. Both images from frame64 before the fix.",
+    "pair_sha256": "1a8a79fb5bc4c6bb2daae3959f3d10fef5ce81b94d6fd6686acf687b9a0385dd"
+  }
+}

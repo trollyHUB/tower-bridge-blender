@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "baseline_git_tag": "v0.1.0",
+  "baseline_git_path": "Tower_Bridge/renders/Tower_Bridge_Open.png",
+  "baseline_image_sha256": "065a436667120a25728675ad6cb96b00faeb10e9f02678c105b011a2dcebe6cb",
+  "current_image_sha256": "03263427ff1ff364b34fd6a7c8a31924297c57d30baadc6b2e2250aca8e1b34f",
+  "current_scene_sha256": "c30270a906f951bf95853b0fb981a43b1acf5367890d4641849183c00951a30b",
+  "comparison_sha256": "d5081106d2fa9fe1b0fc5103da7eb8f56ff1e0a9b468c2966e0c24dacdd72f24",
+  "scope": "Original archived and current unretouched renders, resized with labels only. Camera composition differs. Matched cameras for v1.0.0 versus v1.1.0 are in Before_After.jpg."
+}

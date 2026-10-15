@@ -44,6 +44,9 @@ scene.view_settings.view_transform='Standard'
 editor=scene.sequence_editor_create()
 strips=editor.strips if hasattr(editor,'strips') else editor.sequences
 strip=strips.new_movie('Full finished movie decode',str(video),channel=1,frame_start=1)
+# VSE retains native movie pixel size; fit explicitly instead of center-cropping.
+strip.transform.scale_x=width/cfg['render']['width']
+strip.transform.scale_y=height/cfg['render']['height']
 clip=bpy.data.movieclips.load(str(video),check_existing=False)
 assert clip.frame_duration==count and list(clip.size)==metadata['size']
 assert abs(clip.fps-cfg['fps'])<.001

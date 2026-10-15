@@ -26,6 +26,8 @@ check.write_text('''import bpy, json, sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).parent))
 from scene_components.settings import load_config, frame_count
+from scene_components.scenario import opening
+import math
 cfg=load_config(Path(__file__).parent/'config/scene.json')
 count=frame_count(cfg)
 s=bpy.context.scene
@@ -39,7 +41,11 @@ frames=sorted(set(max(1,round(count*t)) for t in (0,.3,.5,11/15,1)))
 for f in frames:
     s.frame_set(f)
     bpy.context.view_layer.update()
-print('PORTABLE_SCENE_OK',json.dumps({'objects':len(s.objects),'checked_frames':frames,'frames':count,'fps':cfg['fps']}))
+    expected=opening(f)
+    assert abs(bpy.data.objects['BRIDGE CONTROL | Opening degrees']['Opening degrees']-expected)<.001
+    for label,sign in [('North',-1),('South',1)]:
+        assert abs(bpy.data.objects[label+' bascule hinge'].rotation_euler.y-sign*math.radians(expected))<1e-5
+print('PORTABLE_SCENE_OK',json.dumps({'objects':len(s.objects),'checked_frames':frames,'frames':count,'fps':cfg['fps'],'drivers_evaluated':True}))
 ''',encoding='utf-8')
 result=subprocess.run([args.blender,'--background',str(scene),'--python-exit-code','1','--python',str(check)],capture_output=True,text=True,encoding='utf-8',errors='replace')
 (ROOT/'research/portable-release-check.log').write_text(result.stdout+result.stderr,encoding='utf-8')
@@ -47,6 +53,6 @@ assert result.returncode==0 and 'PORTABLE_SCENE_OK' in result.stdout, result.std
 portable=json.loads(next(line.split('PORTABLE_SCENE_OK ',1)[1] for line in result.stdout.splitlines() if line.startswith('PORTABLE_SCENE_OK ')))
 report={'passed':True,'extracted_scene_sha256':hashlib.sha256(scene.read_bytes()).hexdigest(),
         'checked_frames':portable['checked_frames'],'frames':portable['frames'],'fps':portable['fps'],'external_textures_missing':False,
-        'archive_crc_check':True}
+        'archive_crc_check':True,'animation_drivers_evaluated':portable['drivers_evaluated']}
 (ROOT/'Tower_Bridge/portable_validation.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
 print('PORTABLE_RELEASE_OK',json.dumps(report))
