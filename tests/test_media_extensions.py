@@ -6,7 +6,7 @@ def module(name):
 class MediaTests(unittest.TestCase):
     def test_audio_is_deterministic_and_non_silent(self):
         m=module('create_presentation')
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory(dir=ROOT) as tmp:
             a=Path(tmp)/'a.wav';b=Path(tmp)/'b.wav';m.synthesize(a,2);m.synthesize(b,2)
             self.assertEqual(a.read_bytes(),b.read_bytes())
             with wave.open(str(a)) as w:self.assertEqual(w.getnframes(),48000);self.assertGreater(len(set(w.readframes(48000))),100)
@@ -41,7 +41,7 @@ class MediaTests(unittest.TestCase):
         payload=box(b'stsd',bytes(8)+box(b'mp4a',entry))
         for kind in (b'stbl',b'minf',b'mdia',b'trak',b'moov'):payload=box(kind,payload)
         payload=box(b'mdat',b'mp4a'+bytes(40))+payload
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory(dir=ROOT) as tmp:
             path=Path(tmp)/'audio.mp4';path.write_bytes(payload);self.assertEqual(m.mp4_audio(path),{'codec':'AAC/mp4a','channels':2,'sample_rate':48000})
     def test_periodic_values_and_velocity(self):
         f=module('create_day_loop').periodic
