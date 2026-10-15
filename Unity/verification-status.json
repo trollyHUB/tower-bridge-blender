@@ -1,0 +1,51 @@
+{
+  "status": "E05_VERIFIED",
+  "editor_passed": true,
+  "runtime_passed": true,
+  "walk_controls_passed": true,
+  "source_sha256": "12620344f8363ba948cff7e8130e722bc7c47d9c77e1c36cf64852a109d5c0ba",
+  "export_matches_source": true,
+  "built_export_matches_project": true,
+  "groups": 107,
+  "transform_samples": 152640,
+  "python_export_tests": {
+    "passed": 7,
+    "failed": 0
+  },
+  "unity_version": "6000.6.0f1",
+  "graphics_backend": "Direct3D11 WARP / Microsoft Basic Render Driver",
+  "runtime_checks": [
+    "full scene load",
+    "traffic open rejection",
+    "clear deck open acceptance",
+    "vessel close rejection",
+    "clear channel close acceptance",
+    "visitor blocks lifting and lowering",
+    "sidewalk support",
+    "river lacks walk support",
+    "vehicle blocks walking",
+    "approaching car pauses for visitor",
+    "CharacterController deck and railing collision",
+    "river camera preset",
+    "daylight control",
+    "walking camera eye height",
+    "four real camera renders with pixel validation"
+  ],
+  "artifact_sha256": {
+    "verification.json": "ddc50cba4af16f129f3a1d7a1c96cdbd80124dcb7de0bcb28f4e70d443784759",
+    "runtime-verification.json": "e4e9b340bdda75377c00ca4c50cf263f27ae6bfac956bbb90ce7126754c20d6a",
+    "runtime.png": "79566473a90afab8b1381c1f42272e225ba24386e741eb48e4e3c959a0f3a8af",
+    "runtime-river.png": "25b902cf90d856837edc69ab0e410a52792670ad07f1a4c64a4c1ed9c3cf15cd",
+    "runtime-evening.png": "a2d9e9d01ac64c12c94fcdad997c56facf71bef7cd06ca7b105239fbeeee68ed",
+    "runtime-walk.png": "8216c49cb36cf47011060feb1f2058cf940bfb4ab8dbcc412012d3ed36a34cad",
+    "TowerBridge.exe": "a4c71b1bfc3e42d02f2f129fe04adef3ebf2343a662884e4b99598e9dfc90e7d",
+    "TowerBridge_Data/StreamingAssets/scene.json": "0624150868500e6ac9d0061673e1a1980c92f8ea6c263653a2b8a4873a40d5e7",
+    "TowerBridge_Data/StreamingAssets/scene.bin": "870dddda590194f264bdc34017f8a015e418f38a57e220863b4e03845a5c9c48"
+  },
+  "limitations": [
+    "Software rendered verification, not a hardware GPU performance benchmark.",
+    "Camera.Render snapshots show actual Player geometry; the IMGUI overlay is excluded.",
+    "Standard base-colour materials approximate Blender nodes; mesh deformation and animated water shaders are not transferred.",
+    "Bridge commands control safe phases of the synchronized source choreography; traffic is not a free driving simulation."
+  ]
+}

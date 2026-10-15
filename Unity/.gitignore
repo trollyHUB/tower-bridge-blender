@@ -1,0 +1,13 @@
+Library/
+Temp/
+Obj/
+Logs/
+UserSettings/
+Build/
+*.log
+*.csproj
+*.sln
+*.slnx
+compile.rsp
+compile-verification.dll
+build-stage-path.txt
