@@ -12,8 +12,8 @@
   },
   "features": {
     "traffic": true,
-    "city": false,
-    "river": false,
+    "city": true,
+    "river": true,
     "lighting": false
   },
   "wind": {

@@ -199,7 +199,7 @@ def build(g):
             root.keyframe_insert('location', frame=frame)
             # The city approach terminates beyond the camera envelope. Cull
             # only when the complete vehicle has passed that distant edge.
-            visible = abs(root.location.x) <= 220+length/2
+            visible = abs(root.location.x) <= 210+length/2
             root.scale = (1, 1, 1) if visible else (0, 0, 0)
             root.keyframe_insert('scale', frame=frame)
             angle = (longitudinal_position(spec, ref)-start)/radius

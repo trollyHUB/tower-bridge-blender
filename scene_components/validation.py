@@ -26,5 +26,8 @@ def validate(scene, out):
     if any(o.get('actor_type')=='vehicle' for o in bpy.data.objects):
         from .traffic_validation import validate as traffic_validate
         report['traffic']=traffic_validate(scene)
+    if scene.get('City buildings'):
+        from .environment_validation import validate as environment_validate
+        report['environment']=environment_validate(scene)
     (out/'validation.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
     print('VALIDATION_OK',json.dumps(report),flush=True)
