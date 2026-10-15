@@ -1,0 +1,31 @@
+{
+  "passed": true,
+  "archive_crc_check": true,
+  "extracted_player_executed": true,
+  "source_sha256": "12620344f8363ba948cff7e8130e722bc7c47d9c77e1c36cf64852a109d5c0ba",
+  "archive_sha256": "e69303671f2513812cb7482b62e6d0cdb3f214dd8a58071eb1a197843d5b19a9",
+  "runtime_checks": [
+    "full scene load",
+    "traffic open rejection",
+    "clear deck open acceptance",
+    "vessel close rejection",
+    "clear channel close acceptance",
+    "visitor blocks lifting and lowering",
+    "sidewalk support",
+    "river lacks walk support",
+    "vehicle blocks walking",
+    "approaching car pauses for visitor",
+    "CharacterController deck and railing collision",
+    "river camera preset",
+    "daylight control",
+    "walking camera eye height",
+    "four real camera renders with pixel validation"
+  ],
+  "images_sha256": {
+    "runtime.png": "79566473a90afab8b1381c1f42272e225ba24386e741eb48e4e3c959a0f3a8af",
+    "runtime-river.png": "25b902cf90d856837edc69ab0e410a52792670ad07f1a4c64a4c1ed9c3cf15cd",
+    "runtime-evening.png": "a2d9e9d01ac64c12c94fcdad997c56facf71bef7cd06ca7b105239fbeeee68ed",
+    "runtime-walk.png": "8216c49cb36cf47011060feb1f2058cf940bfb4ab8dbcc412012d3ed36a34cad"
+  },
+  "scope": "Actual archive extracted into another directory, real Windows Player launched hidden on CPU WARP; runtime safety/walking/cameras and four nonblack renders pass. No hardware performance claim."
+}
