@@ -52,6 +52,7 @@ def validate(scene):
                     points.extend(evaluated.matrix_world @ Vector(corner) for corner in evaluated.bound_box)
                 xmin, xmax = min(p.x for p in points), max(p.x for p in points)
                 ymin, ymax = min(p.y for p in points), max(p.y for p in points)
+                assert xmin > -210.1 and xmax < 210.1, ('vehicle escapes covered portal',frame,actor.name,xmin,xmax)
                 bounds.append((actor, xmin, xmax, ymin, ymax))
                 front = xmax if direction == 1 else -xmin
                 if actor['schedule_mode'] == 'queue' and 193 <= ref < 1105:

@@ -197,9 +197,9 @@ def build(g):
             ref = reference_frame(frame)
             root.location = vehicle_position(spec, ref)
             root.keyframe_insert('location', frame=frame)
-            # The city approach terminates beyond the camera envelope. Cull
-            # only when the complete vehicle has passed that distant edge.
-            visible = abs(root.location.x) <= 210+length/2
+            # Fade-free spawning happens entirely inside the covered portal:
+            # both bumpers must stay behind its entrance and before its rear wall.
+            visible = abs(root.location.x) <= 210-length/2
             root.scale = (1, 1, 1) if visible else (0, 0, 0)
             root.keyframe_insert('scale', frame=frame)
             angle = (longitudinal_position(spec, ref)-start)/radius

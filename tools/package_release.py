@@ -3,9 +3,12 @@ from pathlib import Path
 import hashlib
 import json
 import zipfile
+import sys
 
 root = Path(__file__).resolve().parent.parent
 out = root / 'Tower_Bridge'
+sys.path.insert(0,str(root))
+from scene_components.render_manifest import png_size
 def sha(path):
     h = hashlib.sha256()
     with path.open('rb') as stream:
@@ -29,6 +32,7 @@ assert (out / 'Tower_Bridge_Animation.mp4').stat().st_size == video['bytes']
 assert len(video.get('decoded_frames', [])) >= 7, 'Run VideoCheck before packaging'
 for name in ('Open', 'Closed', 'City', 'Water', 'Evening'):
     assert (out / 'renders' / f'Tower_Bridge_{name}.png').is_file(), f'Missing {name} still'
+    assert png_size(out/'renders'/f'Tower_Bridge_{name}.png') == size, f'Invalid {name} still'
 assert (out / 'validation.json').is_file(), 'Run validation before packaging'
 validation=json.loads((out/'validation.json').read_text(encoding='utf-8'))
 assert validation['passed'] and validation['scene_sha256']==sha(out/'Tower_Bridge.blend'), 'Stale scene validation'
@@ -37,7 +41,8 @@ for directory in ('Tower_Bridge', 'scene_components', 'assets', 'config', 'tests
     files.extend(sorted(p for p in (root / directory).rglob('*')
                         if p.is_file() and '__pycache__' not in p.parts
                         and p.suffix not in ('.pyc', '.pyo') and not p.name.endswith('.blend1')
-                        and not p.name.startswith(('preview', 'eevee_'))))
+                        and not p.name.startswith(('preview', 'eevee_'))
+                        and p.name != 'Tower_Bridge_Preview.mp4'))
 archive = root / 'Tower_Bridge_Project.zip'
 with zipfile.ZipFile(archive, 'w', compression=zipfile.ZIP_DEFLATED, compresslevel=6) as bundle:
     for path in files:

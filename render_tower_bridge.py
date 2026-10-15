@@ -93,6 +93,10 @@ if mode == 'validate':
     validate(s, OUT)
 elif mode == 'stills':
     engine(s, still=True)
+    # Blender reapplies bound timeline cameras when rendering a still. Clear
+    # bindings in this in-memory copy so the explicitly requested view wins.
+    for marker in s.timeline_markers:
+        marker.camera = None
     (OUT / 'renders').mkdir(parents=True, exist_ok=True)
     shots = [('Open', COUNT // 2, '01 | Hero camera'), ('Closed', 1, '01 | Hero camera'),
              ('City', COUNT // 4, '05 | City camera'), ('Water', COUNT // 2, '06 | Water camera'),
