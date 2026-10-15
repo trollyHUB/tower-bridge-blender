@@ -9,11 +9,12 @@ import bpy
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 from scene_components.render_manifest import sha, make_identity, cache_directory, png_size, check_frames
+from scene_components.settings import load_config, frame_count
 OUT = ROOT / 'Tower_Bridge'
 CONFIG = ROOT / 'config' / 'scene.json'
-cfg = json.loads(CONFIG.read_text(encoding='utf-8-sig'))
+cfg = load_config(CONFIG)
 FPS = int(cfg['fps'])
-COUNT = int(FPS * cfg['duration_seconds'])
+COUNT = frame_count(cfg)
 WIDTH, HEIGHT = int(cfg['render']['width']), int(cfg['render']['height'])
 args = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else ['stills']
 mode = args[0]
@@ -27,30 +28,45 @@ def identity(profile='final'):
 def cache(profile):
     return cache_directory(ROOT / 'research' / 'render_runs', identity(profile))
 
+def cycles_device(scene, requested):
+    scene.cycles.device = 'CPU'
+    if requested == 'cpu':
+        return
+    try:
+        prefs = bpy.context.preferences.addons['cycles'].preferences
+        for backend in ('OPTIX', 'CUDA', 'HIP', 'METAL', 'ONEAPI'):
+            try:
+                prefs.compute_device_type = backend
+                prefs.get_devices()
+                devices = [d for d in prefs.devices if d.type != 'CPU']
+                if devices:
+                    for device in prefs.devices:
+                        device.use = device in devices
+                    scene.cycles.device = 'GPU'
+                    return
+            except Exception:
+                continue
+    except Exception:
+        pass
+    if requested == 'gpu':
+        raise RuntimeError('render.device=gpu requires an available Cycles GPU')
+
+
 def engine(scene, still=False):
-    if still:
-        scene.render.engine = 'CYCLES'
-        scene.cycles.samples = max(16, int(cfg['render'].get('samples', 16)))
-        scene.cycles.use_denoising = True
-        scene.cycles.device = 'CPU'
-        # GPU preferences are optional and never prevent rendering on CPU.
-        try:
-            prefs = bpy.context.preferences.addons['cycles'].preferences
-            for backend in ('OPTIX', 'CUDA', 'HIP', 'METAL', 'ONEAPI'):
-                try:
-                    prefs.compute_device_type = backend
-                    prefs.get_devices()
-                    devices = [d for d in prefs.devices if d.type != 'CPU']
-                    if devices:
-                        for device in prefs.devices:
-                            device.use = device in devices
-                        scene.cycles.device = 'GPU'
-                        break
-                except Exception:
-                    continue
-        except Exception:
-            pass
-    else:
+    settings = cfg['render']
+    device = settings.get('device', 'auto').lower()
+    configured_engine = settings.get('engine', 'EEVEE').upper()
+    if device not in ('auto', 'cpu', 'gpu'):
+        raise ValueError('render.device must be auto, cpu or gpu')
+    if configured_engine not in ('EEVEE', 'CYCLES'):
+        raise ValueError('render.engine must be EEVEE or CYCLES')
+    samples = int(settings.get('still_samples', settings.get('samples', 16)) if still else
+                  settings.get('preview_samples', settings.get('samples', 16)) if profile == 'preview' else
+                  settings.get('samples', 16))
+    if samples < 1:
+        raise ValueError('Render sample counts must be positive')
+    use_cycles = still or configured_engine == 'CYCLES' or device == 'cpu'
+    if not use_cycles:
         for name in ('BLENDER_EEVEE_NEXT', 'BLENDER_EEVEE'):
             try:
                 scene.render.engine = name
@@ -58,15 +74,55 @@ def engine(scene, still=False):
             except (TypeError, ValueError):
                 continue
         else:
-            scene.render.engine = 'CYCLES'
-            scene.cycles.device = 'CPU'
-            scene.cycles.samples = 8
-        if hasattr(scene, 'eevee') and hasattr(scene.eevee, 'taa_render_samples'):
-            scene.eevee.taa_render_samples = int(cfg['render'].get('samples', 16))
+            use_cycles = True
+    if use_cycles:
+        scene.render.engine = 'CYCLES'
+        scene.cycles.samples = samples
+        scene.cycles.use_denoising = True
+        cycles_device(scene, device)
+    else:
+        eevee = getattr(scene, 'eevee', None)
+        if eevee is None:
+            raise RuntimeError('Selected Eevee engine exposes no sample settings')
+        # Prefer the render-specific setting when the version exposes both.
+        if hasattr(eevee, 'taa_render_samples'):
+            eevee.taa_render_samples = samples
+        elif hasattr(eevee, 'taa_samples'):
+            eevee.taa_samples = samples
+        else:
+            raise RuntimeError('Cannot apply requested Eevee render samples')
     scene.render.resolution_x, scene.render.resolution_y = WIDTH, HEIGHT
-    scene.render.resolution_percentage = int(cfg['render'].get('preview_scale', 25)) if profile == 'preview' else 100
+    scene.render.resolution_percentage = int(settings.get('preview_scale', 25)) if profile == 'preview' else 100
     scene.render.image_settings.file_format = 'PNG'
     scene.render.fps = FPS
+    scene.render.fps_base = 1.0
+
+
+def memory_usage():
+    import platform
+    if platform.system() == 'Windows':
+        import ctypes
+        from ctypes import wintypes
+        class Counters(ctypes.Structure):
+            _fields_ = [('cb', wintypes.DWORD), ('PageFaultCount', wintypes.DWORD)] + [
+                (name, ctypes.c_size_t) for name in ('PeakWorkingSetSize', 'WorkingSetSize',
+                'QuotaPeakPagedPoolUsage', 'QuotaPagedPoolUsage', 'QuotaPeakNonPagedPoolUsage',
+                'QuotaNonPagedPoolUsage', 'PagefileUsage', 'PeakPagefileUsage')]
+        kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+        kernel.GetCurrentProcess.restype = wintypes.HANDLE
+        api = ctypes.WinDLL('psapi', use_last_error=True).GetProcessMemoryInfo
+        api.argtypes = [wintypes.HANDLE, ctypes.POINTER(Counters), wintypes.DWORD]
+        api.restype = wintypes.BOOL
+        counters = Counters()
+        counters.cb = ctypes.sizeof(counters)
+        if not api(kernel.GetCurrentProcess(), ctypes.byref(counters), counters.cb):
+            raise ctypes.WinError(ctypes.get_last_error())
+        return {'peak_rss_bytes': counters.PeakWorkingSetSize, 'rss_bytes': counters.WorkingSetSize,
+                'memory_source': 'GetProcessMemoryInfo'}
+    import resource
+    peak = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    return {'peak_rss_bytes': peak if platform.system() == 'Darwin' else peak * 1024,
+            'memory_source': 'getrusage'}
 
 def select_frame(scene, frame):
     scene.frame_set(frame)
@@ -81,7 +137,7 @@ def render(scene, path):
     try:
         bpy.ops.render.render(write_still=True)
     except RuntimeError:
-        if scene.render.engine != 'CYCLES' or scene.cycles.device != 'GPU':
+        if cfg['render'].get('device', 'auto').lower() != 'auto' or scene.render.engine != 'CYCLES' or scene.cycles.device != 'GPU':
             raise
         scene.cycles.device = 'CPU'
         bpy.ops.render.render(write_still=True)
@@ -111,7 +167,7 @@ elif mode in ('animation', 'preview', 'benchmark'):
     directory = cache(profile)
     expected = [WIDTH * s.render.resolution_percentage // 100, HEIGHT * s.render.resolution_percentage // 100]
     if mode == 'benchmark':
-        frames = [1, COUNT // 2, COUNT]
+        frames = sorted(set([1, max(1, COUNT // 4), max(1, COUNT // 2), COUNT]))
     else:
         start = int(args[1]) if len(args) > 1 else 1
         end = int(args[2]) if len(args) > 2 else COUNT
@@ -128,16 +184,17 @@ elif mode in ('animation', 'preview', 'benchmark'):
         render(s, path)
         assert png_size(path) == expected
         seconds = time.perf_counter() - started
-        timings.append({'frame': frame, 'seconds': seconds})
+        measurement={'frame': frame, 'seconds': seconds}
+        if mode=='benchmark':measurement.update(memory_usage())
+        timings.append(measurement)
         if mode == 'benchmark' or frame % FPS == 0:
             print('FRAME_OK', frame, COUNT, round(seconds, 3), flush=True)
     if mode == 'benchmark':
         report = {'identity': identity(), 'timings': timings, 'engine': s.render.engine}
         try:
-            import resource
-            report['peak_rss_platform_units'] = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-        except ImportError:
-            report['memory_note'] = 'Peak RSS is unavailable through Python resource on this platform.'
+            report.update(memory_usage())
+        except (ImportError, OSError) as error:
+            report['memory_error'] = str(error)
         (OUT / 'benchmark.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
 elif mode in ('encode', 'preview_encode', 'video_check'):
     target = OUT / ('Tower_Bridge_Preview.mp4' if profile == 'preview' else 'Tower_Bridge_Animation.mp4')
@@ -155,6 +212,7 @@ elif mode in ('encode', 'preview_encode', 'video_check'):
     s.render.resolution_x, s.render.resolution_y = video_width, video_height
     s.render.resolution_percentage = 100
     s.render.fps = FPS
+    s.render.fps_base = 1.0
     s.frame_start, s.frame_end = 1, COUNT
     s.render.use_sequencer = True
     s.view_settings.view_transform = 'Standard'
@@ -181,7 +239,7 @@ elif mode in ('encode', 'preview_encode', 'video_check'):
         collection.new_movie('Decoded finished MP4', str(target), channel=1, frame_start=1)
         s.render.image_settings.file_format = 'PNG'
         decoded = []
-        for frame in [1, COUNT // 6, COUNT // 3, COUNT // 2, COUNT * 2 // 3, COUNT * 5 // 6, COUNT]:
+        for frame in sorted(set(max(1, round(COUNT * fraction)) for fraction in (0, 1/6, 1/3, 1/2, 2/3, 5/6, 1))):
             s.frame_set(frame)
             path = ROOT / 'research' / f'video_decoded_{frame:04d}.png'
             render(s, path)

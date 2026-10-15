@@ -6,6 +6,7 @@ whole Blender process lifetime, including scene load and the diagnostic render.
 import ctypes
 import json
 import platform
+import sys
 import time
 from pathlib import Path
 import bpy
@@ -13,6 +14,10 @@ import bpy
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / 'Tower_Bridge'
 SCENE = OUT / 'Tower_Bridge.blend'
+sys.path.insert(0,str(ROOT))
+from scene_components.settings import load_config, frame_count
+from scene_components.render_manifest import png_size
+cfg=load_config()
 
 
 def process_memory():
@@ -57,7 +62,12 @@ scene.render.engine = 'CYCLES'
 scene.cycles.device = 'CPU'
 scene.cycles.samples = 1
 scene.cycles.use_denoising = False
+# A deliberately tiny independent CPU probe, based on configured dimensions.
+scene.render.resolution_x=cfg['render']['width']
+scene.render.resolution_y=cfg['render']['height']
 scene.render.resolution_percentage = 10
+scene.render.fps=cfg['fps']
+scene.render.fps_base=1.0
 scene.render.image_settings.file_format = 'PNG'
 image = ROOT / 'research' / 'cpu_probe.png'
 image.parent.mkdir(parents=True, exist_ok=True)
@@ -73,7 +83,7 @@ report = {'blender_version': bpy.app.version_string, 'platform': platform.platfo
           'scene_file_bytes': SCENE.stat().st_size, 'frame': 1,
           'engine': 'CYCLES', 'device': 'CPU', 'samples': 1,
           'render_percentage': 10,
-          'render_size': [scene.render.resolution_x // 10, scene.render.resolution_y // 10],
+          'render_size': png_size(image), 'configured_frames': frame_count(cfg), 'fps': cfg['fps'],
           'cpu_render_seconds': elapsed, 'output': 'research/cpu_probe.png',
           'mesh_objects': len(meshes), 'unique_mesh_datablocks': len(usage),
           'shared_mesh_datablocks': sum(count > 1 for count in usage.values()),

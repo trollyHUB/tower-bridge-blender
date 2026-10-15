@@ -9,6 +9,7 @@ root = Path(__file__).resolve().parent.parent
 out = root / 'Tower_Bridge'
 sys.path.insert(0,str(root))
 from scene_components.render_manifest import png_size
+from scene_components.settings import load_config, frame_count
 def sha(path):
     h = hashlib.sha256()
     with path.open('rb') as stream:
@@ -16,11 +17,10 @@ def sha(path):
             h.update(block)
     return h.hexdigest()
 
-cfg = json.loads((root / 'config' / 'scene.json').read_text(encoding='utf-8-sig'))
+cfg = load_config(root / 'config' / 'scene.json')
 video = json.loads((out / 'video_validation.json').read_text(encoding='utf-8'))
-count = int(cfg['fps'] * cfg['duration_seconds'])
+count = frame_count(cfg)
 size = [cfg['render']['width'], cfg['render']['height']]
-assert count == 1440 and cfg['fps'] == 24 and size == [1920, 1080], 'Release requires 60 seconds at 24 fps, Full HD'
 assert video['frames'] == count and video['size'] == size and abs(video['fps'] - cfg['fps']) < .001
 assert video['identity']['scene_sha256'] == sha(out / 'Tower_Bridge.blend'), 'Scene changed after encoding'
 assert video['identity']['config_sha256'] == sha(root / 'config' / 'scene.json'), 'Configuration changed after encoding'
@@ -29,7 +29,14 @@ assert video['identity']['implementation_sha256'] == sha(root / 'render_tower_br
 assert video['identity']['manifest_implementation_sha256'] == sha(root / 'scene_components' / 'render_manifest.py'), 'Cache implementation changed after encoding'
 assert sha(out / 'Tower_Bridge_Animation.mp4') == video['video_sha256'], 'Video hash mismatch'
 assert (out / 'Tower_Bridge_Animation.mp4').stat().st_size == video['bytes']
-assert len(video.get('decoded_frames', [])) >= 7, 'Run VideoCheck before packaging'
+expected_decoded = sorted(set(max(1, round(count * fraction)) for fraction in (0, 1/6, 1/3, 1/2, 2/3, 5/6, 1)))
+assert video.get('decoded_frames') == expected_decoded, 'Run VideoCheck before packaging'
+full=json.loads((out/'full_video_validation.json').read_text(encoding='utf-8'))
+assert full['passed'] and full['mode']=='full_decode', 'Run tools/check_video_full.py before packaging'
+assert full['decoded_count']==count and full['frames']==count and full['size']==size and abs(full['fps']-cfg['fps'])<.001, 'Incomplete or incompatible full decode'
+assert full['identity']==video['identity'], 'Stale full-decode identity'
+assert full['scene_sha256']==sha(out/'Tower_Bridge.blend') and full['config_sha256']==sha(root/'config/scene.json'), 'Stale full-decode scene/config'
+assert full['video_sha256']==video['video_sha256'], 'Stale full-decode video'
 stills=json.loads((out/'stills_validation.json').read_text(encoding='utf-8'))
 assert stills['passed'] and stills['scene_sha256']==sha(out/'Tower_Bridge.blend'), 'Stale still validation: rerender Stills and run tools/verify_stills.py'
 for name in ('Open', 'Closed', 'City', 'Water', 'Evening'):
