@@ -5,12 +5,12 @@
     1080
   ],
   "fps": 24.0,
-  "bytes": 39804875,
-  "video_sha256": "438584749176c55a69f4bc9af2ae0d3e2efdfb37062b58ce635285156dde2c84",
+  "bytes": 40132670,
+  "video_sha256": "131f8459a4366fbfbd6b78ead78eaa64e64bdb9e3385290aafeb015197eee619",
   "identity": {
-    "scene_sha256": "fbdbf540e1ffdb04076a8971c0cd1ce2da470b5165bccebc200247c8ec481b46",
-    "config_sha256": "cf6814d2e582b32773ea23ea1097651b72c15b16674b304a16128515cafebb86",
-    "implementation_sha256": "27a50f652ce4506d3f853f15fd0d6c38c1f3235b56687a4e2937e654296469ec",
+    "scene_sha256": "c30270a906f951bf95853b0fb981a43b1acf5367890d4641849183c00951a30b",
+    "config_sha256": "8f5b3668f8ac8ec9da5ced8cee4930e1397037eefc219d08f809dc687269d358",
+    "implementation_sha256": "2e0a0008771adb5792c0fa82e3be03f2b6c46d8fa8d73557dd9885fedef023db",
     "profile": "final",
     "fps": 24,
     "frames": 1440,
@@ -19,7 +19,7 @@
       1080
     ],
     "blender_version": "5.2.1 LTS",
-    "manifest_implementation_sha256": "1d976e8834178fd577ce7867f3317425a4a3dfd8ef8f39590bea49b40a4f8489"
+    "manifest_implementation_sha256": "39fff39f6981f6e8f2d5e1607fe0f56f7e36de9c57314cc87af092ecec25e410"
   },
   "decoded_frames": [
     1,

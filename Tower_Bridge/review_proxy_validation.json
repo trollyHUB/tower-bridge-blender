@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "profile": "review_proxy",
+  "method": "downsample_final",
+  "source_identity": {
+    "scene_sha256": "c30270a906f951bf95853b0fb981a43b1acf5367890d4641849183c00951a30b",
+    "config_sha256": "8f5b3668f8ac8ec9da5ced8cee4930e1397037eefc219d08f809dc687269d358",
+    "implementation_sha256": "2e0a0008771adb5792c0fa82e3be03f2b6c46d8fa8d73557dd9885fedef023db",
+    "profile": "final",
+    "fps": 24,
+    "frames": 1440,
+    "size": [
+      1920,
+      1080
+    ],
+    "blender_version": "5.2.1 LTS",
+    "manifest_implementation_sha256": "39fff39f6981f6e8f2d5e1607fe0f56f7e36de9c57314cc87af092ecec25e410"
+  },
+  "frames": 1440,
+  "fps": 24.0,
+  "size": [
+    480,
+    270
+  ],
+  "video_sha256": "0155346e3eb6b328a7d40323a412c33cfc3e253958f7f2046eaca0d0c9c6fb83",
+  "bytes": 2749503,
+  "proxy_manifest_sha256": "2a6288b903dbb8a85d23065d40dd767f07847f7c582980c8623c2c3489a27ff4",
+  "scope": "All proxy and source frame hashes verified; encoded from downsampled final frames. No separate low-sample rendering claim."
+}

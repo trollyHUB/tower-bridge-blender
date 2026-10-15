@@ -1,0 +1,110 @@
+{
+  "passed": true,
+  "scene_sha256": "c30270a906f951bf95853b0fb981a43b1acf5367890d4641849183c00951a30b",
+  "video_sha256": "131f8459a4366fbfbd6b78ead78eaa64e64bdb9e3385290aafeb015197eee619",
+  "frames_visually_reviewed_in_contact_sheets": 1440,
+  "review_resolution": [
+    192,
+    108
+  ],
+  "review_method": "All 15 sequential contact sheets of all decoded frames inspected; full-resolution decoded controls 720 and 1440, rendered controls 240 and 480, Open/Evening stills and four matched before/after views also inspected.",
+  "contact_pages": [
+    {
+      "first": 1,
+      "last": 96,
+      "file": "encoded_0001_0096.jpg",
+      "sha256": "4f3a5f793276e482c237bbaac8ceac16322e2adc8b5e62c0c4730f3461fc8980"
+    },
+    {
+      "first": 97,
+      "last": 192,
+      "file": "encoded_0097_0192.jpg",
+      "sha256": "1cd88475547bfacfb51f52ee5a81c24e044916d07b24c5ee54cfedc9ec3a1e51"
+    },
+    {
+      "first": 193,
+      "last": 288,
+      "file": "encoded_0193_0288.jpg",
+      "sha256": "7b10f074166de90b29f435244aaa858a2328f394d28edacd6a9019c992e544d4"
+    },
+    {
+      "first": 289,
+      "last": 384,
+      "file": "encoded_0289_0384.jpg",
+      "sha256": "30bcf5a2c378c4df3576e0ef10715ffcab5abae96a74e2385958f786ff763aa1"
+    },
+    {
+      "first": 385,
+      "last": 480,
+      "file": "encoded_0385_0480.jpg",
+      "sha256": "5cbebf600777100e36abdf63e2c74905ba45e607361938e955b31b38a6929ca1"
+    },
+    {
+      "first": 481,
+      "last": 576,
+      "file": "encoded_0481_0576.jpg",
+      "sha256": "9ca40bf8972ecc541a67ac8d3657af8921a5e0f463b8a3c3e3adb575ae2f8270"
+    },
+    {
+      "first": 577,
+      "last": 672,
+      "file": "encoded_0577_0672.jpg",
+      "sha256": "73b8cb7d7a6b8e6ac4f86ecc9b997dd057ef83a05fdc83eae4db6e542ea08e06"
+    },
+    {
+      "first": 673,
+      "last": 768,
+      "file": "encoded_0673_0768.jpg",
+      "sha256": "a0a68629b63b41b8e25f75308ce87d73fe7b7fabdb8fd589a6e3ed7f9086d8e2"
+    },
+    {
+      "first": 769,
+      "last": 864,
+      "file": "encoded_0769_0864.jpg",
+      "sha256": "c812bfa65d52474eec5fc75b82d5206b292b26c6431eb61aa75f3f7a08cf47ff"
+    },
+    {
+      "first": 865,
+      "last": 960,
+      "file": "encoded_0865_0960.jpg",
+      "sha256": "fdd11a4cf03729b287f5f2b66121987ce5046e1b7d29dc6e8c90a1b608adde85"
+    },
+    {
+      "first": 961,
+      "last": 1056,
+      "file": "encoded_0961_1056.jpg",
+      "sha256": "f254e013edfdb8dbaab965124be6c4341b710ddfab2169cb845b624cc057f5b6"
+    },
+    {
+      "first": 1057,
+      "last": 1152,
+      "file": "encoded_1057_1152.jpg",
+      "sha256": "71e071e3fb596585e8e406bc7243d7872f65adf748aab796069a9f2337d91653"
+    },
+    {
+      "first": 1153,
+      "last": 1248,
+      "file": "encoded_1153_1248.jpg",
+      "sha256": "36919c7fea9b15d835fbcf4c0f614000af0af42e6306251cd3da7a23695b7995"
+    },
+    {
+      "first": 1249,
+      "last": 1344,
+      "file": "encoded_1249_1344.jpg",
+      "sha256": "04582a8cad6ec2817578631910dfb4e4f3a1839ab6daa0752f18f72dde5aae29"
+    },
+    {
+      "first": 1345,
+      "last": 1440,
+      "file": "encoded_1345_1440.jpg",
+      "sha256": "262b932eab81e1fe4427b6fea3b05630444254b4596423b78678500a58198d08"
+    }
+  ],
+  "observations": [
+    "Planned camera cuts; no black or missing frames visible at review scale",
+    "Traffic waits during leaf movement and resumes after gates reopen",
+    "Sailboat passage precedes closing; both leaves move symmetrically",
+    "City and evening lighting appear in the planned concluding shots"
+  ],
+  "scope": "Overview contact-sheet inspection, not real-time playback or inspection of every full-resolution pixel. Small-object foot/wheel/clearance behavior additionally checked numerically in validation.json and bascule_validation.json."
+}
