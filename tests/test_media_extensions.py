@@ -33,6 +33,16 @@ class MediaTests(unittest.TestCase):
                 for a,b in zip(rows,rows[1:]):self.assertEqual(a[1],b[0])
         cfg['traffic']['bus_stop']=False
         self.assertTrue(all(r[2] in [x[2] for x in m.CAPTIONS] for r in m.caption_frames(1440,cfg)))
+    def test_aac_metadata_reads_sample_entry_not_media_payload(self):
+        import struct
+        m=module('verify_media_extensions')
+        def box(kind,body):return struct.pack('>I4s',len(body)+8,kind)+body
+        entry=bytearray(28);struct.pack_into('>H',entry,16,2);struct.pack_into('>I',entry,24,48000<<16)
+        payload=box(b'stsd',bytes(8)+box(b'mp4a',entry))
+        for kind in (b'stbl',b'minf',b'mdia',b'trak',b'moov'):payload=box(kind,payload)
+        payload=box(b'mdat',b'mp4a'+bytes(40))+payload
+        with tempfile.TemporaryDirectory(dir=ROOT/'research') as tmp:
+            path=Path(tmp)/'audio.mp4';path.write_bytes(payload);self.assertEqual(m.mp4_audio(path),{'codec':'AAC/mp4a','channels':2,'sample_rate':48000})
     def test_periodic_values_and_velocity(self):
         f=module('create_day_loop').periodic
         for h in (1,2,3):

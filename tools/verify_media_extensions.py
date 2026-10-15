@@ -4,10 +4,26 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def mp4_audio(path):
-    data=Path(path).read_bytes();i=data.find(b'mp4a')
-    if i<0:return None
-    # ISO/IEC audio sample entry: reserved[6],data_reference[2],reserved[8],channels[2],sample_size[2],reserved[4],rate16.16[4].
-    return {'codec':'AAC/mp4a','channels':struct.unpack_from('>H',data,i+20)[0],'sample_rate':struct.unpack_from('>I',data,i+28)[0]>>16}
+    data=Path(path).read_bytes()
+    def boxes(start,end):
+        while start+8<=end:
+            size,kind=struct.unpack_from('>I4s',data,start);header=8
+            if size==1:
+                if start+16>end:return
+                size=struct.unpack_from('>Q',data,start+8)[0];header=16
+            elif size==0:size=end-start
+            if size<header or start+size>end:return
+            yield kind,start+header,start+size
+            start+=size
+    def search(start,end):
+        for kind,body,limit in boxes(start,end):
+            if kind==b'mp4a' and body+28<=limit:
+                return {'codec':'AAC/mp4a','channels':struct.unpack_from('>H',data,body+16)[0],'sample_rate':struct.unpack_from('>I',data,body+24)[0]>>16}
+            if kind in (b'moov',b'trak',b'mdia',b'minf',b'stbl',b'stsd'):
+                result=search(body+8 if kind==b'stsd' else body,limit)
+                if result:return result
+        return None
+    return search(0,len(data))
 def main():
     import bpy
     sys.path.insert(0,str(ROOT));from scene_components.render_manifest import png_size
@@ -19,6 +35,7 @@ def main():
     for f in range(1,count+1):
         s.frame_set(f);target=frames/f'{f:04d}.png';s.render.filepath=str(target);bpy.ops.render.render(write_still=True);assert png_size(target)==[192,108]
     assert sha(a.video)==identity
-    report={'passed':True,'decoded_count':count,'frames':count,'fps':fps,'size':size,'video_sha256':identity,'audio_metadata':audio,'scope':'Every video frame decoded with Blender VSE and complete PNG streams validated; audio metadata verifies stream existence and rate, not listening quality.'}
+    manifest_path=a.video.parent/'manifest.json';manifest=json.loads(manifest_path.read_text(encoding='utf-8')) if manifest_path.exists() else {}
+    report={'source_scene_sha256':manifest.get('source_scene_sha256',manifest.get('source_sha256')),'passed':True,'decoded_count':count,'frames':count,'fps':fps,'size':size,'video_sha256':identity,'audio_metadata':audio,'scope':'Every video frame decoded with Blender VSE and complete PNG streams validated; audio metadata verifies stream existence and rate, not listening quality.'}
     (a.video.parent/(a.video.stem+'_validation.json')).write_text(json.dumps(report,indent=2),encoding='utf-8')
 if __name__=='__main__':main()

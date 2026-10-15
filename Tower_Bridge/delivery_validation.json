@@ -1,22 +1,28 @@
 {
   "passed": true,
-  "scene_sha256": "c30270a906f951bf95853b0fb981a43b1acf5367890d4641849183c00951a30b",
-  "video_sha256": "131f8459a4366fbfbd6b78ead78eaa64e64bdb9e3385290aafeb015197eee619",
+  "version": "1.2.0",
+  "scene_sha256": "12620344f8363ba948cff7e8130e722bc7c47d9c77e1c36cf64852a109d5c0ba",
+  "video_sha256": "eab975773179897936372a475771b20897414d983c24d6af13fb1d7325653436",
   "frames": 1440,
   "checks": [
-    "validation.json",
-    "bascule_validation.json",
-    "stills_validation.json",
-    "full_video_validation.json",
-    "video_pixel_validation.json",
-    "visual_review.json",
+    "E01_actual_scene_all_frames_doors_traffic",
+    "E02_source_sound_captions_hashes_and_full_decode",
+    "E03_value_velocity_pixel_seams_decode_and_portable_reopen",
+    "E04_weather_populations_all_frame_variants_and_image_hashes",
+    "E05_current_export_editor_player_walk_controls_and_real_render",
+    "validation",
+    "bascule_validation",
+    "stills_validation",
+    "full_video_validation",
+    "video_pixel_validation",
+    "visual_review",
+    "review_contact_and_control_hashes",
+    "all_still_hashes",
+    "proxy_identity",
     "independent_rebuild",
-    "portable_open_and_drivers",
-    "alternate_configuration_exact_source_sha",
-    "proxy_source_and_video_hash",
-    "all_six_still_hashes",
-    "all_review_sheet_hashes",
-    "comparison_provenance"
+    "alternate_exact_core_source_hashes",
+    "collage_input_and_output_hashes",
+    "portable_scene_open_and_drivers"
   ],
-  "scope": "Final consistency of actual scene, videos, compared render sources, tests evidence and artefact hashes; ZIP checked separately by portable_validation.json."
+  "scope": "Actual final artefact identities and recorded checks; historical v1.0/v1.1 comparison media are not current-render evidence. Full ZIP CRC and portable Blender opening recorded separately; Unity archive was extracted and executed. Visual and prototype limitations remain as documented."
 }

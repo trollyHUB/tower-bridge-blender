@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "source_scene_sha256": "12620344f8363ba948cff7e8130e722bc7c47d9c77e1c36cf64852a109d5c0ba",
+  "source_video_sha256": "eab975773179897936372a475771b20897414d983c24d6af13fb1d7325653436",
+  "video_sha256": "4959b73da1ae223c937514a10d416f7b48919eb27d861135c7f29b1ef959e6d8",
+  "caption_intervals_reviewed": 11,
+  "caption_coverage_frames": 1440,
+  "native_title_frame": 378,
+  "native_title_size": [
+    1920,
+    1080
+  ],
+  "title_frame_sha256": "b4f2dd7a7c155578702a223a40e5169ec8d5e4f1940503ed780d54001f9ec6e9",
+  "contact_sheet_sha256": "a976012a3337ec5c962446ca72406f2ffe731aea3c210468e82d521c4a1e5d9e",
+  "scope": "All11 actual encoded caption interval midpoints reviewed at640x360 and assembled in Contact_Sheet.jpg. Actual encoded bus caption frame378 reviewed at native1920x1080: Russian Arial text legible, safe margins, no clipping or replacement glyphs. Phase labels agree with depicted narrative. Full1440-frame decode and separate actual-AAC DSP checks recorded independently."
+}

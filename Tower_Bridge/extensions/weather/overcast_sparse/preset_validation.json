@@ -20,7 +20,7 @@
       "world_strength": 0.5774999856948853
     }
   ],
-  "scene_sha256": "5ad0da55a3aeef087090552b2a35648a384faba46cfbaeb0faf73a9393d6fc54",
+  "scene_sha256": "e83f7119209177b1aabbaf7f052f69b63a35aa7407d0172bdc4f323bb3eefb50",
   "render_sha256": null,
   "scope": "Actual .blend population, world and sun endpoints plus full integer-frame scene validation; dry weather only."
 }

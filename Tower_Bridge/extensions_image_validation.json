@@ -1,0 +1,28 @@
+{
+  "passed": true,
+  "scene_sha256": "12620344f8363ba948cff7e8130e722bc7c47d9c77e1c36cf64852a109d5c0ba",
+  "inputs": [
+    {
+      "label": "E01 • Автобус: остановка и двери",
+      "source": "Tower_Bridge\\renders\\Tower_Bridge_Bus_Stop.png",
+      "sha256": "6ac6c3982be91f483a0b8ffb1c1edfe14b6cdc7f634f8cc8a3b4d4d195a20f8b"
+    },
+    {
+      "label": "E04 • Пасмурная погода, малая плотность",
+      "source": "Tower_Bridge\\extensions\\weather\\Overcast_Sparse.png",
+      "sha256": "cb692d579bc6942418724fd5214623a090c111e968755fa5c6658ff0f44b220b"
+    },
+    {
+      "label": "E03 • Отдельная дневная петля, 10 секунд",
+      "source": "research\\day_loop_frames\\12620344f836\\0001.png",
+      "sha256": "e6052de7e2622eb3cbe54bb1e9347fdbbf6946a0186b9b3b7b9d4223c712e2eb"
+    },
+    {
+      "label": "E05 • Прогулка в настоящем Unity Player",
+      "source": "Unity\\Verification\\runtime-walk.png",
+      "sha256": "8216c49cb36cf47011060feb1f2058cf940bfb4ab8dbcc412012d3ed36a34cad"
+    }
+  ],
+  "output_sha256": "16725ef17cecad365b0aa00edb7a01e9425c4866584178b97041a2dcdb6ba151",
+  "scope": "Actual Blender renders and actual Unity Player camera capture; compositions differ. E02 is supplied separately as titled sound video."
+}

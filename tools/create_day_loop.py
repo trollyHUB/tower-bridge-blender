@@ -51,6 +51,7 @@ def main():
     s.frame_set(1);s.render.engine='BLENDER_EEVEE';s.render.resolution_x=1920;s.render.resolution_y=1080;s.render.resolution_percentage=100
     if hasattr(s,'eevee'):s.eevee.taa_render_samples=16
     s.render.image_settings.file_format='PNG';s.render.filepath='//renders/Day_Loop_'
+    bpy.context.preferences.filepaths.save_version=0
     target=a.output_dir/'Tower_Bridge_Day_Loop.blend';bpy.ops.wm.save_as_mainfile(filepath=str(target))
     report={'passed':True,'source_sha256':original,'derived_sha256':sha(target),'tool_sha256':sha(__file__),'frames':240,'fps':24,'size':[1920,1080],'camera':camera.name,'daylight_source_frame':1,'drivers':driven,'hidden_story_actors':hidden,'endpoint_state_max_error':error,'endpoint_velocity_max_error':velocity_error,'seam':seam,'motion':'Periodic water shape keys and moored skiff heave/roll; story traffic, passing vessels and transient wakes removed. All other day-one state held constant.'}
     if a.render or a.encode_only:

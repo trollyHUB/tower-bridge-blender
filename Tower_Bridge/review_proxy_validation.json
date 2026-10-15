@@ -3,9 +3,9 @@
   "profile": "review_proxy",
   "method": "downsample_final",
   "source_identity": {
-    "scene_sha256": "c30270a906f951bf95853b0fb981a43b1acf5367890d4641849183c00951a30b",
-    "config_sha256": "8f5b3668f8ac8ec9da5ced8cee4930e1397037eefc219d08f809dc687269d358",
-    "implementation_sha256": "2e0a0008771adb5792c0fa82e3be03f2b6c46d8fa8d73557dd9885fedef023db",
+    "scene_sha256": "12620344f8363ba948cff7e8130e722bc7c47d9c77e1c36cf64852a109d5c0ba",
+    "config_sha256": "78acd237773aa9552d19feb000456eb5e4da7794d893a07633794dfd8662a03a",
+    "implementation_sha256": "a898b647a2e1e4611d289a1db129eec4616284d4c032738a017b7dbeef15e9bf",
     "profile": "final",
     "fps": 24,
     "frames": 1440,
@@ -22,8 +22,8 @@
     480,
     270
   ],
-  "video_sha256": "0155346e3eb6b328a7d40323a412c33cfc3e253958f7f2046eaca0d0c9c6fb83",
-  "bytes": 2749503,
-  "proxy_manifest_sha256": "2a6288b903dbb8a85d23065d40dd767f07847f7c582980c8623c2c3489a27ff4",
+  "video_sha256": "9b13098b4c80e0f24ebca09a37e434d470c89fcbd539c3be15a56de9b34e6ba5",
+  "bytes": 2740227,
+  "proxy_manifest_sha256": "6d143551bbb4d02ebc86d8e8e0ff37427c0cf913a3e315bd72dd0552dddf8d4f",
   "scope": "All proxy and source frame hashes verified; encoded from downsampled final frames. No separate low-sample rendering claim."
 }

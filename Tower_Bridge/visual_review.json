@@ -1,110 +1,238 @@
 {
   "passed": true,
-  "scene_sha256": "c30270a906f951bf95853b0fb981a43b1acf5367890d4641849183c00951a30b",
-  "video_sha256": "131f8459a4366fbfbd6b78ead78eaa64e64bdb9e3385290aafeb015197eee619",
+  "scene_sha256": "12620344f8363ba948cff7e8130e722bc7c47d9c77e1c36cf64852a109d5c0ba",
+  "video_sha256": "eab975773179897936372a475771b20897414d983c24d6af13fb1d7325653436",
   "frames_visually_reviewed_in_contact_sheets": 1440,
   "review_resolution": [
     192,
     108
   ],
-  "review_method": "All 15 sequential contact sheets of all decoded frames inspected; full-resolution decoded controls 720 and 1440, rendered controls 240 and 480, Open/Evening stills and four matched before/after views also inspected.",
+  "contact_sheet_display": "192x108 decoded frames enlarged to240x135 within1920x1896 sheets; viewer display may rescale full sheet.",
+  "review_method": "All 15 sequential contact pages visually inspected in chronological order, then decoded FullHD phase controls 1, 240, 480, 720, 960, 1200, 1440 inspected individually.",
   "contact_pages": [
     {
       "first": 1,
       "last": 96,
       "file": "encoded_0001_0096.jpg",
-      "sha256": "4f3a5f793276e482c237bbaac8ceac16322e2adc8b5e62c0c4730f3461fc8980"
+      "sha256": "57f4f25d23285d7231b8daf4358eb66b278e4ad5a46e6fd134879c3b2a1a06ff",
+      "path": "research/visual_review/encoded_0001_0096.jpg",
+      "visually_reviewed": true,
+      "observation": "Wide daylight establishing view remains complete and consistently framed; no black or missing thumbnail observed."
     },
     {
       "first": 97,
       "last": 192,
       "file": "encoded_0097_0192.jpg",
-      "sha256": "1cd88475547bfacfb51f52ee5a81c24e044916d07b24c5ee54cfedc9ec3a1e51"
+      "sha256": "27ccd161d485aacfcdc5c27781ddfab84cf8f73222ab5b2e85dac6ac1bf0a0c7",
+      "path": "research/visual_review/encoded_0097_0192.jpg",
+      "visually_reviewed": true,
+      "observation": "Continuation of establishing overview; chronology and composition remain coherent."
     },
     {
       "first": 193,
       "last": 288,
       "file": "encoded_0193_0288.jpg",
-      "sha256": "7b10f074166de90b29f435244aaa858a2328f394d28edacd6a9019c992e544d4"
+      "sha256": "8e70e03684cfeff3c2c88cfb9f0fbaa9c8172be5c4563324c556de08041778f0",
+      "path": "research/visual_review/encoded_0193_0288.jpg",
+      "visually_reviewed": true,
+      "observation": "Cut to bridge traffic detail at193; vehicles progress across the roadway in chronological order."
     },
     {
       "first": 289,
       "last": 384,
       "file": "encoded_0289_0384.jpg",
-      "sha256": "30bcf5a2c378c4df3576e0ef10715ffcab5abae96a74e2385958f786ff763aa1"
+      "sha256": "752fdd56f446fa2084129aa1496970e8b98e79f0980059e7ef28bdb5e31b51ea",
+      "path": "research/visual_review/encoded_0289_0384.jpg",
+      "visually_reviewed": true,
+      "observation": "Traffic detail continues through351; clean cut to bus-stop insert at352; red bus and shelter clearly visible through384."
     },
     {
       "first": 385,
       "last": 480,
       "file": "encoded_0385_0480.jpg",
-      "sha256": "5cbebf600777100e36abdf63e2c74905ba45e607361938e955b31b38a6929ca1"
+      "sha256": "fb46951e1dcf836e43b568f4de915eee896e4ce2bb8a0fe5e9952f8522123ad0",
+      "path": "research/visual_review/encoded_0385_0480.jpg",
+      "visually_reviewed": true,
+      "observation": "Bus-stop insert remains clear385\u2013407, traffic passes behind; clean return to bridge detail408 and overview433. No intervening black thumbnail."
     },
     {
       "first": 481,
       "last": 576,
       "file": "encoded_0481_0576.jpg",
-      "sha256": "9ca40bf8972ecc541a67ac8d3657af8921a5e0f463b8a3c3e3adb575ae2f8270"
+      "sha256": "6d64d79d09ea3f3471703d50c92343cbfd7f60d4f7bb6f6c0bcda755dead7987",
+      "path": "research/visual_review/encoded_0481_0576.jpg",
+      "visually_reviewed": true,
+      "observation": "Overview shows bascules beginning to rise with stopped traffic; sailboat advances toward opening."
     },
     {
       "first": 577,
       "last": 672,
       "file": "encoded_0577_0672.jpg",
-      "sha256": "73b8cb7d7a6b8e6ac4f86ecc9b997dd057ef83a05fdc83eae4db6e542ea08e06"
+      "sha256": "4abb01b3f8ea2fa225fa876174f76892bb9b3ff2e07c6069fe43ad1ac08be075",
+      "path": "research/visual_review/encoded_0577_0672.jpg",
+      "visually_reviewed": true,
+      "observation": "Overview transitions to open-bridge detail625; raised leaves and sailboat are visible in consistent sequence."
     },
     {
       "first": 673,
       "last": 768,
       "file": "encoded_0673_0768.jpg",
-      "sha256": "a0a68629b63b41b8e25f75308ce87d73fe7b7fabdb8fd589a6e3ed7f9086d8e2"
+      "sha256": "22f56de7e183f57ab02b640bf24add9867c751f8957e13248caa146e40bd1ec4",
+      "path": "research/visual_review/encoded_0673_0768.jpg",
+      "visually_reviewed": true,
+      "observation": "Open-bridge detail continues; sailboat moves through gap while roadway traffic remains behind raised leaves."
     },
     {
       "first": 769,
       "last": 864,
       "file": "encoded_0769_0864.jpg",
-      "sha256": "c812bfa65d52474eec5fc75b82d5206b292b26c6431eb61aa75f3f7a08cf47ff"
+      "sha256": "fee37e661c375a5b122d80a300b57e55b932190cd2c96543eefae7e38dcf9477",
+      "path": "research/visual_review/encoded_0769_0864.jpg",
+      "visually_reviewed": true,
+      "observation": "Open-bridge detail and boat transit remain coherent; no missing, black or reversed-order thumbnail observed."
     },
     {
       "first": 865,
       "last": 960,
       "file": "encoded_0865_0960.jpg",
-      "sha256": "fdd11a4cf03729b287f5f2b66121987ce5046e1b7d29dc6e8c90a1b608adde85"
+      "sha256": "29682d20aa9f54ce6545191f680c1f3b9d84f1303e964b8b45faf0cb625546dc",
+      "path": "research/visual_review/encoded_0865_0960.jpg",
+      "visually_reviewed": true,
+      "observation": "Wide overview returns865; leaves lower progressively as small boat continues on water."
     },
     {
       "first": 961,
       "last": 1056,
       "file": "encoded_0961_1056.jpg",
-      "sha256": "f254e013edfdb8dbaab965124be6c4341b710ddfab2169cb845b624cc057f5b6"
+      "sha256": "c90adc1ff0962d38a8bf1bbd0669d65ec306a919b9d200b4f85fabaf5bb8dde7",
+      "path": "research/visual_review/encoded_0961_1056.jpg",
+      "visually_reviewed": true,
+      "observation": "Overview continues closing phase; road deck approaches closed position; vehicles and water remain visible."
     },
     {
       "first": 1057,
       "last": 1152,
       "file": "encoded_1057_1152.jpg",
-      "sha256": "71e071e3fb596585e8e406bc7243d7872f65adf748aab796069a9f2337d91653"
+      "sha256": "2dbf2d9586568eaf65cef69b7714f18d2609504379ad223bcd5f2fa8be586566",
+      "path": "research/visual_review/encoded_1057_1152.jpg",
+      "visually_reviewed": true,
+      "observation": "Bridge traffic detail resumes1057; sailboat has passed behind bridge and road traffic resumes in sequence."
     },
     {
       "first": 1153,
       "last": 1248,
       "file": "encoded_1153_1248.jpg",
-      "sha256": "36919c7fea9b15d835fbcf4c0f614000af0af42e6306251cd3da7a23695b7995"
+      "sha256": "8e1bf6881f6f70df068000d2a116e5ab3fd4fdb739f2dce254314cd22a9441dd",
+      "path": "research/visual_review/encoded_1153_1248.jpg",
+      "visually_reviewed": true,
+      "observation": "Traffic detail continues through1200; clean cut to city-bank view1201, with buildings and pedestrians visible."
     },
     {
       "first": 1249,
       "last": 1344,
       "file": "encoded_1249_1344.jpg",
-      "sha256": "04582a8cad6ec2817578631910dfb4e4f3a1839ab6daa0752f18f72dde5aae29"
+      "sha256": "21a40cf8c20630b2c1001cf46b1926a01122d33d95c7e492916f7776b996e818",
+      "path": "research/visual_review/encoded_1249_1344.jpg",
+      "visually_reviewed": true,
+      "observation": "City-bank view continues through1320; clean cut to wide dusk overview1321; lights become progressively apparent."
     },
     {
       "first": 1345,
       "last": 1440,
       "file": "encoded_1345_1440.jpg",
-      "sha256": "262b932eab81e1fe4427b6fea3b05630444254b4596423b78678500a58198d08"
+      "sha256": "327cd7503784abd37cbbd623c20268890f58c450665ebd48d6a6227e57ff8959",
+      "path": "research/visual_review/encoded_1345_1440.jpg",
+      "visually_reviewed": true,
+      "observation": "Dusk overview darkens gradually while tower, walkway and street lighting remain visible; ending frame remains complete."
     }
   ],
-  "observations": [
-    "Planned camera cuts; no black or missing frames visible at review scale",
-    "Traffic waits during leaf movement and resumes after gates reopen",
-    "Sailboat passage precedes closing; both leaves move symmetrically",
-    "City and evening lighting appear in the planned concluding shots"
+  "full_resolution_controls": [
+    {
+      "frame": 1,
+      "path": "research/video_decoded_0001.png",
+      "sha256": "18b40515b1d147fc8630400d5c0b16350ab6df7dbb2315cc3dd440482d5cba89",
+      "visually_reviewed": true,
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "frame": 240,
+      "path": "research/video_decoded_0240.png",
+      "sha256": "badf67e19eb0a68d1c3a602b7ba95d442dc4892b11af8e6d9488a179235f3254",
+      "visually_reviewed": true,
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "frame": 480,
+      "path": "research/video_decoded_0480.png",
+      "sha256": "e45b85614056f95729b8696f247a6a66e161631645acdda5f47621a84c05d245",
+      "visually_reviewed": true,
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "frame": 720,
+      "path": "research/video_decoded_0720.png",
+      "sha256": "72dea75cdf07e0a6544f982d166101a9b7a60c209053f8e669f9429d60b89c67",
+      "visually_reviewed": true,
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "frame": 960,
+      "path": "research/video_decoded_0960.png",
+      "sha256": "e844b062fd4b42a704b2c6f9f345886711eebfbb2bd3e41409927e143e72aa55",
+      "visually_reviewed": true,
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "frame": 1200,
+      "path": "research/video_decoded_1200.png",
+      "sha256": "bcd8dd322365fd520d5d1c6885b7f4a5cc2fcd161a491364853deb1170612d06",
+      "visually_reviewed": true,
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "frame": 1440,
+      "path": "research/video_decoded_1440.png",
+      "sha256": "93debd3e29922550ce9e07e983146469ff57e36b16d29d6ad72efe911a75e8e4",
+      "visually_reviewed": true,
+      "size": [
+        1920,
+        1080
+      ]
+    }
   ],
-  "scope": "Overview contact-sheet inspection, not real-time playback or inspection of every full-resolution pixel. Small-object foot/wheel/clearance behavior additionally checked numerically in validation.json and bascule_validation.json."
+  "findings": {
+    "no_black_or_missing_overview_frames_observed": true,
+    "chronological_sequence_coherent": true,
+    "bus_insert_frames": [
+      352,
+      407
+    ],
+    "bus_insert": "Red bus and shelter visible across complete insert at contact-sheet scale; clean camera cuts 352 and 408.",
+    "water_and_boats": "Visible river surface, sailboat passage through raised bridge and small-boat transit coherent in overview and selected FullHD controls.",
+    "dusk": "Final wide view gradually darkens with visible tower, walkway and street illumination."
+  },
+  "scope": "Visual overview of all 1440 decoded frames via 15 contact sheets, plus seven individually inspected FullHD phase controls. This is not real-time playback, exhaustive inspection of every FullHD pixel, or proof of small-object motion and every possible collision.",
+  "limitations": [
+    "Contact frames decoded at 192x108; small details cannot be conclusively judged at this scale.",
+    "Only seven decoded phase frames were separately inspected at FullHD; bus close-up was inspected here at contact-sheet scale."
+  ],
+  "video_pixel_validation_sha256": "a53c9109cdff647e6c505ba7b824e6ec2ca8787b71b4e43b8887dfa7f2662e2a"
 }

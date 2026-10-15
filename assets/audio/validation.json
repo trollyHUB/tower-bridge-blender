@@ -7,7 +7,7 @@
   "rms": 0.026255036389263027,
   "sha256": "a183a5e12cdfb91880194346dc4c7762848b1bc8b4ebf4c0769ee48c0e9e1174",
   "source": "Original deterministic additive synthesis; no third-party sound samples",
-  "synthesis_tool_sha256": "f7ddf0a68f482fd351fabf66a9429e7070e83f637aff481ad7fb75059bf83317",
+  "synthesis_tool_sha256": "8ebb712e7a0e40626cf8b78a6fb257c78a3d6116a9c8b9af5d430d35521c4ba9",
   "bell_window_peak_frequencies_hz": [
     660,
     659,

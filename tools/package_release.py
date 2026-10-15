@@ -4,6 +4,11 @@ import hashlib
 import json
 import zipfile
 import sys
+import argparse
+import subprocess
+parser=argparse.ArgumentParser()
+parser.add_argument("--core-only", action="store_true", help="Package the core Blender pipeline without optional extensions or Unity")
+args=parser.parse_args()
 
 root = Path(__file__).resolve().parent.parent
 out = root / 'Tower_Bridge'
@@ -18,6 +23,8 @@ def sha(path):
     return h.hexdigest()
 
 cfg = load_config(root / 'config' / 'scene.json')
+if not args.core_only:
+    subprocess.run([sys.executable, str(root/'tools/verify_extensions.py')], check=True)
 video = json.loads((out / 'video_validation.json').read_text(encoding='utf-8'))
 count = frame_count(cfg)
 size = [cfg['render']['width'], cfg['render']['height']]
@@ -47,12 +54,21 @@ assert (out / 'validation.json').is_file(), 'Run validation before packaging'
 validation=json.loads((out/'validation.json').read_text(encoding='utf-8'))
 assert validation['passed'] and validation['scene_sha256']==sha(out/'Tower_Bridge.blend'), 'Stale scene validation'
 files = [root / name for name in ('build_tower_bridge.py', 'render_tower_bridge.py', 'README.md', '.gitignore', '.gitattributes')]
+if (root/'requirements-dev.txt').is_file():
+    files.append(root/'requirements-dev.txt')
+for directory in (() if args.core_only else ('Assets', 'Packages', 'ProjectSettings', 'Verification', 'Build')):
+    files.extend(sorted(p for p in (root/'Unity'/directory).rglob('*') if p.is_file()
+                        and p.suffix not in ('.log','.pdb','.mdb')
+                        and not any('DoNotShip' in part for part in p.parts)))
+if not args.core_only:
+    files.extend(root/'Unity'/name for name in ('.gitignore','compile_sources.py','build_windows.ps1','record_verification.py','verification-status.json'))
 for directory in ('Tower_Bridge', 'scene_components', 'assets', 'config', 'tests', 'docs', 'scripts', 'tools', '.github'):
     files.extend(sorted(p for p in (root / directory).rglob('*')
                         if p.is_file() and '__pycache__' not in p.parts
                         and p.suffix not in ('.pyc', '.pyo') and not p.name.endswith('.blend1')
                         and not p.name.startswith(('preview', 'eevee_'))
-                        and p.name != 'Tower_Bridge_Preview.mp4'))
+                        and p.name != 'Tower_Bridge_Preview.mp4'
+                        and (not args.core_only or (not any(part in ('extensions', 'unity_export', 'Unity') for part in p.relative_to(root).parts) and p.name not in ('media_extensions_validation.json', 'unity_export_validation.json')))))
 archive = root / 'Tower_Bridge_Project.zip'
 with zipfile.ZipFile(archive, 'w', compression=zipfile.ZIP_DEFLATED, compresslevel=6) as bundle:
     for path in files:

@@ -1,13 +1,14 @@
 {
   "passed": true,
-  "video_sha256": "73d1f1c55d48835c5f9393a0a12526f9c937a94f7822def623735d8cad0705ea",
+  "source_scene_sha256": "12620344f8363ba948cff7e8130e722bc7c47d9c77e1c36cf64852a109d5c0ba",
+  "video_sha256": "496cf80b9056203a641874aa018d4b6171e87515a722d7446f20049079e878e2",
   "decoded_frames_compared": 240,
   "mean_rgb_error_255": 2.3706284427512,
   "maximum_rgb_error_255": 2.384837962962963,
   "encoded_wrap_difference_255": 0.6977398405349794,
   "encoded_adjacent_difference_255": 0.6479230967078189,
   "encoded_seam_ratio": 1.076886815858681,
-  "contact_sheet": "research\\day_loop_review\\encoded_contact.jpg",
+  "contact_sheet": "Tower_Bridge\\extensions\\day_loop\\Contact_Sheet.jpg",
   "contact_sha256": "61b41afb36104d6b720cd8d44ac7052ecd7111c4c77f5624b1fae08c95b092bc",
   "scope": "All decoded 192x108 frames compared against downsampled source; global error threshold 8/255. Actual decoded wrap must be nonzero and less than three times adjacent internal differences."
 }

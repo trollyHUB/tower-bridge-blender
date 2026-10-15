@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "version": "1.2.0",
+  "scene_sha256": "12620344f8363ba948cff7e8130e722bc7c47d9c77e1c36cf64852a109d5c0ba",
+  "tasks": {
+    "E01": "completed",
+    "E02": "completed",
+    "E03": "completed",
+    "E04": "completed",
+    "E05": "completed"
+  },
+  "checks": [
+    "E01_actual_scene_all_frames_doors_traffic",
+    "E02_source_sound_captions_hashes_and_full_decode",
+    "E03_value_velocity_pixel_seams_decode_and_portable_reopen",
+    "E04_weather_populations_all_frame_variants_and_image_hashes",
+    "E05_current_export_editor_player_walk_controls_and_real_render"
+  ],
+  "scope": "Verified release artefact identities and actual recorded tests. Unity prototype uses simplified materials; software-rendered Player images do not establish hardware performance."
+}

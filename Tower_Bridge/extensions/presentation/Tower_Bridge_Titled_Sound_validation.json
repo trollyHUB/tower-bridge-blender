@@ -1,0 +1,18 @@
+{
+  "source_scene_sha256": "12620344f8363ba948cff7e8130e722bc7c47d9c77e1c36cf64852a109d5c0ba",
+  "passed": true,
+  "decoded_count": 1440,
+  "frames": 1440,
+  "fps": 24.0,
+  "size": [
+    1920,
+    1080
+  ],
+  "video_sha256": "4959b73da1ae223c937514a10d416f7b48919eb27d861135c7f29b1ef959e6d8",
+  "audio_metadata": {
+    "codec": "AAC/mp4a",
+    "channels": 2,
+    "sample_rate": 48000
+  },
+  "scope": "Every video frame decoded with Blender VSE and complete PNG streams validated; audio metadata verifies stream existence and rate, not listening quality."
+}

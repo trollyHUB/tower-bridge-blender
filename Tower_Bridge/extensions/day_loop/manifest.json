@@ -1,8 +1,8 @@
 {
   "passed": true,
-  "source_sha256": "e5ec6391b69995f0c3f394e44dfab7e912c132cafc80698c577717816130c2d2",
-  "derived_sha256": "aa8095a28cb28db63096d8b11d0d3218bb98cef8fa145f9239096297d7e4a212",
-  "tool_sha256": "40eaccd66a7714e7202a5cead43d31219ed601a248cc71606338f7e7fb913cad",
+  "source_sha256": "12620344f8363ba948cff7e8130e722bc7c47d9c77e1c36cf64852a109d5c0ba",
+  "derived_sha256": "2eb2bc98cd7f30e5dd1c55f24b14fa5206bc5d8e7e6d0b2b610c505bc39efeb4",
+  "tool_sha256": "e75c118796d9e88108070967f4eb5065ae3e769adec13eaa029516bd24809aff",
   "frames": 240,
   "fps": 24,
   "size": [
@@ -759,12 +759,11 @@
     }
   ],
   "motion": "Periodic water shape keys and moored skiff heave/roll; story traffic, passing vessels and transient wakes removed. All other day-one state held constant.",
-  "video_sha256": "73d1f1c55d48835c5f9393a0a12526f9c937a94f7822def623735d8cad0705ea",
   "pixel_seam": {
     "wrap_mean_absolute_difference": 0.0009352003319688748,
     "adjacent_mean_absolute_difference": 0.0009293603444588551,
     "ratio": 1.0062838785244492,
     "no_duplicate_terminal_frame": true
   },
-  "portable_ui_update": "Story actor descendants hidden in viewport as well as render; saved render output is relative //renders/Day_Loop_. These UI/output-default changes do not alter render visibility or existing video pixels."
+  "video_sha256": "496cf80b9056203a641874aa018d4b6171e87515a722d7446f20049079e878e2"
 }

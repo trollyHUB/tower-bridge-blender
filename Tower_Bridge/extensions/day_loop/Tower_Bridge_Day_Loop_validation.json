@@ -1,4 +1,5 @@
 {
+  "source_scene_sha256": "12620344f8363ba948cff7e8130e722bc7c47d9c77e1c36cf64852a109d5c0ba",
   "passed": true,
   "decoded_count": 240,
   "frames": 240,
@@ -7,7 +8,7 @@
     1920,
     1080
   ],
-  "video_sha256": "73d1f1c55d48835c5f9393a0a12526f9c937a94f7822def623735d8cad0705ea",
+  "video_sha256": "496cf80b9056203a641874aa018d4b6171e87515a722d7446f20049079e878e2",
   "audio_metadata": null,
   "scope": "Every video frame decoded with Blender VSE and complete PNG streams validated; audio metadata verifies stream existence and rate, not listening quality."
 }

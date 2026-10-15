@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "source_scene_sha256": "12620344f8363ba948cff7e8130e722bc7c47d9c77e1c36cf64852a109d5c0ba",
+  "video_sha256": "4959b73da1ae223c937514a10d416f7b48919eb27d861135c7f29b1ef959e6d8",
+  "decoded_pcm_sha256": "a5288937f5bd9e20bc87b1d0fde928be7698f47bd6ff781815055fa7cb85a783",
+  "sample_rate": 48000,
+  "channels": 2,
+  "sample_width_bytes": 2,
+  "sample_frames": 2880512,
+  "seconds": 60.010666666666665,
+  "expected_seconds": 60.0,
+  "rms": 0.01798551319962831,
+  "peak": 0.142669677734375,
+  "bell_rms": 0.034408004011485,
+  "quiet_rms": 0.017325004893553694,
+  "bell_tone_peak_to_neighbour_median": {
+    "660": 172.98914663127618,
+    "991": 75.04436059982821
+  },
+  "scope": "Actual encoded MP4 AAC loaded as the sole VSE sound strip and mixed down through Blender/Audaspace to48kHz stereo PCM16. Duration, nonzero RMS, no clipping and warning-bell spectrum/window energy checked; DSP validation, not expert listening."
+}

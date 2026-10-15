@@ -8,18 +8,18 @@
   "images": [
     {
       "label": "Clear_Busy",
-      "scene_sha256": "e5ec6391b69995f0c3f394e44dfab7e912c132cafc80698c577717816130c2d2",
-      "image_sha256": "8abef5f8367389311eb361db23f2286e5f4535a498af0b8405478817aa856f2a"
+      "scene_sha256": "12620344f8363ba948cff7e8130e722bc7c47d9c77e1c36cf64852a109d5c0ba",
+      "image_sha256": "ab88f583bd99c0f115b9bf3af71b97905fcdbd6a375199d3d1478e7141e2dc2a"
     },
     {
       "label": "Clear_Standard",
-      "scene_sha256": "632b2b00ea2cceb4f0e72a94b427df17b5d67488375224850731a565a5123155",
-      "image_sha256": "0bd91976595c897ccf97c29c0d7d0ea2c2f835c0037cf0d5bcb4883d850d7b83"
+      "scene_sha256": "1fbe12521103627bf73eb788f55b2df5686ce34ec3441ec425ec93c7e4191dc1",
+      "image_sha256": "d68fa2c25ae113cce876dfb1c5faf4d0d6e0099607947ffe110647e4ee8d3f8e"
     },
     {
       "label": "Overcast_Sparse",
-      "scene_sha256": "5ad0da55a3aeef087090552b2a35648a384faba46cfbaeb0faf73a9393d6fc54",
-      "image_sha256": "8e1a0acb02914f1b7e369f62654f36e015b234606d66a9f489da2b6809a5b9e5"
+      "scene_sha256": "e83f7119209177b1aabbaf7f052f69b63a35aa7407d0172bdc4f323bb3eefb50",
+      "image_sha256": "cb692d579bc6942418724fd5214623a090c111e968755fa5c6658ff0f44b220b"
     }
   ]
 }
