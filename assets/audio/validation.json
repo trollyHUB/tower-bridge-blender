@@ -1,0 +1,23 @@
+{
+  "passed": true,
+  "frames": 1440000,
+  "sample_rate": 24000,
+  "duration": 60.0,
+  "peak": 0.20281982421875,
+  "rms": 0.026255036389263027,
+  "sha256": "a183a5e12cdfb91880194346dc4c7762848b1bc8b4ebf4c0769ee48c0e9e1174",
+  "source": "Original deterministic additive synthesis; no third-party sound samples",
+  "synthesis_tool_sha256": "f7ddf0a68f482fd351fabf66a9429e7070e83f637aff481ad7fb75059bf83317",
+  "bell_window_peak_frequencies_hz": [
+    660,
+    659,
+    661,
+    991,
+    63,
+    992,
+    990,
+    62
+  ],
+  "bell_rms": 0.04914376681792976,
+  "quiet_rms": 0.022864794429822977
+}
