@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "fps": 24,
   "duration_seconds": 60,
   "seed": 1894,
@@ -8,7 +8,11 @@
     "width": 1920,
     "height": 1080,
     "preview_scale": 25,
-    "samples": 16
+    "samples": 16,
+    "preview_samples": 4,
+    "device": "auto",
+    "engine": "EEVEE",
+    "still_samples": 32
   },
   "features": {
     "traffic": true,
@@ -26,6 +30,35 @@
   },
   "water": {
     "level": 0.9,
-    "amplitude": 0.075
+    "amplitude": 0.075,
+    "current": [
+      0,
+      0.12
+    ],
+    "wake_lifetime": 4
+  },
+  "traffic": {
+    "speed": 18,
+    "minimum_gap": 4,
+    "stop_line": 55,
+    "recycle": true,
+    "headlight_power": 120
+  },
+  "people": {
+    "bank_walkers": 8,
+    "passengers_per_stop": 3,
+    "cafe_visitors": 4,
+    "stride_length": 0.4
+  },
+  "lighting": {
+    "mode": "animated",
+    "lantern_power": 650,
+    "tower_power": 4200,
+    "walkway_power": 1400,
+    "dock_power": 400,
+    "stop_power": 300,
+    "cafe_power": 250,
+    "day_strength": 1,
+    "night_strength": 1
   }
 }

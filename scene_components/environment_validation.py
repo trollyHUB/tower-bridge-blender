@@ -4,7 +4,7 @@ BVH checks detect triangle surface intersections at the stated sample frames;
 they are not a continuous swept-volume or minimum-distance proof.
 """
 import math
-from .scenario import reference_frame
+from .scenario import reference_frame, CONFIG
 
 
 def validate(scene):
@@ -53,17 +53,18 @@ def validate(scene):
         return BVHTree.FromPolygons(vertices, triangles, all_triangles=True, epsilon=.00001)
 
     walkers = [o for o in scene.objects if o.name.startswith('Walker ') and o.get('route')]
+    people = [o for o in scene.objects if o.get('actor_type') == 'person']
     cars = [o for o in scene.objects if o.get('actor_type') == 'vehicle']
     sail = next(o for o in scene.objects if o.get('actor_type') == 'sailboat')
     launch = next(o for o in scene.objects if o.get('actor_type') == 'launch')
     leaves = [o for o in scene.objects if o.type == 'MESH' and o.parent and 'bascule hinge' in o.parent.name]
     walkways = [o for o in scene.objects if o.type == 'MESH' and
                 any(c.name == '05 | High-level walkways' for c in o.users_collection)]
-    assert len(walkers) == 10, ('pedestrian count', len(walkers))
+    assert len(walkers) == max(0,min(12,int(CONFIG.get('people',{}).get('bank_walkers',8))))+2, ('pedestrian count', len(walkers))
     assert leaves, 'Missing bascule meshes'
     assert walkways, 'Missing fixed upper walkways'
     walkway_low = bounds(walkways)[2][0]
-    walker_mesh = {o: descendants(o) for o in walkers}
+    walker_mesh = {o: descendants(o) for o in people}
     car_mesh = {o: descendants(o) for o in cars}
     sail_mesh, launch_mesh = descendants(sail, True), descendants(launch, True)
     names = ['RIVERSIDE STORES', 'THE BRIDGE HOTEL', 'THAMES CAFE', 'ALBERT TERRACE',
@@ -83,7 +84,7 @@ def validate(scene):
     # Static meshes contain multiple disconnected fixtures. Triangle BVH tests
     # are required here; their whole-object AABBs would give false collisions.
     static = [o for o in scene.objects if o.type == 'MESH' and not o.parent and
-              any(c.name in ('City | buildings', 'City | streets', 'City | gardens') for c in o.users_collection)]
+              any(c.name in ('City | buildings', 'City | streets', 'City | gardens', 'City | furniture') for c in o.users_collection)]
     obstacles = [(o.name, bounds([o]), surface([o], above=10.55)) for o in static]
     obstacles = [item for item in obstacles if item[2] is not None]
     samples = set(range(scene.frame_start, scene.frame_end+1, 12))
@@ -98,7 +99,7 @@ def validate(scene):
     snapshots = {}
 
     def state():
-        objects = walkers+[sail, launch]
+        objects = people+[sail, launch]
         return tuple(tuple(float(v) for row in o.matrix_world for v in row) for o in objects)
 
     try:
@@ -107,16 +108,16 @@ def validate(scene):
             bpy.context.view_layer.update()
             ref = reference_frame(frame)
             traffic = [(o, bounds(car_mesh[o])) for o in cars if o.scale.x >= .5]
-            for walker in walkers:
+            for walker in people:
                 bb = bounds(walker_mesh[walker])
-                if 'bank promenade' in walker['route']:
+                if 'bank promenade' in walker.get('route',''):
                     # Entire body stays on a bank, outside its street and away
                     # from the river edge; tests use geometry, not its origin.
                     assert bb[0][1] < -110.5 or bb[0][0] > 110.5, ('walker leaves bank', frame, walker.name)
                     assert bb[0][0] > -210 and bb[0][1] < 210
                     assert bb[1][0] > -68 and bb[1][1] < 68
                     assert bb[1][1] < -8 or bb[1][0] > 8, ('bank walker enters road', frame, walker.name)
-                if 337 <= ref < 1105:
+                if walker.get('role')=='walker' and 337 <= ref < 1105:
                     assert bb[0][1] < -30.5 or bb[0][0] > 30.5, ('walker on moving leaf during closure', frame, walker.name)
                 for car, cb in traffic:
                     assert not overlapping(bb, cb), ('walker/vehicle bounds overlap', frame, walker.name, car.name)
@@ -170,9 +171,10 @@ def validate(scene):
             assert error < .00001, ('direct seek changes actor state', frame, error)
     finally:
         scene.frame_set(original)
-    return {'passed': True, 'pedestrian_count': len(walkers), 'pedestrian_frames_checked': pedestrian_frames,
+    return {'passed': True, 'pedestrian_count': len(people), 'walking_pedestrian_count':len(walkers), 'stationary_people_count':len(people)-len(walkers),
+            'person_vehicle_scope':'Every frame, complete descendant mesh world AABBs for all walking and stationary people versus all visible cars', 'pedestrian_frames_checked': pedestrian_frames,
             'building_groups_checked': len(buildings), 'static_obstacle_bvh_queries': obstacle_queries,
-            'static_obstacle_scope': 'Unparented city buildings, street furniture and garden meshes; ground triangles below 10.55m excluded',
+            'static_obstacle_scope': 'All people versus unparented city building, street, garden and furniture mesh triangles above 10.55m; cafe-owned parented chairs excluded; AABB broad phase then triangle BVH overlap; no penetration-depth or swept-volume proof',
             'vessel_surface_sample_count': vessel_samples, 'vessel_surface_sample_frames': sorted(samples),
             'vessel_surface_test_scope': 'World-space triangle intersections with moving leaves; sampled every 12 frames and phase boundaries',
             'minimum_launch_closed_deck_vertical_margin_m': min_launch_clearance,

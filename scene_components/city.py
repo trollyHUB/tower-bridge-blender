@@ -1,6 +1,9 @@
 """Two connected London banks, generated with the shared geometry batcher."""
 import math
-from .scenario import END, FPS, frame as timeline_frame
+import random
+from .scenario import CONFIG, END, FPS, frame as timeline_frame
+from .people_math import route_state, foot_target, leg_angles
+from .wind import wind_vector
 
 
 def build(g):
@@ -20,6 +23,10 @@ def build(g):
     bs=lit.node_tree.nodes.get('Principled BSDF')
     bs.inputs['Emission Color'].default_value=(.8,.42,.12,1)
     bs.inputs['Emission Strength'].default_value=.45
+    rng=random.Random(CONFIG['seed'])
+    glazing=[material('City | glazing variant %d'%i,
+                      (.12+rng.random()*.10,.22+rng.random()*.12,.27+rng.random()*.13),
+                      rough=.12+rng.random()*.24) for i in range(12)]
     ground=10.2
 
     def label(text, loc, size=.8, rotation=(math.pi/2,0,0)):
@@ -131,7 +138,7 @@ def build(g):
                 xx=x-w/2+2+col*3.5; z=ground+2+row*3.2
                 if xx>x+w/2-1:continue
                 box((xx,front-.08,z),(1.65,.2,2.1),trim)
-                box((xx,front-.2,z),(1.35,.12,1.8),lit if (row+col+index)%5==0 else glass)
+                box((xx,front-.2,z),(1.35,.12,1.8),lit if (row+col+index)%5==0 else glazing[(index*3+row+col)%len(glazing)])
                 box((xx,front-.29,z),(.07,.08,1.8),trim)
                 box((xx,front-.29,z),(1.35,.08,.07),trim)
                 box((xx,front-.3,z-1.12),(1.85,.5,.13),trim)
@@ -176,7 +183,9 @@ def build(g):
             group('Plane tree crown %s %s'%(sign,i),'City | gardens',crown)
             for dx,dy,dz,r in [(0,0,.8,2.7),(-1.1,.3,.4,1.9),(1.2,-.4,1.3,1.9)]:sphere((dx,dy,dz),r,leaf)
             for f in sorted(set([1,END]+list(range(1,END+1,max(1,round(FPS*2)))))):
-                crown.rotation_euler[1]=.025*math.sin(f/FPS*.6+i)
+                wx,wy=wind_vector(f/FPS)[:2]
+                crown.rotation_euler[0]=-wy*.21
+                crown.rotation_euler[1]=wx*.21
                 crown.keyframe_insert('rotation_euler',frame=f)
             group('Park furniture '+str(sign),'City | gardens')
         for yy in [42,53,62]:bench(sign*133,yy)
@@ -184,34 +193,65 @@ def build(g):
     # Low-poly articulated people walk only along the clear quay promenade.
     skin=material('People | skin',(.54,.32,.20),rough=.75)
     coats=[material('People | coat '+str(i),c,rough=.8) for i,c in enumerate([(.15,.23,.34),(.5,.15,.09),(.21,.32,.22),(.52,.39,.12)])]
+    gait_cycle=2*CONFIG.get('people',{}).get('stride_length',.65)
     def person(i, keys, angle, route, moving):
         actor=empty('Walker %02d'%i,'Actors | pedestrians',keys[0][1])
-        actor['route']=route
+        actor['route']=route; actor['actor_type']='person'; actor['role']='walker'
+        actor['gait']='distance-driven two-segment legs with planted stance'
+        gait_offset=((i*.38196601125+CONFIG['seed']*.001)%1)*gait_cycle
+        actor['gait_phase_offset_m']=gait_offset
         actor.rotation_euler[2]=angle
         group('Walker %02d body'%i,'Actors | pedestrians',actor)
         box((0,0,1.05),(.42,.27,.58),coats[i%4]); sphere((0,0,1.55),.19,skin)
+        limbs=[]
         for side in [-1,1]:
-            for limb,xx,zz,length in [('leg',side*.12,.79,.75),('arm',side*.29,1.3,.62)]:
-                pivot=empty('Walker %02d %s %s'%(i,limb,side),'Actors | pedestrians')
-                pivot.parent=actor; pivot.location=(xx,0,zz)
-                group('Walker %02d %s %s'%(i,limb,side),'Actors | pedestrians',pivot)
-                box((0,0,-length/2),(.13,.15,length),dark if limb=='leg' else coats[i%4])
-                for f in sorted(set([1,END]+list(range(1,END+1,max(1,round(FPS/4)))))):
-                    pivot.rotation_euler[0]=(.40*math.sin((f/FPS+i*.29)*2*math.pi)*side*(1 if limb=='leg' else -1)) if moving(f) else 0
-                    pivot.keyframe_insert('rotation_euler',frame=f)
-                # Explicit still poses on both boundaries of the waiting phase.
-                for f in [timeline_frame(13.34),timeline_frame(46)]:
-                    if not moving(f):
-                        pivot.rotation_euler[0]=0; pivot.keyframe_insert('rotation_euler',frame=f)
-        for f,loc in keys:
+            hip=empty('Walker %02d leg %s'%(i,side),'Actors | pedestrians')
+            hip.parent=actor; hip.location=(side*.12,0,.76)
+            group('Walker %02d thigh %s'%(i,side),'Actors | pedestrians',hip)
+            box((0,0,-.215),(.13,.15,.43),dark)
+            knee=empty('Walker %02d shin %s'%(i,side),'Actors | pedestrians')
+            knee.parent=hip; knee.location=(0,0,-.43)
+            group('Walker %02d shin mesh %s'%(i,side),'Actors | pedestrians',knee)
+            box((0,0,-.215),(.12,.14,.43),dark)
+            foot=empty('Walker %02d foot %s'%(i,side),'Actors | pedestrians')
+            foot.parent=knee; foot.location=(0,0,-.43)
+            foot['actor_owner']=actor.name; foot['side']=side
+            foot['gait_cycle']=gait_cycle; foot['stance_fraction']=.60
+            group('Walker %02d shoe %s'%(i,side),'Actors | pedestrians',foot)
+            box((0,.065,.035),(.16,.29,.07),dark)
+            arm=empty('Walker %02d arm %s'%(i,side),'Actors | pedestrians')
+            arm.parent=actor; arm.location=(side*.29,0,1.3)
+            group('Walker %02d sleeve %s'%(i,side),'Actors | pedestrians',arm)
+            box((0,0,-.31),(.13,.15,.62),coats[i%4])
+            limbs.append((side,hip,knee,foot,arm))
+        # Per-frame analytic targets preserve contact during every stance and wait.
+        for f in range(1,END+1):
+            loc,distance=route_state(keys,f)
             actor.location=loc; actor.keyframe_insert('location',frame=f)
+            actor['route_distance']=distance; actor.keyframe_insert(data_path='["route_distance"]',frame=f)
+            for side,hip,knee,foot,arm in limbs:
+                target,lift=foot_target(distance+gait_offset,side,cycle=gait_cycle)
+                target-=gait_offset
+                if not moving(f):lift=0.0
+                phase=((distance+gait_offset+(gait_cycle*.5 if side>0 else 0))/gait_cycle)%1
+                for prop,value in [('stance',int(phase<=.60 or not moving(f))),('stance_anchor',target),('lift',lift)]:
+                    foot[prop]=value; foot.keyframe_insert(data_path='["%s"]'%prop,frame=f)
+                upper,lower=leg_angles(target-distance,lift)
+                hip.rotation_euler[0]=upper; knee.rotation_euler[0]=lower
+                foot.rotation_euler[0]=-upper-lower
+                arm.rotation_euler[0]=-.25*math.sin((distance+gait_offset)/gait_cycle*2*math.pi)*side if moving(f) else 0
+                for ob in (hip,knee,foot,arm):ob.keyframe_insert('rotation_euler',frame=f)
         return actor
 
-    # Eight separated, parallel routes never cross y=0 or staircase furniture.
-    for i in range(8):
-        sign=-1 if i<4 else 1
-        x=sign*(114.3+(i%4)*1.05)
-        north=i%2==0
+    # Alternate north/south lanes so adjacent bodies stay well separated.
+    bank_count=max(0,min(12,int(CONFIG.get('people',{}).get('bank_walkers',8))))
+    left_count=(bank_count+1)//2
+    for i in range(bank_count):
+        sign=-1 if i<left_count else 1
+        lane=i if sign<0 else i-left_count
+        count=left_count if sign<0 else bank_count-left_count
+        x=sign*(114.3+(3.15*lane/max(1,count-1)))
+        north=lane%2==0
         ya,yb=(-61,-17) if not north else (17,61)
         person(i,[(1,(x,ya,10.3)),(END,(x,yb,10.3))],0,
                'Safe bank promenade; y stays outside road and stop area',lambda f:True)
@@ -219,13 +259,59 @@ def build(g):
     # Two people clear the moving leaf early, wait on the fixed approach,
     # then continue away from the bridge after the pedestrian gates open.
     clear=timeline_frame(13.34); resume=timeline_frame(46)
-    for i,sign in enumerate([-1,1],8):
+    for i,sign in enumerate([-1,1],bank_count):
         person(i,[(1,(sign*29,sign*6.05,10.43)),
                   (clear,(sign*55,sign*6.05,10.43)),
                   (resume,(sign*55,sign*6.05,10.43)),
                   (END,(sign*76,sign*6.05,10.43))],
                -sign*math.pi/2,'Bascule clearance before gates; wait at fixed x55 until 46 seconds',
                lambda f:f<clear or f>resume)
+    def visitor(name,location,role,seated=False,angle=0):
+        actor=empty(name,'Actors | pedestrians',location)
+        actor['actor_type']='person'; actor['role']=role
+        actor.rotation_euler[2]=angle
+        group(name+' body','Actors | pedestrians',actor)
+        hip=.48 if seated else .76
+        box((0,0,hip+.29),(.42,.27,.58),coats[len(name)%4])
+        sphere((0,0,hip+.8),.19,skin)
+        for side in [-1,1]:
+            beam((side*.27,0,hip+.5),(side*.29,.1,hip+.02),.075,coats[len(name)%4])
+            if seated:
+                beam((side*.12,0,hip),(side*.12,.38,hip),.075,dark)
+                beam((side*.12,.38,hip),(side*.12,.38,.07),.07,dark)
+                box((side*.12,.46,.055),(.16,.28,.11),dark)
+            else:
+                beam((side*.12,0,hip),(side*.12,0,.08),.075,dark)
+                box((side*.12,.06,.055),(.16,.28,.11),dark)
+        return actor
+
+    # Waiting passengers occupy the shelter sidewalk, outside the road envelope.
+    passenger_count=CONFIG.get('people',{}).get('passengers_per_stop',3)
+    for sign in [-1,1]:
+        for j in range(passenger_count):
+            visitor('Bus passenger %s %02d'%(sign,j),(sign*157+(j-(passenger_count-1)/2)*.85,9.5,10.3),
+                    'bus_stop_waiting',angle=math.pi)
+    # Cafe frontage is y=21; seating lies between y=16 and 20, away from quay.
+    for j in range(CONFIG.get('people',{}).get('cafe_visitors',4)):
+        x=-151+(j//2)*8; y=18.0
+        group('Cafe table %02d'%j,'City | furniture')
+        if j%2==0:
+            cyl((x,y,11.12),.73,.12,wood,24)
+            cyl((x,y,10.73),.065,.8,blue,12)
+        dx=-1.15 if j%2==0 else 1.15
+        cx=x+dx
+        chair=empty('Cafe chair %02d'%j,'City | furniture')
+        chair['seat_owner']='Cafe visitor %02d'%j
+        group('Cafe chair %02d'%j,'City | furniture',chair)
+        box((cx,y,10.76),(.6,.6,.12),wood)
+        for ox in [-.23,.23]:
+            for oy in [-.23,.23]:beam((cx+ox,y+oy,10.3),(cx+ox,y+oy,10.72),.04,blue)
+        box((cx+(.28 if dx>0 else -.28),y,11.08),(.09,.6,.55),wood)
+        visitor('Cafe visitor %02d'%j,(cx,y,10.3),'cafe_seated',True,
+                angle=math.pi/2 if dx>0 else -math.pi/2)
+    g['scene']['Pedestrian walking count']=bank_count+2
+    g['scene']['Pedestrian waiting count']=passenger_count*2
+    g['scene']['Pedestrian cafe count']=CONFIG.get('people',{}).get('cafe_visitors',4)
     g['scene']['City buildings']=8
-    g['scene']['Pedestrian route note']='Eight bank walkers keep |y|>=17. Two bridge walkers clear leaves before gate closure and wait at |x|55 until 46 seconds.'
+    g['scene']['Pedestrian route note']='%d bank walkers keep |y|>=17. Two bridge walkers clear leaves before gate closure and wait at |x|55 until 46 seconds.'%bank_count
     group('City completed','City | streets')

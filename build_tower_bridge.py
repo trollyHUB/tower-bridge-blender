@@ -93,8 +93,14 @@ wb.inputs['IOR'].default_value=1.333
 tc=wn.nodes.new('ShaderNodeTexCoord'); mp=wn.nodes.new('ShaderNodeMapping')
 wn.links.new(tc.outputs['Object'],mp.inputs['Vector'])
 mp.inputs['Scale'].default_value=(.42,1.6,1)
-mp.inputs['Location'].default_value=(0,0,0); mp.inputs['Location'].keyframe_insert('default_value',frame=1)
-mp.inputs['Location'].default_value=(0,8,0); mp.inputs['Location'].keyframe_insert('default_value',frame=END)
+from scene_components.wind import wind_vector, wind_time
+current=CONFIG['water']['current']; drift=[0.,0.]
+for f in range(1,END+1):
+    wx,wy=wind_vector((f-1)/FPS)
+    if f>1:
+        drift[0]+=(current[0]+wx*.15)/FPS; drift[1]+=(current[1]+wy*.15)/FPS
+    mp.inputs['Location'].default_value=(*drift,0)
+    mp.inputs['Location'].keyframe_insert('default_value',frame=f)
 noise=wn.nodes.new('ShaderNodeTexNoise'); noise.inputs['Scale'].default_value=1.8; noise.inputs['Detail'].default_value=3; noise.inputs['Roughness'].default_value=.65
 wn.links.new(mp.outputs['Vector'],noise.inputs['Vector'])
 bump=wn.nodes.new('ShaderNodeBump'); bump.inputs['Strength'].default_value=.26; bump.inputs['Distance'].default_value=.25
@@ -463,8 +469,8 @@ group('Standing rigging','11 | River boat',boat)
 for a,b in [((0,.8,24),(0,7.2,2.1)),((0,.8,24),(0,-5.5,2.1))]:beam(a,b,.035,gold)
 
 # Extension components share the geometry batch API.
-for component in ['traffic','city','river']:
-    if CONFIG['features'].get(component):
+for component in ['traffic','city','river','architecture']:
+    if CONFIG['features'].get(component,component=='architecture'):
         import importlib
         importlib.import_module('scene_components.'+component).build(globals())
 
@@ -549,6 +555,8 @@ https://www.youtube.com/watch?v=kdWINtbofzo
 3D Tudor provided the visual idea of a bridge diorama; the paid project was not downloaded.
 YouTube transcript was unavailable; the full tutorial was not reviewed.
 '''
+readme=readme.replace('frames 1-1440, 24 fps (60 s)',f'frames 1-{END}, {FPS} fps ({CONFIG["duration_seconds"]} s)')
+readme=readme.replace('Frame 720: ship/open. Frame 1440: blue hour/closed.',f'Frame {round(END/2)}: ship/open. Frame {END}: finale; light mode {CONFIG["lighting"]["mode"]}.')
 txt=bpy.data.texts.new('START HERE | Project notes');txt.write(readme)
 scene['Project']='Tower Bridge | architectural diorama'
 scene['Construction']='Original generated geometry; artistic reconstruction'

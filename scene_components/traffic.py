@@ -47,33 +47,88 @@ def vehicle_specs():
                               kind=kind, direction=direction, mode='through',
                               start=-40.0-i*50.0))
         # Front bumper of the leader stops 1.5 m before the painted line.
-        front = -STOP_LINE-1.5
+        front = -_settings().get('stop_line',55)-1.5
         for i, kind in enumerate(('truck', 'taxi', 'car', 'bus')):
             length = VEHICLE_TYPES[kind][0]
             target = front-length/2
             specs.append(dict(name=f'Traffic queue {direction:+d} {i+1} {kind}',
                               kind=kind, direction=direction, mode='queue',
                               start=target-150.0, target=target, index=i))
-            front -= length+4.0
+            front -= length+_settings().get('minimum_gap',4.0)
     return specs
 
 
+def _settings():
+    from .scenario import CONFIG
+    return CONFIG.get('traffic', {})
+
+
+from functools import lru_cache
+
+
+@lru_cache(maxsize=16)
+def _schedule(speed, gap, stop_line, recycle):
+    specs = vehicle_specs()
+    positions = [s['start'] for s in specs]
+    odometers = [0.0]*len(specs)
+    records = [(tuple(positions), tuple(odometers))]
+    for frame in range(2, LAST_FRAME+1):
+        for direction in (1, -1):
+            indices = sorted((i for i,s in enumerate(specs) if s['direction'] == direction),
+                             key=lambda i: positions[i], reverse=True)
+            leader = None
+            for i in indices:
+                spec = specs[i]
+                half = VEHICLE_TYPES[spec['kind']][0]/2
+                old = positions[i]
+                movement = speed/FPS
+                if spec['mode'] == 'queue' and frame <= 336:
+                    t0, t1 = (frame-2)/335, (frame-1)/335
+                    movement = 150*((2*t1-t1*t1)-(2*t0-t0*t0))
+                elif spec['mode'] == 'queue' and frame < 1105+spec['index']*20:
+                    movement = 0
+                wanted = old+movement
+                if signal_state(frame) == 'red' and old+half <= -stop_line:
+                    wanted = min(wanted, -stop_line-1.5-half)
+                if leader is not None:
+                    wanted = min(wanted, positions[leader]-VEHICLE_TYPES[specs[leader]['kind']][0]/2-gap-half)
+                wanted = max(old, wanted)
+                if recycle:
+                    wanted = min(wanted, 211.0)
+                odometers[i] += wanted-old
+                positions[i] = wanted
+                leader = i
+            # Teleports occur only with the complete body inside the two opaque
+            # road-end portals. Defer re-entry until the tail has enough space.
+            if recycle:
+                for i in indices:
+                    if positions[i] < 211:
+                        continue
+                    half = VEHICLE_TYPES[specs[i]['kind']][0]/2
+                    others = [j for j in indices if j != i]
+                    if all(positions[j]-VEHICLE_TYPES[specs[j]['kind']][0]/2 >= -211+half+gap for j in others):
+                        positions[i] = -211.0
+        records.append((tuple(positions), tuple(odometers)))
+    return tuple(records)
+
+
+def vehicle_sample(spec, frame):
+    settings = _settings()
+    records = _schedule(float(settings.get('speed',18)), float(settings.get('minimum_gap',4)),
+                        float(settings.get('stop_line',55)), bool(settings.get('recycle',True)))
+    index = next(i for i,s in enumerate(vehicle_specs()) if s['name'] == spec['name'])
+    f = max(1.0, min(float(frame), LAST_FRAME))
+    lo, hi = int(f)-1, min(int(f), LAST_FRAME-1)
+    alpha = f-int(f)
+    p0,d0 = records[lo][0][index], records[lo][1][index]
+    p1,d1 = records[hi][0][index], records[hi][1][index]
+    # Fractional frames never interpolate a wrap across the visible road.
+    position = p0 if p1 < p0 else p0+(p1-p0)*alpha
+    return position, d0+(d1-d0)*alpha
+
+
 def longitudinal_position(spec, frame):
-    """Distance coordinate increasing in the actor's travel direction."""
-    if spec['mode'] == 'through':
-        return spec['start']+18.0*(frame-1)/FPS
-    # Constant initial speed followed by a gentle deceleration to rest. The
-    # trajectory's velocity reaches exactly zero at frame 336.
-    t = max(0.0, min(1.0, (frame-1)/335.0))
-    approach = 150.0*(2*t-t*t)
-    release = 1105+spec['index']*20
-    seconds = max(0.0, (frame-release)/FPS)
-    acceleration = 2.5
-    cruise = 18.0
-    ramp = cruise/acceleration
-    departure = (.5*acceleration*seconds**2 if seconds < ramp
-                 else .5*acceleration*ramp*ramp+cruise*(seconds-ramp))
-    return spec['start']+approach+departure
+    return vehicle_sample(spec, frame)[0]
 
 
 def vehicle_position(spec, frame):
@@ -82,7 +137,7 @@ def vehicle_position(spec, frame):
 
 
 def braking(spec, frame):
-    return spec['mode'] == 'queue' and 193 <= frame < 1105+spec['index']*20
+    return signal_state(frame) == 'red' and longitudinal_position(spec,frame) < -_settings().get('stop_line',55)
 
 
 def _linear(ob):
@@ -103,7 +158,7 @@ def _linear(ob):
 
 def build(g):
     import bpy
-    from .scenario import END, reference_frame
+    from .scenario import END, reference_frame, CONFIG, dusk
     def actual_frame(reference):
         return max(1, round(reference*END/1440))
     group, box, cyl, empty = (g[k] for k in ('group', 'box', 'cyl', 'empty'))
@@ -126,9 +181,9 @@ def build(g):
 
     headlights = lamp('Traffic | evening headlights', (1, .87, .61), .15)
     headinput = headlights.node_tree.nodes.get('Principled BSDF').inputs['Emission Strength']
-    for frame, value in ((1, .15), (1200, .15), (1320, 5), (1440, 5)):
-        headinput.default_value = value
-        headinput.keyframe_insert('default_value', frame=actual_frame(frame))
+    for f in sorted(set([1, END]+list(range(1,END+1,6)))):
+        headinput.default_value = .15+4.85*dusk(f)
+        headinput.keyframe_insert('default_value', frame=f)
 
     actors = []
     for spec in vehicle_specs():
@@ -142,7 +197,7 @@ def build(g):
         root['length'], root['width'], root['direction'] = length, width, direction
         root['height'] = height
         root['schedule_mode'] = spec['mode']
-        root['stop_line'] = -direction*STOP_LINE
+        root['stop_line'] = -direction*_settings().get('stop_line',55)
         group(spec['name']+' body', 'Traffic', root)
         mat = bodymats[kind]
         radius = .50 if kind in ('bus', 'truck') else .35
@@ -178,6 +233,23 @@ def build(g):
         for side in (-1, 1):
             box((length/2+.018, side*width*.33, .82), (.04, .35, .22), headlights)
             box((-length/2-.018, side*width*.33, .82), (.04, .30, .2), stopmat)
+        for side in (-1, 1):
+            data = bpy.data.lights.new(spec['name']+f' headlight {side}', 'SPOT')
+            data.color = (1.0, .87, .61)
+            data.spot_size = math.radians(48)
+            data.spot_blend = .55
+            data.shadow_soft_size = .12
+            light = bpy.data.objects.new(data.name, data)
+            bpy.context.collection.objects.link(light)
+            light.parent = root
+            light['lighting_role'] = 'headlight'
+            light.location = (length/2+.08, side*width*.33, .85)
+            from mathutils import Vector
+            light.rotation_euler = Vector((1, 0, -.08)).to_track_quat('-Z','Y').to_euler()
+            data.use_shadow = False
+            for f in sorted(set([1, END]+list(range(1,END+1,6)))):
+                data.energy = CONFIG['traffic']['headlight_power']*CONFIG['lighting']['night_strength']*dusk(f)
+                data.keyframe_insert('energy', frame=f)
         wheels = []
         for x in (-length*.32, length*.32):
             for side in (-1, 1):
@@ -199,10 +271,12 @@ def build(g):
             root.keyframe_insert('location', frame=frame)
             # Fade-free spawning happens entirely inside the covered portal:
             # both bumpers must stay behind its entrance and before its rear wall.
-            visible = abs(root.location.x) <= 210-length/2
+            visible = abs(root.location.x) < 211-1e-6
             root.scale = (1, 1, 1) if visible else (0, 0, 0)
             root.keyframe_insert('scale', frame=frame)
-            angle = (longitudinal_position(spec, ref)-start)/radius
+            root['odometer'] = vehicle_sample(spec, ref)[1]
+            root.keyframe_insert(data_path='["odometer"]', frame=frame)
+            angle = vehicle_sample(spec, ref)[1]/radius
             for wheel in wheels:
                 wheel.rotation_euler.y = angle
                 wheel.keyframe_insert('rotation_euler', frame=frame, index=1)
@@ -230,7 +304,7 @@ def build(g):
             hinge.keyframe_insert('rotation_euler', frame=frame, index=0)
         _linear(hinge)
         group(f'Stop line {direction:+d}', 'Traffic infrastructure')
-        box((-direction*STOP_LINE, side*2.8, ROAD_Z+.035), (.32, 5.15, .035), white)
+        box((-direction*_settings().get('stop_line',55), side*2.8, ROAD_Z+.035), (.32, 5.15, .035), white)
         sx, sy = -direction*57, side*6.25
         cyl((sx, sy, ROAD_Z+1.8), .09, 3.6, g['dark'])
         box((sx, sy, ROAD_Z+3.65), (.35, .65, 1.55), dark)

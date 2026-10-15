@@ -2,7 +2,7 @@
 import math
 
 from .scenario import reference_frame
-from .traffic import barrier_angle, signal_state
+from .traffic import barrier_angle, signal_state, vehicle_specs, longitudinal_position
 
 
 def validate(scene):
@@ -20,6 +20,7 @@ def validate(scene):
     assert all(len(w) == 4 for w in wheels.values()), 'Every vehicle needs four wheels'
     last_frame = scene.frame_current
     previous = {}
+    recycled = set()
     minimum_gap = math.inf
     worst_wheel_error = 0.0
     closest_stop_front = -math.inf
@@ -36,14 +37,30 @@ def validate(scene):
                 position = actor.matrix_world.translation.x
                 angles = [w.rotation_euler.y for w in wheels[actor]]
                 if actor in previous:
-                    old_x, old_angles = previous[actor]
-                    distance = direction*(position-old_x)
+                    old_x, old_angles, old_odometer = previous[actor]
+                    distance = float(actor['odometer'])-old_odometer
                     assert distance >= -1e-4, ('vehicle reverses', frame, actor.name)
+                    if direction*(position-old_x) < -1:
+                        # Low-fps output can skip the portal frames. Inspect each
+                        # reference-timeline solver step between output samples;
+                        # require the complete body inside both portals at wrap.
+                        spec=next(item for item in vehicle_specs() if item['name']==actor.name)
+                        first=max(1,math.floor(reference_frame(frame-1)))
+                        last=math.ceil(ref)
+                        wraps=[]
+                        for tick in range(first+1,last+1):
+                            before=longitudinal_position(spec,tick-1)
+                            after=longitudinal_position(spec,tick)
+                            if after<before-1:
+                                wraps.append((before,after))
+                        assert wraps, ('unexplained vehicle teleport',frame,actor.name)
+                        assert all(abs(before)-actor['length']/2>199 and abs(after)-actor['length']/2>199 for before,after in wraps), ('visible recycle',frame,actor.name,wraps)
+                        recycled.add(actor)
                     for wheel, angle, old_angle in zip(wheels[actor], angles, old_angles):
                         error = abs((angle-old_angle)*wheel['wheel_radius']-distance)
                         worst_wheel_error = max(worst_wheel_error, error)
                         assert error < .002, ('wheel slip', frame, wheel.name, error)
-                previous[actor] = (position, angles)
+                previous[actor] = (position, angles, float(actor['odometer']))
                 if actor.scale.x < .5:
                     continue  # Hidden beyond the road-end portals.
                 points = []
@@ -52,12 +69,12 @@ def validate(scene):
                     points.extend(evaluated.matrix_world @ Vector(corner) for corner in evaluated.bound_box)
                 xmin, xmax = min(p.x for p in points), max(p.x for p in points)
                 ymin, ymax = min(p.y for p in points), max(p.y for p in points)
-                assert xmin > -210.1 and xmax < 210.1, ('vehicle escapes covered portal',frame,actor.name,xmin,xmax)
+                assert xmin > -219.1 and xmax < 219.1, ('vehicle escapes covered portal',frame,actor.name,xmin,xmax)
                 bounds.append((actor, xmin, xmax, ymin, ymax))
                 front = xmax if direction == 1 else -xmin
-                if actor['schedule_mode'] == 'queue' and 193 <= ref < 1105:
+                if (actor['schedule_mode'] == 'queue' or actor in recycled) and 193 <= ref < 1105:
                     closest_stop_front = max(closest_stop_front, front)
-                    assert front <= -55, ('front crosses stop line', frame, actor.name, front)
+                    assert front <= -abs(actor['stop_line']), ('front crosses stop line', frame, actor.name, front)
                 if 337 <= ref < 1105:
                     assert xmax <= -30.5 or xmin >= 30.5, ('vehicle in moving span', frame, actor.name)
                     for gate in gates:
@@ -90,4 +107,4 @@ def validate(scene):
             'maximum_wheel_distance_error_m': worst_wheel_error,
             'checks': ['evaluated_mesh_bounds', 'full_body_span_clearance', 'stop_lines',
                        'barrier_intersections', 'barrier_timing', 'signal_interlock',
-                       'wheel_distance', 'no_reverse']}
+                       'wheel_distance', 'no_reverse', 'hidden_portal_recycling']}

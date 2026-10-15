@@ -86,6 +86,98 @@ class RenderManifestTests(unittest.TestCase):
             png_size(path)
 
 
+class SupportedConfigTests(unittest.TestCase):
+    def test_manifest_uses_rounded_shared_frame_count(self):
+        # Binary floating-point yields 28.999999999999996, not 29.
+        cfg = {'fps': 50, 'duration_seconds': .58,
+               'render': {'width': 1280, 'height': 720, 'preview_scale': 50}}
+        from scene_components.settings import frame_count
+        import tempfile
+        scratch = Path(__file__).resolve().parents[1] / 'research'
+        scratch.mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=scratch) as temp:
+            directory=Path(temp)
+            scene=directory/'scene.blend';scene.write_bytes(b'scene')
+            config=directory/'scene.json';config.write_text(json.dumps(cfg))
+            result=make_identity(scene,config,scene,'preview','5.2')
+        self.assertEqual(frame_count(cfg),29)
+        self.assertEqual(result['frames'],29)
+        self.assertEqual(result['size'],[640,360])
+
+    def test_reject_unsupported_engine_and_actual_odd_preview_dimensions(self):
+        from scene_components.settings import load_config
+        import copy
+        root=Path(__file__).resolve().parents[1]
+        baseline=load_config()
+        scratch=root/'research';scratch.mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=scratch) as temp:
+            path=Path(temp)/'scene.json'
+            for settings in ({'engine':'WORKBENCH'}, {'preview_scale':25.5},
+                             {'width':1924,'preview_scale':25},
+                             {'width':16,'height':16,'preview_scale':1}):
+                cfg=copy.deepcopy(baseline);cfg['render'].update(settings)
+                path.write_text(json.dumps(cfg))
+                with self.subTest(settings=settings), self.assertRaises(ValueError):
+                    load_config(path)
+            cfg=copy.deepcopy(baseline)
+            cfg.update(fps=30,duration_seconds=45)
+            cfg['render'].update(width=1280,height=720,preview_scale=50,engine='CYCLES')
+            path.write_text(json.dumps(cfg))
+            self.assertEqual(load_config(path)['fps'],30)
+
+
+class RenderSettingsTests(unittest.TestCase):
+    """Execute real engine-policy functions with Blender settings represented by RNA-like objects."""
+    def setUp(self):
+        import ast
+        from types import SimpleNamespace as NS
+        self.NS = NS
+        source = Path(__file__).resolve().parents[1] / 'render_tower_bridge.py'
+        tree = ast.parse(source.read_text(encoding='utf-8-sig'))
+        funcs = [node for node in tree.body if isinstance(node, ast.FunctionDef)
+                 and node.name in ('cycles_device', 'engine')]
+        self.config = {'render': {'samples': 16, 'preview_samples': 3, 'still_samples': 27,
+                                 'device': 'auto', 'engine': 'EEVEE', 'preview_scale': 50}}
+        self.scope = {'cfg': self.config, 'profile': 'final', 'WIDTH': 1280, 'HEIGHT': 720, 'FPS': 30,
+                      'bpy': NS(context=NS(preferences=NS(addons={}))) }
+        exec(compile(ast.Module(body=funcs, type_ignores=[]), str(source), 'exec'), self.scope)
+        self.scene = NS(render=NS(image_settings=NS()), cycles=NS(),
+                        eevee=NS(taa_samples=7, taa_render_samples=8))
+
+    def test_preview_samples_resolution_and_integer_timebase(self):
+        self.scope['profile'] = 'preview'
+        self.scope['engine'](self.scene)
+        self.assertEqual(self.scene.eevee.taa_render_samples, 3)
+        self.assertEqual(self.scene.render.resolution_percentage, 50)
+        self.assertEqual(self.scene.render.fps, 30)
+        self.assertEqual(self.scene.render.fps_base, 1)
+        self.assertEqual(self.scene.render.resolution_x, 1280)
+
+    def test_still_samples_respected_below_previous_minimum(self):
+        self.config['render']['still_samples'] = 2
+        self.scope['engine'](self.scene, still=True)
+        self.assertEqual(self.scene.render.engine, 'CYCLES')
+        self.assertEqual(self.scene.cycles.samples, 2)
+        self.assertEqual(self.scene.cycles.device, 'CPU')
+
+    def test_cpu_request_does_not_probe_gpu_and_uses_configured_samples(self):
+        self.config['render']['device'] = 'cpu'
+        self.scope['engine'](self.scene)
+        self.assertEqual(self.scene.render.engine, 'CYCLES')
+        self.assertEqual(self.scene.cycles.device, 'CPU')
+        self.assertEqual(self.scene.cycles.samples, 16)
+
+    def test_explicit_gpu_does_not_silently_fall_back(self):
+        self.config['render'].update(device='gpu', engine='CYCLES')
+        with self.assertRaisesRegex(RuntimeError, 'requires an available'):
+            self.scope['engine'](self.scene)
+
+    def test_cycle_preview_applies_preview_quality(self):
+        self.config['render']['engine'] = 'CYCLES'
+        self.scope['profile'] = 'preview'
+        self.scope['engine'](self.scene)
+        self.assertEqual(self.scene.cycles.samples, 3)
+
+
 if __name__ == '__main__':
     unittest.main()
-

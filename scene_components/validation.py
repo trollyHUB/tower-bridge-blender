@@ -1,6 +1,6 @@
 """Evaluate the saved Blender scene, including every frame of moving actors."""
 import json, math, hashlib
-from .scenario import END, FPS, opening, reference_frame
+from .scenario import END, FPS, CONFIG, opening, reference_frame, dusk
 
 def validate(scene, out):
     import bpy
@@ -29,13 +29,17 @@ def validate(scene, out):
     if scene.get('City buildings'):
         from .environment_validation import validate as environment_validate
         report['environment']=environment_validate(scene)
+    from .improvement_validation import validate as improvement_validate
+    report['improvements']=improvement_validate(scene)
     lamps=[o for o in scene.objects if o.type=='LIGHT' and o.name.startswith('Practical lantern')]
     if lamps:
-        scene.frame_set(1)
-        assert all(o.data.energy<.001 for o in lamps)
-        scene.frame_set(END)
-        assert all(o.data.energy>200 for o in lamps)
-        report['practical_lights']={'count':len(lamps),'day_off_evening_on':True}
+        endpoints=[]
+        for f in (1,END):
+            scene.frame_set(f)
+            expected=CONFIG['lighting']['lantern_power']*CONFIG['lighting']['night_strength']*dusk(f)
+            assert all(abs(o.data.energy-expected)<.01 for o in lamps), ('Lantern endpoint energy',f,expected)
+            endpoints.append({'frame':f,'energy':expected})
+        report['practical_lights']={'count':len(lamps),'mode':CONFIG['lighting']['mode'],'endpoint_checks':endpoints}
     snapshots=[]
     for f in [1,round(END/4),round(END/2),END]:
         scene.frame_set(f);bpy.context.view_layer.update()

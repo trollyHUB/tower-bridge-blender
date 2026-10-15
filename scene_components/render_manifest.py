@@ -4,6 +4,7 @@ import json
 import struct
 import zlib
 from pathlib import Path
+from .settings import frame_count
 
 
 def sha(path):
@@ -19,7 +20,7 @@ def make_identity(scene, config_path, implementation, profile, blender_version):
     scale = int(cfg['render'].get('preview_scale', 25)) if profile == 'preview' else 100
     return {'scene_sha256': sha(scene), 'config_sha256': sha(config_path),
             'implementation_sha256': sha(implementation), 'profile': profile,
-            'fps': int(cfg['fps']), 'frames': int(cfg['fps'] * cfg['duration_seconds']),
+            'fps': int(cfg['fps']), 'frames': frame_count(cfg),
             'size': [int(cfg['render']['width']) * scale // 100,
                      int(cfg['render']['height']) * scale // 100],
             'blender_version': blender_version}
