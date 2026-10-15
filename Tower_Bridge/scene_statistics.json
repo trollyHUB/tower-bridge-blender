@@ -1,9 +1,9 @@
 {
-  "objects": 762,
-  "mesh_objects": 552,
-  "vertices": 129609,
-  "faces": 96243,
-  "materials": 61,
+  "objects": 1685,
+  "mesh_objects": 1041,
+  "vertices": 164823,
+  "faces": 129435,
+  "materials": 408,
   "frames": 1440,
   "fps": 24
 }

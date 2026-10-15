@@ -1,6 +1,65 @@
 {
+  "primary_file_sha256": "c30270a906f951bf95853b0fb981a43b1acf5367890d4641849183c00951a30b",
+  "primary_file_unchanged": true,
   "passed": true,
-  "separate_directory_build": true,
-  "transform_sha256": "3d4c27f6876d5dd948d4e4154abe67bd1914c9efb9726481f3870296664f0264",
-  "frames_checked_each": 1440
+  "blender_version": "5.2.1 LTS",
+  "execution": "CPU only; no renders",
+  "scope": "Same configuration and seed, independently rebuilt in research/repro_smoke. Sorted non-camera object names/types/parents; mesh topology, vertex coordinates, polygon material indices, material names, shape-key coordinates; world matrices at four frames. Coordinates quantized to 1e-6. Excludes camera objects, active camera/frame, scene metadata, UI state, file bytes, shader node graphs, light energy and animation between samples.",
+  "primary": {
+    "configuration_sha256": "95bddf37c8ea5397a06c290f486a2cabd9c141127b9b58dc9f5f3a921188ce6e",
+    "object_mesh_sha256": "093be91622425bcdfd5b1c027e17e5284ebad9b33d0525b7bc84bf24108f343e",
+    "objects": 1677,
+    "unique_meshes": 724,
+    "samples": [
+      {
+        "frame": 1,
+        "world_matrices_sha256": "6dfd812955a2947256737d88cc7f25a06f53879768c8b1e4605f06fd42ca4413"
+      },
+      {
+        "frame": 360,
+        "world_matrices_sha256": "37f99ba4ab1bde8fb42c1d86a34c1cfdc9ed2846c4175dbc9a55a2101243ead3"
+      },
+      {
+        "frame": 720,
+        "world_matrices_sha256": "533e2213f39b708db0d5f93fd53865d7cd1af53f2113a268e85c1027fd977684"
+      },
+      {
+        "frame": 1440,
+        "world_matrices_sha256": "e0e5674dc4db1ab51b48343b7c82754b94820f4f58444a8f8698d7d45e6cf00a"
+      }
+    ],
+    "semantic_sha256": "3931dc94f725206b013ee63a7a2590f83d1ae22bd4d50abb33de9fec432ac3b1"
+  },
+  "rebuilt": {
+    "configuration_sha256": "95bddf37c8ea5397a06c290f486a2cabd9c141127b9b58dc9f5f3a921188ce6e",
+    "object_mesh_sha256": "093be91622425bcdfd5b1c027e17e5284ebad9b33d0525b7bc84bf24108f343e",
+    "objects": 1677,
+    "unique_meshes": 724,
+    "samples": [
+      {
+        "frame": 1,
+        "world_matrices_sha256": "6dfd812955a2947256737d88cc7f25a06f53879768c8b1e4605f06fd42ca4413"
+      },
+      {
+        "frame": 360,
+        "world_matrices_sha256": "37f99ba4ab1bde8fb42c1d86a34c1cfdc9ed2846c4175dbc9a55a2101243ead3"
+      },
+      {
+        "frame": 720,
+        "world_matrices_sha256": "533e2213f39b708db0d5f93fd53865d7cd1af53f2113a268e85c1027fd977684"
+      },
+      {
+        "frame": 1440,
+        "world_matrices_sha256": "e0e5674dc4db1ab51b48343b7c82754b94820f4f58444a8f8698d7d45e6cf00a"
+      }
+    ],
+    "semantic_sha256": "3931dc94f725206b013ee63a7a2590f83d1ae22bd4d50abb33de9fec432ac3b1"
+  },
+  "differing_objects": [],
+  "samples": [
+    1,
+    360,
+    720,
+    1440
+  ]
 }

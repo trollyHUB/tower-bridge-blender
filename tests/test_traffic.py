@@ -1,6 +1,7 @@
 """Full-frame schedule checks; these do not import Blender."""
 import math
 import unittest
+from scene_components.scenario import CONFIG
 
 from scene_components.traffic import (
     LAST_FRAME, VEHICLE_TYPES, barrier_angle, longitudinal_position,
@@ -21,11 +22,11 @@ def lane_clearance(specs, frame, direction):
 
 
 class TrafficScheduleTests(unittest.TestCase):
-    def test_all_frames_keep_four_metre_body_clearance(self):
+    def test_all_frames_keep_configured_body_clearance(self):
         specs = vehicle_specs()
         for frame in range(1, LAST_FRAME+1):
             for direction in (-1, 1):
-                self.assertGreaterEqual(lane_clearance(specs, frame, direction), 4-1e-7)
+                self.assertGreaterEqual(lane_clearance(specs, frame, direction), CONFIG['traffic']['minimum_gap']-1e-7)
 
     def test_collision_checker_rejects_deliberate_overlap(self):
         a = vehicle_specs()[0]

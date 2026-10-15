@@ -1,0 +1,11 @@
+{
+  "scene_sha256": "c30270a906f951bf95853b0fb981a43b1acf5367890d4641849183c00951a30b",
+  "passed": true,
+  "frames_checked": 1440,
+  "unique_geometry_states": 193,
+  "cache_contract": "Exact unrounded float world matrices; evaluated leaf geometry has no shape keys or animated modifiers; fixed bridge meshes and transforms unchanged",
+  "scope": "Evaluated leaf mesh triangles versus evaluated fixed bridge tower, arch, deck, suspension and furniture meshes at every integer frame; triangle clipping excludes only first 1.3m of leaf local X from hinge, representing mechanical joint. Opposite leaf versus leaf uses all evaluated triangles without hinge or centre-tip exclusions. Triangle BVH overlap at zero epsilon; touching/coplanar contacts may be reported; no swept subframe proof.",
+  "violating_frames": [],
+  "fixed_mesh_objects": 81,
+  "moving_leaf_mesh_objects": 12
+}

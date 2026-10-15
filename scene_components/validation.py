@@ -4,6 +4,7 @@ from .scenario import END, FPS, CONFIG, opening, reference_frame, dusk
 
 def validate(scene, out):
     import bpy
+    scene_sha=hashlib.sha256((out/'Tower_Bridge.blend').read_bytes()).hexdigest()
     assert scene.frame_end == END and scene.render.fps == FPS
     control=bpy.data.objects['BRIDGE CONTROL | Opening degrees']
     records=[]
@@ -45,6 +46,7 @@ def validate(scene, out):
         scene.frame_set(f);bpy.context.view_layer.update()
         snapshots.append([(o.name,tuple(round(v,5) for row in o.matrix_world for v in row)) for o in sorted(scene.objects,key=lambda o:o.name)])
     report['deterministic_transform_sha256']=hashlib.sha256(json.dumps(snapshots).encode()).hexdigest()
-    report['scene_sha256']=hashlib.sha256((out/'Tower_Bridge.blend').read_bytes()).hexdigest()
+    assert scene_sha==hashlib.sha256((out/'Tower_Bridge.blend').read_bytes()).hexdigest(), 'Scene changed during validation'
+    report['scene_sha256']=scene_sha
     (out/'validation.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
     print('VALIDATION_OK',json.dumps(report),flush=True)

@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "before_version": "v1.0.0",
+  "after_version": "v1.1.0",
+  "before_scene_sha256": "fbdbf540e1ffdb04076a8971c0cd1ce2da470b5165bccebc200247c8ec481b46",
+  "after_scene_sha256": "c30270a906f951bf95853b0fb981a43b1acf5367890d4641849183c00951a30b",
+  "comparison_sha256": "80013846c10730bcb6ebb4b1ce673554694ab768ff0bc3e247baa80b22173869",
+  "matched_camera_views": [
+    "social",
+    "river",
+    "architecture",
+    "evening"
+  ],
+  "scope": "Matched camera poses, scale, frame references and render settings. Labels and assembly only; renders are unretouched."
+}

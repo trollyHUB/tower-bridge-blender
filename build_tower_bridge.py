@@ -264,19 +264,19 @@ for tx,label in [(-39,'North'),(39,'South')]:
         for i in range(10):beam((tx+outline[i][0],outline[i][1],z),(tx+outline[(i+1)%10][0],outline[(i+1)%10][1],z),.35,trim)
     group(label+' tower masonry',C)
     # Actual clear tunnel: there is no cube filling the road opening.
-    for y in [-9.1,9.1]:box((tx,y,15),(17,5.2,18),stone)
+    for y in [-10.0,10.0]:box((tx,y,15),(17,3.4,18),stone)
     box((tx,0,37.0),(17,23.4,26),stone)
     # Curved spandrels between the semicircular road arch and upper storeys.
     for side in [-1,1]:
         for i in range(16):
-            y0=6.5*i/16; y1=6.5*(i+1)/16
-            z0=17+math.sqrt(max(0,6.5**2-y0*y0)); z1=17+math.sqrt(max(0,6.5**2-y1*y1))
+            y0=8.3*i/16; y1=8.3*(i+1)/16
+            z0=15.5+math.sqrt(max(0,8.3**2-y0*y0)); z1=15.5+math.sqrt(max(0,8.3**2-y1*y1))
             v=[(xx,side*yy,zz) for xx in [tx-8.5,tx+8.5] for yy,zz in [(y0,z0),(y1,z1),(y1,24.05),(y0,24.05)]]
             meshpart(v,[(0,3,2,1),(4,5,6,7),(0,1,5,4),(1,2,6,5),(2,3,7,6),(3,0,4,7)],stone)
     group(label+' arch stones',C)
     for xx in [tx-8.65,tx+8.65]:
-        arch_x(xx,6.5,17,.85,.65)
-        for yy in [-6.95,6.95]:
+        arch_x(xx,8.3,15.5,.85,.65)
+        for yy in [-8.75,8.75]:
             box((xx,yy,13.5),(.7,.9,7),trim)
             for z in [10.5,11.7,12.9,14.1,15.3,16.5]:box((xx,yy,z),(.77,1,.10),foundation)
     group(label+' cornices',C)
@@ -353,7 +353,7 @@ for yy in [-7.9,7.9]:
         xx=-29+i*3
         beam((xx,yy-1.6,43.12),(xx,yy+1.6,43.12),.17,ivory)
 
-def road(start,end,local=False):
+def road(start,end,local=False,rail_start=0,rail_end=0):
     cx=(start+end)/2; length=abs(end-start)
     box((cx,0,-.25),(length,15.6,.65),blue)
     box((cx,0,.11),(length,11.4,.16),asphalt)
@@ -366,21 +366,23 @@ def road(start,end,local=False):
     for yy in [-5.3,5.3]:box((cx,yy,.205),(length,.12,.025),white)
     for side in [-1,1]:
         y=side*7.65
-        for z in [.5,1.6]:beam((start,y,z),(end,y,z),.14,blue)
-        n=max(1,int(length/2.5))
+        direction=1 if end>start else -1
+        rs=start+direction*rail_start;re=end-direction*rail_end
+        for z in [.5,1.6]:beam((rs,y,z),(re,y,z),.14,blue)
+        n=max(1,int(abs(re-rs)/2.5))
         for i in range(n+1):
-            x=start+(end-start)*i/n
+            x=rs+(re-rs)*i/n
             beam((x,y,.42),(x,y,1.75),.14,blue)
             sphere((x,y,1.8),.12,gold)
             if i<n:
-                nx=start+(end-start)*(i+1)/n
+                nx=rs+(re-rs)*(i+1)/n
                 beam((x,y,.58),(nx,y,1.45),.085,ivory)
                 beam((x,y,1.45),(nx,y,.58),.085,ivory)
 
 # Permanent roadway is grouped under a fixed datum to keep the same local Z.
 roadbase=empty('Road level | 10 m','06 | Roads',(0,0,10))
 for start,end,name in [(-132,-30.5,'North fixed deck'),(30.5,132,'South fixed deck')]:
-    group(name,'06 | Roads',roadbase); road(start,end)
+    group(name,'06 | Roads',roadbase); road(start,end,rail_start=2.6 if start==30.5 else 0,rail_end=2.6 if end==-30.5 else 0)
     for yy in [-7.5,7.5]:
         for z in [-.65,-2.0]:beam((start,yy,z),(end,yy,z),.35,blue)
         n=int((end-start)/4)
@@ -401,7 +403,7 @@ for sign,label in [(-1,'North'),(1,'South')]:
     dr.expression=f'{sign} * angle * pi / 180'
     group(label+' moving bascule','07 | Bascule animation',pivot)
     end=-sign*30.44
-    road(0,end)
+    road(0,end,rail_start=2.6,rail_end=.25)
     for yy in [-7.15,7.15]:
         beam((0,yy,-2.1),(end,yy,-.55),.38,blue)
         for i in range(10):
@@ -414,6 +416,11 @@ for sign,label in [(-1,'North'),(1,'South')]:
         x=end*i/11
         beam((x,-7.1,-.75),(x,7.1,-.75),.25,blue)
     for yy in [-7.9,7.9]:cyl((0,yy,-.1),.85,.55,gold,24,axis=(0,1,0))
+    # Fixed outboard guards protect the hinge pocket without entering its sweep.
+    group(label+' hinge pocket guards','06 | Roads',roadbase)
+    for yy in [-8.15,8.15]:
+        for z in [.5,1.6]:beam((sign*30.5-2.8,yy,z),(sign*30.5+2.8,yy,z),.12,blue)
+        for dx in [-2.8,2.8]:beam((sign*30.5+dx,yy,.4),(sign*30.5+dx,yy,1.75),.12,blue)
 
 # Side suspension chains and vertical hangers --------------------------------
 for sign,label in [(-1,'North'),(1,'South')]:

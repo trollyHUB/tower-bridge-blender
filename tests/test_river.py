@@ -16,14 +16,17 @@ class RiverTests(unittest.TestCase):
             self.assertAlmostEqual(result,surface_height(x,y,t,CONFIG),places=12)
 
     def test_level_amplitude_and_wind_propagate(self):
-        config=copy.deepcopy(CONFIG); base=surface_height(13,22,7,config)
+        fixture=copy.deepcopy(CONFIG)
+        fixture['wind'].update(strength=.12,direction=[1,.3,0])
+        fixture['water']['amplitude']=.075
+        config=copy.deepcopy(fixture); base=surface_height(13,22,7,config)
         config['water']['level']+=2
         self.assertAlmostEqual(surface_height(13,22,7,config),base+2)
         config['water']['amplitude']=0
         self.assertEqual(surface_height(13,22,7,config),config['water']['level'])
-        config=copy.deepcopy(CONFIG); config['wind']['strength']=0
+        config=copy.deepcopy(fixture); config['wind']['strength']=0
         self.assertEqual(surface_height(13,22,7,config),config['water']['level'])
-        config=copy.deepcopy(CONFIG); config['wind']['direction']=[0,1,0]
+        config=copy.deepcopy(fixture); config['wind']['direction']=[0,1,0]
         self.assertNotAlmostEqual(surface_height(13,22,7,config),base)
 
     def test_slope_matches_numeric_derivative_and_contact(self):
