@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "extracted_scene_sha256": "fbdbf540e1ffdb04076a8971c0cd1ce2da470b5165bccebc200247c8ec481b46",
+  "checked_frames": [
+    1,
+    432,
+    720,
+    1056,
+    1440
+  ],
+  "external_textures_missing": false,
+  "archive_crc_check": true
+}

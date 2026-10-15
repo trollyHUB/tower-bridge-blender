@@ -1,9 +1,33 @@
 {
-  "frames": 720,
+  "frames": 1440,
   "size": [
-    1280,
-    720
+    1920,
+    1080
   ],
   "fps": 24.0,
-  "bytes": 11037977
+  "bytes": 39804875,
+  "video_sha256": "438584749176c55a69f4bc9af2ae0d3e2efdfb37062b58ce635285156dde2c84",
+  "identity": {
+    "scene_sha256": "fbdbf540e1ffdb04076a8971c0cd1ce2da470b5165bccebc200247c8ec481b46",
+    "config_sha256": "cf6814d2e582b32773ea23ea1097651b72c15b16674b304a16128515cafebb86",
+    "implementation_sha256": "27a50f652ce4506d3f853f15fd0d6c38c1f3235b56687a4e2937e654296469ec",
+    "profile": "final",
+    "fps": 24,
+    "frames": 1440,
+    "size": [
+      1920,
+      1080
+    ],
+    "blender_version": "5.2.1 LTS",
+    "manifest_implementation_sha256": "1d976e8834178fd577ce7867f3317425a4a3dfd8ef8f39590bea49b40a4f8489"
+  },
+  "decoded_frames": [
+    1,
+    240,
+    480,
+    720,
+    960,
+    1200,
+    1440
+  ]
 }

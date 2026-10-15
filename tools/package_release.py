@@ -30,9 +30,12 @@ assert video['identity']['manifest_implementation_sha256'] == sha(root / 'scene_
 assert sha(out / 'Tower_Bridge_Animation.mp4') == video['video_sha256'], 'Video hash mismatch'
 assert (out / 'Tower_Bridge_Animation.mp4').stat().st_size == video['bytes']
 assert len(video.get('decoded_frames', [])) >= 7, 'Run VideoCheck before packaging'
+stills=json.loads((out/'stills_validation.json').read_text(encoding='utf-8'))
+assert stills['passed'] and stills['scene_sha256']==sha(out/'Tower_Bridge.blend'), 'Stale still validation: rerender Stills and run tools/verify_stills.py'
 for name in ('Open', 'Closed', 'City', 'Water', 'Evening'):
     assert (out / 'renders' / f'Tower_Bridge_{name}.png').is_file(), f'Missing {name} still'
     assert png_size(out/'renders'/f'Tower_Bridge_{name}.png') == size, f'Invalid {name} still'
+    assert sha(out/'renders'/f'Tower_Bridge_{name}.png')==stills['images'][f'Tower_Bridge_{name}.png']['sha256'], f'Changed {name} still'
 assert (out / 'validation.json').is_file(), 'Run validation before packaging'
 validation=json.loads((out/'validation.json').read_text(encoding='utf-8'))
 assert validation['passed'] and validation['scene_sha256']==sha(out/'Tower_Bridge.blend'), 'Stale scene validation'

@@ -1,0 +1,48 @@
+{
+  "passed": true,
+  "scene_sha256": "fbdbf540e1ffdb04076a8971c0cd1ce2da470b5165bccebc200247c8ec481b46",
+  "images": {
+    "Tower_Bridge_Open.png": {
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "1e73324303373f725bc2deb82b29cbe9f81af2bef971751c79d39fd68339c72e"
+    },
+    "Tower_Bridge_Closed.png": {
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "f176f8dd963aef8efe792cabdc6e3ef942777878b8cac27d0c0d90ab5775b00c"
+    },
+    "Tower_Bridge_City.png": {
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "2fe48939d8aa27cf1ec8de8981cdc8d3844f746fcff7b0bb52f0298b0fd2df78"
+    },
+    "Tower_Bridge_Water.png": {
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "db06a7be1c543f01a013bedc099420d6dbaa8cd052103bb915049aa6c6d8a430"
+    },
+    "Tower_Bridge_Evening.png": {
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "eca813cfe07ffecaa92d0a61794ba257b6b18e5bc297ff2c9715e06058580a5f"
+    },
+    "Tower_Bridge_Detail.png": {
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "064a051b785ea425dacbd225f2dece009bcb05c8073b9a8a36e06e32a016d563"
+    }
+  }
+}

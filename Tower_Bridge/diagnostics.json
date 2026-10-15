@@ -1,7 +1,7 @@
 {
   "blender_version": "5.2.1 LTS",
   "platform": "Windows-11-10.0.26200-SP0",
-  "scene_file_bytes": 2814063,
+  "scene_file_bytes": 2817057,
   "frame": 1,
   "engine": "CYCLES",
   "device": "CPU",
@@ -11,7 +11,7 @@
     192,
     108
   ],
-  "cpu_render_seconds": 0.8650595000071917,
+  "cpu_render_seconds": 0.7152876000036485,
   "output": "research/cpu_probe.png",
   "mesh_objects": 552,
   "unique_mesh_datablocks": 297,
@@ -19,7 +19,7 @@
   "objects_using_shared_meshes": 290,
   "saved_mesh_instances": 255,
   "memory_scope": "Whole Blender process peak, including scene load and CPU probe",
-  "peak_working_set_bytes": 876789760,
-  "working_set_bytes": 790749184,
+  "peak_working_set_bytes": 884404224,
+  "working_set_bytes": 795226112,
   "memory_source": "Windows GetProcessMemoryInfo"
 }

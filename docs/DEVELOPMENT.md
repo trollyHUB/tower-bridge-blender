@@ -1,96 +1,47 @@
-# Разработка и Git
+# Разработка и проверка
 
-Команды ниже описывают текущую реализацию v0.1.0. Будущая реорганизация и переход к 60-секундному сценарию раскрыты в [архитектуре](ARCHITECTURE.md); она ещё не выполнена. Общий порядок новых работ находится в [плане разработки](PROJECT_PLAN.md) и [очереди задач](BACKLOG.md).
+Команды актуальны для реализации v1.0.0 на 15 октября 2026 года. Фактические результаты и границы проверок см. в [отчёте](IMPLEMENTATION_REPORT.md).
 
-## Требования
+Нужны Blender 5.2.1 LTS, Git LFS и Python для тестов без Blender. `bpy` отдельно устанавливать не нужно. Cycles поддерживает CPU; совместимый GPU необязателен. Перед редактированием сохраните ручные изменения сцены отдельно.
 
-- Git и Git LFS.
-- Blender 5.2.1 LTS — проверенная версия.
-- PowerShell для `scripts/project.ps1` либо прямой запуск Blender из терминала.
-- Обычный Python 3.11+ нужен только для упаковки ZIP и проверки синтаксиса.
-- OptiX-совместимая NVIDIA нужна для текущих режимов `Stills`, `Benchmark` и `Finalize`. Остальные режимы не требуют настройки OptiX; готовая сцена использует CPU в Cycles.
-
-Все пути основных скриптов вычисляются относительно корня проекта. Учебные документы и исходные FBX/GLB из внешних папок не нужны для сборки.
-
-## Сборка и проверка
-
-Запускайте из корня репозитория. Для проверки существующей сцены:
-
-```powershell
-./scripts/project.ps1 -Action Validate
-```
-
-Для создания сцены с нуля и сохранения настроенного проекта:
+## Полная последовательность
 
 ```powershell
 ./scripts/project.ps1 -Action Build
 ./scripts/project.ps1 -Action Finalize
 ./scripts/project.ps1 -Action Validate
-```
-
-`Build` перезаписывает `Tower_Bridge/Tower_Bridge.blend` и создаёт статистику и примечания. Перед сборкой сохраните ручные правки сцены под другим именем. `Finalize` устанавливает анимированную камеру, первый кадр и добавляет русскую инструкцию в файл.
-
-Прямой запуск без PowerShell-обёртки:
-
-```bash
-blender --background --python-exit-code 1 --python build_tower_bridge.py
-blender --background --python-exit-code 1 --python render_tower_bridge.py -- validate
-```
-
-## Изображения и видео
-
-```powershell
+python -m unittest discover -s tests -v
+./scripts/project.ps1 -Action Preview
+./scripts/project.ps1 -Action PreviewEncode
+./scripts/project.ps1 -Action Benchmark
 ./scripts/project.ps1 -Action Stills
-./scripts/project.ps1 -Action Animation -StartFrame 1 -EndFrame 720
+python tools/verify_stills.py
+./scripts/project.ps1 -Action Animation
 ./scripts/project.ps1 -Action Encode
 ./scripts/project.ps1 -Action VideoCheck
-```
-
-`Stills` сохраняет три PNG в `Tower_Bridge/renders/`. `Animation` создаёт кадры в `research/animation_frames/`, `Encode` собирает MP4, `VideoCheck` декодирует три контрольных кадра в `research/`.
-
-Рендер анимации пропускает уже существующие кадры, что позволяет продолжить прерванный расчёт. После изменения сцены используйте свежую папку кадров: старые PNG не пересчитываются автоматически. Удобный способ сохранить их — переименовать `research/animation_frames/` перед новым расчётом.
-
-## Рабочий процесс Git
-
-Основная ветка — `main`. Для отдельной задачи создайте ветку:
-
-```bash
-git switch -c feat/traffic
-git status
-git add build_tower_bridge.py render_tower_bridge.py docs/ROADMAP.md
-git commit -m "Add traffic routes and bridge stop sequence"
-git push -u origin feat/traffic
-```
-
-Добавляйте только нужные изменения. После изменения сцены добавьте её явно:
-
-```bash
-git add Tower_Bridge/Tower_Bridge.blend
-git lfs ls-files
-```
-
-`.blend`, `.fbx`, `.glb`, `.hdr` и `.exr` настроены для Git LFS. PNG-превью хранятся в обычном Git. Логи, исследование, промежуточные кадры, MP4, ZIP и резервные копии Blender не попадают в коммиты.
-
-Blender-файл нельзя объединять как текст. При конфликте двух версий сцены согласуйте изменения в Blender или восстановите нужную сцену из источников; не пытайтесь вручную объединить бинарный файл. Разделение будущих крупных компонентов на отдельные `.blend` уменьшит такие конфликты.
-
-В текущем репозитории настроен GitHub-адрес `noreply` для автора коммитов. Глобальные настройки имени, почты и доступа к Git не менялись.
-
-## Проверки на GitHub
-
-Workflow `Project checks` проверяет синтаксис Python, синтаксис PowerShell и чтение JSON. Проверка не запускает Blender и не оценивает внешний вид рендера. Саму сцену проверяйте через режим `Validate` и контрольные изображения после изменений геометрии или анимации.
-
-## Релизы
-
-После проверки проекта и видео:
-
-```bash
 python tools/package_release.py
+python tools/check_release.py
 ```
 
-Архив содержит сцену, изображения, видео, документацию и исходники. В него не входят `.git`, кадры анимации, локальное исследование и credentials. Для следующего релиза можно использовать GitHub CLI:
+При нестандартной установке добавьте `-BlenderPath 'D:\Apps\Blender\blender.exe'`. Диапазон по умолчанию берётся из конфигурации. Для частичного расчёта: `-Action Animation -StartFrame 481 -EndFrame 960`; Preview принимает тот же диапазон. Для полного PreviewEncode нужны все 1440 preview-кадров. Режим Benchmark рассчитывает начало, середину и конец и сохраняет время; если пик памяти недоступен, это явно отмечается в JSON.
 
-```bash
-gh release create v0.2.0 Tower_Bridge_Project.zip Tower_Bridge/Tower_Bridge_Animation.mp4 --title "Tower Bridge v0.2.0" --notes-file release-notes.txt
-```
+Build создаёт сцену заново. Finalize обновляет встроенную инструкцию и сохраняет `.blend`; выполните его до всех итоговых кадров. Validate обращается к `scene_components.validation`. Stills создаёт пять основных изображений Open/Closed/City/Water/Evening и дополнительный Detail.
 
-Перед выполнением подготовьте реальные примечания и выберите версию согласно выполненным изменениям. Публичный репозиторий уже создан в аккаунте `trollyHUB`; самостоятельно создавать его повторно не нужно.
+`tools/check_release.py` распаковывает ZIP в отдельную локальную папку и открывает
+сцену в Blender без сохранения. Для другой установки Blender используйте аргумент
+`--blender`. Для фактической проверки CPU и памяти запустите Blender в фоне с
+`--python tools/diagnose_scene.py`; результат попадёт в `Tower_Bridge/diagnostics.json`.
+
+## Кеш и артефакты
+
+Кадры лежат в `research/render_runs/<identity>/`. Манифест учитывает SHA-256 сцены, конфигурации, скрипта рендера и helper-кода, версию Blender и профиль. Preview не подменяет финальные кадры. Повторный запуск продолжает совместимый диапазон, проверяя PNG; повреждённый файл требует пересчёта. Изменения источников следует завершить до долгого рендера.
+
+Encode проверяет полноту PNG, создаёт `Tower_Bridge/Tower_Bridge_Animation.mp4` и `video_validation.json`. PreviewEncode создаёт отдельные `Tower_Bridge_Preview.mp4` и `preview_validation.json`. VideoCheck проверяет финальный MP4 и декодирует семь контрольных фаз. Упаковщик проверяет текущие хеши, 1440 кадров, Full HD и наличие результатов декодирования перед созданием `Tower_Bridge_Project.zip`.
+
+Файлы в рабочей папке могут остаться от прежней сборки: окончательный статус берётся из отчёта реализации и проверочных JSON. Само существование `.mp4` или `.png` не доказывает актуальность.
+
+## Git и проверки
+
+После клонирования выполните `git lfs install --local` и `git lfs pull`. `.blend` — бинарный LFS-файл; его нельзя сливать как текст. При конфликте восстановите сцену из согласованных исходников. `research/`, видео, ZIP, Python-кеш и резервные копии Blender исключены из Git.
+
+Тесты `tests/` выполняются без Blender. Проверка синтаксиса и JSON не подтверждает геометрические зазоры и визуальное качество. До релиза отдельно пройти A01–A12 и весь ролик. E01–E05 остаются последующими дополнениями.
