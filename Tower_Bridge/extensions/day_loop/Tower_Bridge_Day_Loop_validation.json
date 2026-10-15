@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "decoded_count": 240,
+  "frames": 240,
+  "fps": 24.0,
+  "size": [
+    1920,
+    1080
+  ],
+  "video_sha256": "73d1f1c55d48835c5f9393a0a12526f9c937a94f7822def623735d8cad0705ea",
+  "audio_metadata": null,
+  "scope": "Every video frame decoded with Blender VSE and complete PNG streams validated; audio metadata verifies stream existence and rate, not listening quality."
+}

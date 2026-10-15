@@ -1,0 +1,6 @@
+{
+  "passed": true,
+  "reviewed": "research/day_loop_review/encoded_contact.jpg",
+  "scope": "Twelve decoded thumbnails including first/second and penultimate/final frames visually inspected. Stable camera/daylight, recognizable bridge, water/flag motion, no visible cut or transient actors. Fine detail checked on source frame1 at1080p.",
+  "video_sha256": "73d1f1c55d48835c5f9393a0a12526f9c937a94f7822def623735d8cad0705ea"
+}

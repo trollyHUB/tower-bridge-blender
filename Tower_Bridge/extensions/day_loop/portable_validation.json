@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "reopened_in_fresh_process": true,
+  "driver_auto_execution": "simple mathematical drivers evaluated without enabling script auto-run",
+  "endpoint_state_max_error": 7.365200821699989e-16,
+  "endpoint_velocity_max_error": 1.6391277313232422e-05,
+  "portable_render_path": "//renders\\Day_Loop_",
+  "hidden_render_objects": 1040,
+  "derived_sha256": "aa8095a28cb28db63096d8b11d0d3218bb98cef8fa145f9239096297d7e4a212"
+}
