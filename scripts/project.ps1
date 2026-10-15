@@ -1,12 +1,12 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('Build', 'Validate', 'Stills', 'Animation', 'Encode', 'Finalize', 'Benchmark', 'VideoCheck')]
+    [ValidateSet('Build', 'Validate', 'Stills', 'Animation', 'Encode', 'Finalize', 'Benchmark', 'VideoCheck', 'Preview')]
     [string]$Action = 'Validate',
     [string]$BlenderPath,
-    [ValidateRange(1, 720)]
+    [ValidateRange(1, 1000000)]
     [int]$StartFrame = 1,
-    [ValidateRange(1, 720)]
-    [int]$EndFrame = 720
+    [ValidateRange(0, 1000000)]
+    [int]$EndFrame = 0
 )
 
 $ErrorActionPreference = 'Stop'
@@ -23,6 +23,10 @@ if (-not $BlenderPath) {
 if (-not (Test-Path -LiteralPath $BlenderPath -PathType Leaf)) {
     throw 'Blender was not found. Supply -BlenderPath with the path to blender.exe.'
 }
+$sceneConfig = Get-Content -LiteralPath (Join-Path $projectRoot 'config/scene.json') -Raw | ConvertFrom-Json
+$frameCount = [int]($sceneConfig.fps * $sceneConfig.duration_seconds)
+if ($EndFrame -eq 0) { $EndFrame = $frameCount }
+if ($StartFrame -gt $frameCount -or $EndFrame -gt $frameCount) { throw 'Requested frames exceed the configured duration.' }
 if ($StartFrame -gt $EndFrame) {
     throw 'StartFrame must not exceed EndFrame.'
 }
@@ -34,7 +38,7 @@ if ($Action -eq 'Build') {
     $blenderArgs += Join-Path $projectRoot 'render_tower_bridge.py'
     $mode = if ($Action -eq 'VideoCheck') { 'video_check' } else { $Action.ToLowerInvariant() }
     $blenderArgs += @('--', $mode)
-    if ($Action -eq 'Animation') {
+    if ($Action -in @('Animation', 'Preview')) {
         $blenderArgs += @([string]$StartFrame, [string]$EndFrame)
     }
 }
@@ -49,3 +53,5 @@ try {
 } finally {
     Pop-Location
 }
+
+

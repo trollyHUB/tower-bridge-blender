@@ -7,11 +7,13 @@ from mathutils import Vector
 from math import sin, cos, pi
 
 ROOT=Path(__file__).resolve().parent
+sys.path.insert(0,str(ROOT))
+from scene_components.scenario import CONFIG, END, FPS, opening, boat_y, frame, PHASES, linear_keys
 OUT=ROOT/'Tower_Bridge'
 OUT.mkdir(exist_ok=True)
 (OUT/'renders').mkdir(exist_ok=True)
 bpy.ops.wm.read_factory_settings(use_empty=True)
-random.seed(1894)
+random.seed(CONFIG['seed'])
 scene=bpy.context.scene
 scene.unit_settings.system='METRIC'
 scene.unit_settings.scale_length=1
@@ -21,9 +23,9 @@ scene.cycles.use_denoising=True
 scene.render.resolution_x=1920
 scene.render.resolution_y=1080
 scene.render.resolution_percentage=100
-scene.render.fps=24
+scene.render.fps=FPS
 scene.frame_start=1
-scene.frame_end=720
+scene.frame_end=END
 scene.render.image_settings.file_format='PNG'
 scene.world=bpy.data.worlds.new('Studio daylight')
 scene.world.use_nodes=True
@@ -92,7 +94,7 @@ tc=wn.nodes.new('ShaderNodeTexCoord'); mp=wn.nodes.new('ShaderNodeMapping')
 wn.links.new(tc.outputs['Object'],mp.inputs['Vector'])
 mp.inputs['Scale'].default_value=(.42,1.6,1)
 mp.inputs['Location'].default_value=(0,0,0); mp.inputs['Location'].keyframe_insert('default_value',frame=1)
-mp.inputs['Location'].default_value=(0,8,0); mp.inputs['Location'].keyframe_insert('default_value',frame=720)
+mp.inputs['Location'].default_value=(0,8,0); mp.inputs['Location'].keyframe_insert('default_value',frame=END)
 noise=wn.nodes.new('ShaderNodeTexNoise'); noise.inputs['Scale'].default_value=1.8; noise.inputs['Detail'].default_value=3; noise.inputs['Roughness'].default_value=.65
 wn.links.new(mp.outputs['Vector'],noise.inputs['Vector'])
 bump=wn.nodes.new('ShaderNodeBump'); bump.inputs['Strength'].default_value=.26; bump.inputs['Distance'].default_value=.25
@@ -375,7 +377,8 @@ for start,end,name in [(-132,-30.5,'North fixed deck'),(30.5,132,'South fixed de
 ctrl=empty('BRIDGE CONTROL | Opening degrees','07 | Bascule animation')
 ctrl['Opening degrees']=0.0
 ctrl.id_properties_ui('Opening degrees').update(min=0,max=68,description='Animated lift angle in degrees; both bascules follow this control.')
-for f,deg in [(1,0),(120,0),(288,68),(456,68),(624,0),(720,0)]:
+for f in range(1,END+1):
+    deg=opening(f)
     ctrl['Opening degrees']=float(deg); ctrl.keyframe_insert(data_path='["Opening degrees"]',frame=f)
 for sign,label in [(-1,'North'),(1,'South')]:
     pivot=empty(label+' bascule hinge','07 | Bascule animation',(sign*30.5,0,10))
@@ -458,7 +461,8 @@ bus(-68,-2.8);bus(82,2.8)
 
 # A small sailing boat crosses only while the bridge is fully raised.
 boat=empty('Sailing boat | crossing route','11 | River boat')
-for f,y in [(1,-46),(240,-36),(288,-27),(456,27),(624,46),(720,46)]:
+for f in range(1,END+1):
+    y=boat_y(f)
     boat.location=(0,y,0);boat.keyframe_insert('location',frame=f)
 group('Sailing boat hull and cabin','11 | River boat',boat)
 outline=[(-1.9,-6),(-2.6,-3),(-2.4,4),(0,8),(2.4,4),(2.6,-3),(1.9,-6)]
@@ -471,6 +475,12 @@ beam((0,.8,5),(-5.7,.8,5),.16,slate)
 meshpart([(-.2,.85,24),(-5.65,.85,5.2),(-.2,.85,5.2)],[(0,1,2)],white)
 meshpart([(.25,.85,22),(5.1,.85,4),(.25,.85,4)],[(0,1,2)],ivory)
 for a,b in [((0,.8,24),(0,7.2,2.1)),((0,.8,24),(0,-5.5,2.1))]:beam(a,b,.035,gold)
+
+# Extension components share the geometry batch API.
+for component in ['traffic','city','river']:
+    if CONFIG['features'].get(component):
+        import importlib
+        importlib.import_module('scene_components.'+component).build(globals())
 
 # Flush all geometry into editable semantic meshes (hundreds, not thousands).
 for (name,collection,parent,matname),(verts,faces,smooth,mat) in buckets.items():
@@ -519,20 +529,8 @@ for f,angle in [(1,-66),(120,-62),(288,-73),(456,-99),(624,-107),(720,-112)]:
     anim.keyframe_insert('location',frame=f);anim.keyframe_insert('rotation_euler',frame=f)
 scene.camera=hero
 
-for frame,name in [(1,'CLOSED | establishing view'),(120,'LIFT START'),(288,'OPEN | vessel enters'),(360,'HERO | fully raised'),(456,'LOWERING START'),(624,'CLOSED'),(720,'END | 30 seconds')]:scene.timeline_markers.new(name,frame=frame)
-
-# Monotonic eased keys, without overshooting the hinge angle.
-for action in bpy.data.actions:
-    try:
-        for layer in action.layers:
-            for strip in layer.strips:
-                for slot in action.slots:
-                    bag=strip.channelbag(slot)
-                    if bag:
-                        for fc in bag.fcurves:
-                            for key in fc.keyframe_points:
-                                key.interpolation='BEZIER';key.handle_left_type='AUTO_CLAMPED';key.handle_right_type='AUTO_CLAMPED'
-    except Exception:pass
+for seconds,name in PHASES:scene.timeline_markers.new(name,frame=frame(seconds))
+linear_keys()
 
 readme='''TOWER BRIDGE / LONDON 1894
 Original procedural architectural study created in Blender.
@@ -561,8 +559,9 @@ YouTube transcript was unavailable; the full tutorial was not reviewed.
 txt=bpy.data.texts.new('START HERE | Project notes');txt.write(readme)
 scene['Project']='Tower Bridge | architectural diorama'
 scene['Construction']='Original generated geometry; artistic reconstruction'
-scene['Animation']='30 s / 24 fps / 0 to 68 degrees / two independent bascules'
-scene.frame_set(360)
+scene['Animation']=f'{END} frames / {FPS} fps / deterministic scenario'
+scene['Configuration']=json.dumps(CONFIG,sort_keys=True)
+scene.frame_set(frame(30))
 # Open the file in a useful camera view, with uncluttered material-colored geometry.
 for screen in bpy.data.screens:
     for ar in screen.areas:
@@ -574,7 +573,7 @@ for screen in bpy.data.screens:
 scene.render.filepath=str(OUT/'renders'/'Tower_Bridge_Hero.png')
 bpy.context.preferences.filepaths.save_version=0
 bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'Tower_Bridge.blend'))
-stats={'objects':len(bpy.data.objects),'mesh_objects':sum(o.type=='MESH' for o in bpy.data.objects),'vertices':sum(len(m.vertices) for m in bpy.data.meshes),'faces':sum(len(m.polygons) for m in bpy.data.meshes),'materials':len(bpy.data.materials),'frames':720,'fps':24}
+stats={'objects':len(bpy.data.objects),'mesh_objects':sum(o.type=='MESH' for o in bpy.data.objects),'vertices':sum(len(m.vertices) for m in bpy.data.meshes),'faces':sum(len(m.polygons) for m in bpy.data.meshes),'materials':len(bpy.data.materials),'frames':END,'fps':FPS}
 (OUT/'scene_statistics.json').write_text(json.dumps(stats,indent=2),encoding='utf-8')
 (OUT/'SOURCES.txt').write_text(readme,encoding='utf-8')
 print('BUILD_OK',json.dumps(stats),flush=True)

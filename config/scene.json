@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "fps": 24,
+  "duration_seconds": 60,
+  "seed": 1894,
+  "opening_degrees": 68,
+  "render": {"width": 1920, "height": 1080, "preview_scale": 25, "samples": 16},
+  "features": {"traffic": false, "city": false, "river": false, "lighting": false},
+  "wind": {"strength": 0.12, "direction": [1, 0.3, 0]},
+  "water": {"level": 0.9, "amplitude": 0.075}
+}
