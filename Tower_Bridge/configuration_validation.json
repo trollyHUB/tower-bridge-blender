@@ -1,8 +1,8 @@
 {
   "passed": true,
-  "scope": "Alternate-configuration integration proof using exact listed source SHA-256: CPU-only 120 frames at 12 fps, 320x180. All build/finalize/scene validation/preview and final rendering/encoding/seven-phase and full decode/stills/release packaging/portable-open steps passed. Separate review-proxy tools also passed. Automated integrity and geometry checks, not a claim of visual inspection of every video frame.",
+  "version": "1.2.0",
   "configuration": {
-    "version": "1.1.0",
+    "version": "1.2.0",
     "fps": 12,
     "duration_seconds": 10,
     "seed": 1894,
@@ -10,11 +10,11 @@
     "render": {
       "width": 320,
       "height": 180,
-      "preview_scale": 100,
+      "preview_scale": 50,
       "samples": 1,
       "preview_samples": 1,
       "device": "cpu",
-      "engine": "EEVEE",
+      "engine": "CYCLES",
       "still_samples": 1
     },
     "features": {
@@ -24,7 +24,7 @@
       "lighting": true
     },
     "wind": {
-      "strength": 0,
+      "strength": 0.12,
       "direction": [
         1,
         0.3,
@@ -32,7 +32,7 @@
       ]
     },
     "water": {
-      "level": 1,
+      "level": 0.9,
       "amplitude": 0.075,
       "current": [
         0,
@@ -45,7 +45,9 @@
       "minimum_gap": 3,
       "stop_line": 60,
       "recycle": true,
-      "headlight_power": 120
+      "headlight_power": 120,
+      "bus_stop": true,
+      "vehicles_per_direction": 5
     },
     "people": {
       "bank_walkers": 4,
@@ -54,7 +56,7 @@
       "stride_length": 0.4
     },
     "lighting": {
-      "mode": "evening",
+      "mode": "day",
       "lantern_power": 650,
       "tower_power": 4200,
       "walkway_power": 1400,
@@ -63,432 +65,473 @@
       "cafe_power": 250,
       "day_strength": 1,
       "night_strength": 1
+    },
+    "weather": {
+      "preset": "overcast"
+    },
+    "population": {
+      "preset": "busy"
     }
   },
   "source_sha256": {
-    "build_tower_bridge.py": "84ed2809bc3a3a24188c021d8dee781a00cff30ef5a7980dea4077f3b3b9ce9c",
-    "render_tower_bridge.py": "2e0a0008771adb5792c0fa82e3be03f2b6c46d8fa8d73557dd9885fedef023db",
+    ".gitattributes": "ca0c7d6a2d7ff58dd1c4a9924e7bc04874cdf507bb7ebac2d6b0a656f8327ad2",
+    ".github/workflows/checks.yml": "b7c0b0cfdb058370eb5283fe9068798e716f2756b7f3dc033fa2f8aced32f73e",
+    ".gitignore": "2dc1fad61d0726ebcf654babba06c30d5d777fe35ef9b560b2ee8b9b74f31b32",
+    "README.md": "f598e488243dd43f08a79bb6faf4bfc300687c58a3b094f4fe6fcccc3626af73",
+    "assets/README.md": "b2ab37addfb76fc37ac77319a6cde11603be27572542284184c83161ac8c3f72",
+    "assets/SOURCES.md": "7ba8d2ca85c3878ac7804f600802ce66c470403cbb859269a5272c3306e0eef9",
+    "assets/audio/tower_bridge_original.wav": "a183a5e12cdfb91880194346dc4c7762848b1bc8b4ebf4c0769ee48c0e9e1174",
+    "assets/audio/validation.json": "2e9369270dd2196d5694d8ccbdcb3a39b63f86498dc555e2f14799d3dbaa364e",
+    "assets/history/README.md": "fa66ad978d4dd16ad1463b790b1f3c6a1c15a5597a02fb692777c811b7e7ecf8",
+    "assets/history/v0.1.0_Open.png": "065a436667120a25728675ad6cb96b00faeb10e9f02678c105b011a2dcebe6cb",
+    "build_tower_bridge.py": "b9198cf5c2b658deb0a213814315b902457e8de4bf52a1a548f6d80ff00096b1",
+    "config/scene.json": "78acd237773aa9552d19feb000456eb5e4da7794d893a07633794dfd8662a03a",
+    "docs/ACCEPTANCE.md": "8c4f7b41060caee7df1aeb206f06d09f63474e4aab683a0d90300b8fc77af383",
+    "docs/ARCHITECTURE.md": "bf8fd0b3962b29335b8dd30ba793ef46ec42dcd0a17b5852de9c0ebfcabbf02a",
+    "docs/BACKLOG.md": "ddfdf375341db8b48a54e6c161b25429c1a08e40b544121e936c2d96fa8bf8d8",
+    "docs/BEFORE_AFTER.md": "02428153c5f1ed39192240fb77deb7dc9ad74cf37dc017d186d6ce4f1f13da76",
+    "docs/DEVELOPMENT.md": "172f5d2842891f2d845f454756cea176a2741860f93e2e5167d142685493b895",
+    "docs/E01_BUS.md": "24c9f7c926c29b8323d941604751415b4cc07503f5885b35497c7f846cdc3b5e",
+    "docs/IMPLEMENTATION_REPORT.md": "e27b0e8d1c8f19ffc9ea758a59fcc6c8f9ac20760eaf701e41ff481c7001c1d3",
+    "docs/IMPLEMENTATION_REPORT_v1.1.0.md": "bf6f8717afa06355fb07022ecaf272fcbda20a0c3325017a119b89981a2e1aba",
+    "docs/IMPLEMENTATION_REPORT_v1.2.0.md": "e7c0fb41b301d897ed30e1a357d59f3b4b6646b8bfaa85be6ca9fec71b2d509a",
+    "docs/MEDIA.md": "143e9bd8c4c45ccf8f2b1043ed6a6d01db6a0f2fc154195a76b8bf91959746d1",
+    "docs/PRESETS.md": "2d727eb27ef9fc4385d51f63feb9c1f9e276487ef91a0b8a76d415b639f23c6f",
+    "docs/PROJECT_PLAN.md": "fdbb30a7d2d99d11e374f56aa87642bf4b8c570bb1ab73a831ffd4df0eb67134",
+    "docs/README.md": "1b02039a0ff766471ce7edeab71a1df44d3bc83235a94818fcee52e7e27e9240",
+    "docs/RELEASE_NOTES_v1.0.0.md": "1a6fb21e3bee8e238407e68f0404df08be861751bf5746ecd6afe8698a43d3e5",
+    "docs/RELEASE_NOTES_v1.1.0.md": "0353c1cca67bbe8d66f8d456dbd64ef9b51da60d940bb38547ce3be15ca5bec4",
+    "docs/RELEASE_NOTES_v1.2.0.md": "accbff3ba9621e416420c2edf3e54f1f5ea273de73226b8dd945a23ff0de64f1",
+    "docs/REMAINING_WORK.md": "5c45e1e925b633ff8625d774acabbb3ec4ed81c5b0673b293a5ba1120d01f164",
+    "docs/REQUIREMENTS.md": "1ba4c51d8ce7ba0c345522f178ddad9cb42688ea47289ea6426576e47e057e48",
+    "docs/ROADMAP.md": "d5f782684a6bd5ae5496a555d27a61d3da30219bcc49ca96252b7c88a69d0df0",
+    "docs/SCENARIO.md": "a85ae018c8fd9f148cfdf8e09c80ce0346877637af533409de62817623d38331",
+    "docs/UNITY.md": "c1a23d889b2233e5954652a51a78913c1e252a7ee01d5599f07d008cfa9996bc",
+    "render_tower_bridge.py": "a898b647a2e1e4611d289a1db129eec4616284d4c032738a017b7dbeef15e9bf",
     "scene_components/__init__.py": "cf92cc39cba7a6be56120a2397412157eee4f458118acd0a9916a8a136b1b341",
     "scene_components/architecture.py": "127fe65f97943a0a3072fd7a3a70617dca079b5bce80493a7d1487d6c2a42085",
-    "scene_components/cameras.py": "4ee65cc8ff213d5788bc2b61fbda56a880dab5e6d8c02c45a892cc8fc345d7c7",
+    "scene_components/cameras.py": "b348b3590d76b9fbcac9c66f690ceffe15ba54762496e7092cca1302476909bc",
     "scene_components/city.py": "1846d34d95cc370ac754d64934890b5e92e37480b60ba387b4ffcf8b6d0613b5",
     "scene_components/environment_validation.py": "9fe033e54fb574be727219ea3c4f8427f86cb151879d25efa2df5920cfe9fcee",
     "scene_components/finish.py": "2bfe58bcafafd359e30cbc4347fca43915e443ea2585844d28707f5ffab246a8",
-    "scene_components/improvement_validation.py": "e0c720e3d16d2c16978f8b065f461922e0f33ea1af3c9fb630e8786dcc021f10",
+    "scene_components/improvement_validation.py": "be05c147e6437dc78d7af3ccc297159b3f39e08174e9b04c8eac88aa7dbc0e00",
     "scene_components/lighting.py": "2196084f63739fe14910ca2f5fd503a7eddc6c181c405336b0fd8a4333e16029",
     "scene_components/people_math.py": "6b5e2670bd14ef4feade4d029b4409c736ce83aed32f9e46b1b28253bd950106",
     "scene_components/practical_lighting.py": "95f8505c2707cc3176338ef08f98932570ffd8d3739bbae1346b5784f426c942",
+    "scene_components/presets.py": "da9c611c17b45633ca3c86d22f2eac848ac6683658da6138c041873bbcfa9ced",
     "scene_components/render_manifest.py": "39fff39f6981f6e8f2d5e1607fe0f56f7e36de9c57314cc87af092ecec25e410",
     "scene_components/river.py": "6a0dac16b4caab176ac1d6f42ce16ce4b6fa8bd8ae0864787e3f0eddc16a7e75",
     "scene_components/scenario.py": "3a36242754aed1819268f959e4c998db949deadea051de06fb1c1fbe9f49077b",
-    "scene_components/settings.py": "8b189b68c742fb3327973109ef2cd9702e64cc115c0f3dffd044c3b8d7a850a9",
-    "scene_components/traffic.py": "4f6dbf1e79a30f048d991a7644cdc053948e0e6c840c4d4d90a7981632f9e83d",
-    "scene_components/traffic_validation.py": "f869a7d656374ac795cc3b18e316b148c11f8895e41507c369f32f25b90903f1",
+    "scene_components/settings.py": "82c716273f98bddc2ab147d22545758435182fa2d37f87ca5bbbf557ef09b17e",
+    "scene_components/traffic.py": "f0efde0b5baf0a42700feec4dbe8a85073b39b704b8328fa67193b27a571dbea",
+    "scene_components/traffic_validation.py": "e64a00051672b3702c9f528e95b52cc41cc7d5c2521f7f0f8406b0d061a9cbd2",
     "scene_components/validation.py": "7d8563eeab5c27b3969d27837d7e37bef751e89183b45e6291223a5c6fb566e5",
     "scene_components/water_math.py": "9f3dae0b33b34966bef75ba246c24cae883cc0e34394e17437dbce878bf54115",
-    "scene_components/wind.py": "a2e204b5980bbafc58f0f2a2da6487a6b804b77ca85ae26074af4881f3f0deed"
-  },
-  "timings_seconds": {
-    "Build": 6.25,
-    "Finalize": 2.442,
-    "Validate": 39.782,
-    "Preview": 211.6811153000017,
-    "PreviewEncode": 3.525617399995099,
-    "Animation": 361.8659822000045,
-    "Encode": 2.5332500000076834,
-    "VideoCheck": 1.8541796999925282,
-    "FullDecode": 1.8832946999900742,
-    "Stills": 13.59650060000422,
-    "StillsVerify": 0.080053500001668,
-    "Package": 0.39710200000263285,
-    "Portable": 2.140606900007697
-  },
-  "checks": {
-    "scene": {
-      "passed": true,
-      "frames_checked": 120,
-      "hinge_samples": [
-        {
-          "frame": 1,
-          "angle": 0.0
-        },
-        {
-          "frame": 120,
-          "angle": 0.0
-        }
-      ],
-      "raised_max_z": 38.78480529785156,
-      "traffic": {
-        "passed": true,
-        "frames_checked": 120,
-        "vehicle_count": 14,
-        "vehicle_types": [
-          "bus",
-          "car",
-          "taxi",
-          "truck"
-        ],
-        "minimum_actual_body_gap_m": 2.923980712890625,
-        "closest_queued_front_direction_coordinate_m": -61.46200180053711,
-        "maximum_wheel_distance_error_m": 3.6621093748578915e-05,
-        "checks": [
-          "evaluated_mesh_bounds",
-          "full_body_span_clearance",
-          "stop_lines",
-          "barrier_intersections",
-          "barrier_timing",
-          "signal_interlock",
-          "wheel_distance",
-          "no_reverse",
-          "hidden_portal_recycling"
-        ]
-      },
-      "environment": {
-        "passed": true,
-        "pedestrian_count": 16,
-        "walking_pedestrian_count": 6,
-        "stationary_people_count": 10,
-        "person_vehicle_scope": "Every frame, complete descendant mesh world AABBs for all walking and stationary people versus all visible cars",
-        "pedestrian_frames_checked": 120,
-        "building_groups_checked": 8,
-        "static_obstacle_bvh_queries": 9683,
-        "static_obstacle_scope": "All people versus unparented city building, street, garden and furniture mesh triangles above 10.55m; cafe-owned parented chairs excluded; AABB broad phase then triangle BVH overlap; no penetration-depth or swept-volume proof",
-        "vessel_surface_sample_count": 20,
-        "vessel_surface_sample_frames": [
-          1,
-          13,
-          16,
-          25,
-          27,
-          28,
-          36,
-          37,
-          49,
-          52,
-          60,
-          61,
-          72,
-          73,
-          85,
-          88,
-          92,
-          97,
-          109,
-          120
-        ],
-        "vessel_surface_test_scope": "World-space triangle intersections with moving leaves; sampled every 12 frames and phase boundaries",
-        "minimum_launch_closed_deck_vertical_margin_m": 4.437024831771851,
-        "minimum_waiting_sailboat_channel_distance_m": 22.978050231933594,
-        "minimum_vessel_fixed_walkway_vertical_margin_m": 17.934999465942383,
-        "direct_seek_checks": 40,
-        "maximum_direct_seek_matrix_error": 0.0
-      },
-      "improvements": {
-        "configuration_roundtrip": true,
-        "water_mesh_samples": 84,
-        "vessel_pose_frames": 480,
-        "max_water_mesh_height_error_m": 0.0,
-        "max_buoyancy_contact_error_m": 1.4901161415892261e-09,
-        "max_foot_target_error_m": 7.688768146799611e-06,
-        "max_stance_slide_m": 7.62939453125e-06,
-        "planted_foot_frame_checks": 972,
-        "wake_age_samples": 1218,
-        "headlight_count": 28,
-        "scope": "Vessel buoyancy and foot contact every integer frame; evaluated triangulated water and wake age sampled every 6 frames plus endpoint; no subframe swept collision proof",
-        "distinct_gait_phases": 6,
-        "walking_people": 6,
-        "waiting_passengers": 6,
-        "cafe_visitors": 4,
-        "practical_light_roles": {
-          "lantern": 40,
-          "tower": 6,
-          "walkway": 6,
-          "dock": 4,
-          "bus_stop": 2,
-          "cafe": 2
-        }
-      },
-      "practical_lights": {
-        "count": 40,
-        "mode": "evening",
-        "endpoint_checks": [
-          {
-            "frame": 1,
-            "energy": 650.0
-          },
-          {
-            "frame": 120,
-            "energy": 650.0
-          }
-        ]
-      },
-      "deterministic_transform_sha256": "cba8c54346b23e9c32bbce32fa5065d99061e9b4db63f245de2aa07e308a8856",
-      "scene_sha256": "19951b37bbe97273c79b751183685f3225edaaa0ed654a7c26df36bca5e13d35"
-    },
-    "video": {
-      "frames": 120,
-      "size": [
-        320,
-        180
-      ],
-      "fps": 12.0,
-      "bytes": 218750,
-      "video_sha256": "5e41359edc20668cb0a0a458977d207e5b678003947800f6ad75e84c65461675",
-      "identity": {
-        "scene_sha256": "19951b37bbe97273c79b751183685f3225edaaa0ed654a7c26df36bca5e13d35",
-        "config_sha256": "b131f525aa81c957caf02417e0ae1501456761b4d3a2115d3e0030041416c5e4",
-        "implementation_sha256": "2e0a0008771adb5792c0fa82e3be03f2b6c46d8fa8d73557dd9885fedef023db",
-        "profile": "final",
-        "fps": 12,
-        "frames": 120,
-        "size": [
-          320,
-          180
-        ],
-        "blender_version": "5.2.1 LTS",
-        "manifest_implementation_sha256": "39fff39f6981f6e8f2d5e1607fe0f56f7e36de9c57314cc87af092ecec25e410"
-      },
-      "decoded_frames": [
-        1,
-        20,
-        40,
-        60,
-        80,
-        100,
-        120
-      ]
-    },
-    "full_decode": {
-      "passed": true,
-      "mode": "full_decode",
-      "decoded_count": 120,
-      "frames": 120,
-      "fps": 12.0,
-      "size": [
-        320,
-        180
-      ],
-      "decode_size": [
-        192,
-        108
-      ],
-      "scene_sha256": "19951b37bbe97273c79b751183685f3225edaaa0ed654a7c26df36bca5e13d35",
-      "config_sha256": "b131f525aa81c957caf02417e0ae1501456761b4d3a2115d3e0030041416c5e4",
-      "video_sha256": "5e41359edc20668cb0a0a458977d207e5b678003947800f6ad75e84c65461675",
-      "identity": {
-        "scene_sha256": "19951b37bbe97273c79b751183685f3225edaaa0ed654a7c26df36bca5e13d35",
-        "config_sha256": "b131f525aa81c957caf02417e0ae1501456761b4d3a2115d3e0030041416c5e4",
-        "implementation_sha256": "2e0a0008771adb5792c0fa82e3be03f2b6c46d8fa8d73557dd9885fedef023db",
-        "profile": "final",
-        "fps": 12,
-        "frames": 120,
-        "size": [
-          320,
-          180
-        ],
-        "blender_version": "5.2.1 LTS",
-        "manifest_implementation_sha256": "39fff39f6981f6e8f2d5e1607fe0f56f7e36de9c57314cc87af092ecec25e410"
-      },
-      "blender_version": "5.2.1 LTS",
-      "scope": "Every configured frame decoded by Blender VSE; PNG CRC and complete pixel streams checked. No claim of visual inspection."
-    },
-    "stills": {
-      "passed": true,
-      "scene_sha256": "19951b37bbe97273c79b751183685f3225edaaa0ed654a7c26df36bca5e13d35",
-      "images": {
-        "Tower_Bridge_Open.png": {
-          "size": [
-            320,
-            180
-          ],
-          "sha256": "c3199552904c0f14dd2c8598667eb1cdf82c95e726d1f4d5f2a49d6ac5d731cc"
-        },
-        "Tower_Bridge_Closed.png": {
-          "size": [
-            320,
-            180
-          ],
-          "sha256": "6af62cfa7ecf400640dfa9c67025bef613ad2e2cd072e677f6e11ddaf4cdcf97"
-        },
-        "Tower_Bridge_City.png": {
-          "size": [
-            320,
-            180
-          ],
-          "sha256": "9a5806eaf7299aae5ec0c08d6c4afa20fb42271c7a13308faae24989f2b198b7"
-        },
-        "Tower_Bridge_Water.png": {
-          "size": [
-            320,
-            180
-          ],
-          "sha256": "faf90d00b2d7d36f724af8df40dfb3d9372dd2a1bee6b398719bb184161c1bdc"
-        },
-        "Tower_Bridge_Evening.png": {
-          "size": [
-            320,
-            180
-          ],
-          "sha256": "1ce9a4d7f203cf233138e5412a409a1bfab13eec2fa7170049cd98b8c9f246a8"
-        },
-        "Tower_Bridge_Detail.png": {
-          "size": [
-            320,
-            180
-          ],
-          "sha256": "e9c1559732efbfaea854b70058331a6f7e7b71433b5f027c0c94cc6b1e0d9739"
-        }
-      }
-    },
-    "portable": {
-      "passed": true,
-      "extracted_scene_sha256": "19951b37bbe97273c79b751183685f3225edaaa0ed654a7c26df36bca5e13d35",
-      "checked_frames": [
-        1,
-        36,
-        60,
-        88,
-        120
-      ],
-      "frames": 120,
-      "fps": 12,
-      "external_textures_missing": false,
-      "archive_crc_check": true,
-      "animation_drivers_evaluated": true
-    },
-    "review_proxy": {
-      "passed": true,
-      "profile": "review_proxy",
-      "method": "downsample_final",
-      "source_identity": {
-        "scene_sha256": "19951b37bbe97273c79b751183685f3225edaaa0ed654a7c26df36bca5e13d35",
-        "config_sha256": "b131f525aa81c957caf02417e0ae1501456761b4d3a2115d3e0030041416c5e4",
-        "implementation_sha256": "2e0a0008771adb5792c0fa82e3be03f2b6c46d8fa8d73557dd9885fedef023db",
-        "profile": "final",
-        "fps": 12,
-        "frames": 120,
-        "size": [
-          320,
-          180
-        ],
-        "blender_version": "5.2.1 LTS",
-        "manifest_implementation_sha256": "39fff39f6981f6e8f2d5e1607fe0f56f7e36de9c57314cc87af092ecec25e410"
-      },
-      "frames": 120,
-      "fps": 12.0,
-      "size": [
-        320,
-        180
-      ],
-      "video_sha256": "35f658694487c9baceb3c0f8b31cb174482fda90b3fb4fb8080f77e2ac29e6c5",
-      "bytes": 218750,
-      "proxy_manifest_sha256": "8a0cca444c8314391c3a463c6f7632fc20fafaf50b41e9385da204889184a1e2",
-      "scope": "All proxy and source frame hashes verified; encoded from downsampled final frames. No separate low-sample rendering claim."
-    },
-    "video_pixels": {
-      "passed": true,
-      "frames_checked": 120,
-      "decode_size": [
-        192,
-        108
-      ],
-      "mean_rgb_error_255": 2.5126733342806498,
-      "p95_rgb_error_255": 3.930414927005768,
-      "maximum_rgb_error_255": 4.075842380523682,
-      "worst_frame": 100,
-      "threshold_rgb_error_255": 8,
-      "scene_sha256": "19951b37bbe97273c79b751183685f3225edaaa0ed654a7c26df36bca5e13d35",
-      "video_sha256": "5e41359edc20668cb0a0a458977d207e5b678003947800f6ad75e84c65461675",
-      "identity": {
-        "scene_sha256": "19951b37bbe97273c79b751183685f3225edaaa0ed654a7c26df36bca5e13d35",
-        "config_sha256": "b131f525aa81c957caf02417e0ae1501456761b4d3a2115d3e0030041416c5e4",
-        "implementation_sha256": "2e0a0008771adb5792c0fa82e3be03f2b6c46d8fa8d73557dd9885fedef023db",
-        "profile": "final",
-        "fps": 12,
-        "frames": 120,
-        "size": [
-          320,
-          180
-        ],
-        "blender_version": "5.2.1 LTS",
-        "manifest_implementation_sha256": "39fff39f6981f6e8f2d5e1607fe0f56f7e36de9c57314cc87af092ecec25e410"
-      },
-      "visual_contact_pages": [
-        {
-          "first": 1,
-          "last": 96,
-          "file": "encoded_0001_0096.jpg",
-          "sha256": "be72245f8ec605bb9587f108ea7c3f4f5fce44100c8dfba98bc834e288ec5897"
-        },
-        {
-          "first": 97,
-          "last": 120,
-          "file": "encoded_0097_0120.jpg",
-          "sha256": "191355c4ec63c3a275ffdc7671226f0be8ff096269e90270fb9b9942c9c9bc00"
-        }
-      ],
-      "scope": "Every decoded frame compared to Lanczos-downsampled render source at decode resolution. Global RGB mean absolute error threshold 8/255; not exact full-resolution fidelity or small-object motion proof. Contact pages are generated for separate visual review."
-    }
-  },
-  "archive_bytes": 6772230,
-  "qa_tool_source_sha256": {
+    "scene_components/wind.py": "a2e204b5980bbafc58f0f2a2da6487a6b804b77ca85ae26074af4881f3f0deed",
+    "scripts/project.ps1": "d57bf0171caf20b653fb8c11aa60ba6bf734ba3b53c4e9bf4711ea3acc3818b5",
+    "tests/test_camera_reuse.py": "6e8fcffe59223b1f041379388d871d2303f04e1f3dda0f15056e3c8e3ffa3d6f",
+    "tests/test_media_extensions.py": "fcc98b271fdc56e1e01f70a334a6886357d01e666387d93c0959d9d9b0b5cfc5",
+    "tests/test_people.py": "912bf4c3a5969627c99752e0bdf8b19ce3a4e1a68c609a9055b42922a5d1890c",
+    "tests/test_pipeline.py": "620959e411b63db8c0f1493cb1b0ae1503c39613933e5b2579ca69fd9b295ca5",
+    "tests/test_presets.py": "b3552f5a8a8cbd6fb70dce49d322e4e55924a2edbfb55912a7efa9cba8a29b7e",
+    "tests/test_river.py": "9a20b921339cd5ab962eedd072a225c2e724f99abbe3441963d0f10ca2fe3178",
+    "tests/test_scenario.py": "3a11b39f8d63a6dba326ff76d352d86874cbbf612499fcd077d0bce3c22ef11d",
+    "tests/test_settings.py": "5a17d1d3b8370b701b4c13703c78c3046647cfbc1409e3531ad0a7e00c1fcd2b",
+    "tests/test_traffic.py": "f3df549e1c55a270c6874a7fabd8e07fc0e3438f1ec3f6c45625e01a4f7d49a5",
+    "tests/test_unity_export.py": "8dd6693dc54b7ad8a67fb046621729d84974d647b88c9e7c008e908581e87d28",
+    "tests/test_wind.py": "a56f69395c64ece926924a236c2741b4972031a86ca7a8565de02c48a9b008b9",
     "tools/assemble_comparison.py": "3cf8503c9afd3e9e4164c000f6a6af61394260dd74e81b0e3770545e8bbc159d",
     "tools/assemble_evolution.py": "f39ea24924797cc25b481923483a200956b32263a26fb4a2c299c93ff1483676",
     "tools/check_bascule_overlaps.py": "70987fa132c06c003326e2b431fa49a7938baa99ce94d16d00283fd2702477d7",
-    "tools/check_release.py": "5f2545f2b5e87898d5fbd8f594d0ba436493bde47fb872fba4069e24b206ef78",
+    "tools/check_media_pixels.py": "a4f5af86534849c5d49ca06ff8d08646ded8a179340c6540244be971ae4b26f6",
+    "tools/check_preset.py": "f972e506ccfd9e257bccaa420f99b1601b2b4e880b0561763715ba5d20081dee",
+    "tools/check_release.py": "347b3c45488f2466333595eeedd0951b07da449f221b66e92f1d8528272bc40f",
     "tools/check_reproducibility.py": "7d397d8fc7e2da34826a4b61da7f505621fbf93e079412bef1701e8fbabf89f4",
     "tools/check_video_full.py": "6cd7a588d57d80baa91e5afd22a73d72b2f90b50f1074082b623770031b33598",
-    "tools/diagnose_scene.py": "4ae211752cd5302b2b0cb3408cb516dd3c9635ef815971b59517ef2d9da90f0b",
+    "tools/create_day_loop.py": "40eaccd66a7714e7202a5cead43d31219ed601a248cc71606338f7e7fb913cad",
+    "tools/create_presentation.py": "f7ddf0a68f482fd351fabf66a9429e7070e83f637aff481ad7fb75059bf83317",
+    "tools/diagnose_scene.py": "990629f215eef1a3c7a96c1784b331b6a5f9bef977612cefd2282bb5cbc684c8",
     "tools/encode_review_proxy.py": "e36b3bc30e9868dca87c7e8aebc613cb5278e6bc0be48a1c7260952d312adb22",
+    "tools/export_unity.py": "a2a6c3a1bbefc06798a80250b31611f6cc731f0ea2a590592851146a4e1a5b20",
     "tools/make_contact_sheets.py": "2c660d6883d3af82b50dcca55de457ad4f0380b71fcf5533235c538947d47444",
     "tools/make_review_proxy.py": "22affad07bfdfd975826f35e1fb46d80782d3ba63ffb4085632639ae7e974c8b",
-    "tools/package_release.py": "c241581121e7a15bdc60ca73ed0f56154c54424e8bc28ff2af9a52e75acbf32d",
+    "tools/migrate_camera_cache.py": "46259df5fa6848134c4a9acf26bc93e8f3def6d1a91f945b7e7093279a552281",
+    "tools/package_release.py": "675a368c42353d1d19a6a9f2e37be95d62cc37bb1a7b4b8798ecacf4990c03fa",
+    "tools/package_unity.py": "f8fb8fafc035901a0d3d2b59f30ece7604da2a3f6e50946d8b8410669ff29c4c",
+    "tools/patch_bus_camera.py": "27f0b9c2a37b9525956e180dad28518179ba731d77cd90d38dc1d7b5ace5b302",
+    "tools/preset_scene.py": "c0f82656b2edff4b171814f21337cdb1fd20550e93ba03d15f5831abb136cff5",
     "tools/render_comparison.py": "92da16935bdcd2637e576cca2ac2e1a78d622f569203f97691692ae97c11780c",
+    "tools/render_stills_cpu.py": "6fe72c1233546489dacefff8a7d0f5b1c1c5a9dc2c6d697c4385e39cc1fab1ff",
+    "tools/render_weather_previews.py": "32086f0e368b5d755d98f6a708a9cdc9774f37912f9fe395f563f17a1f4efa99",
+    "tools/run_configuration_smoke.py": "61f040f5e15680d08446b51e03edc8167fa17423576ec237185afabdb721a626",
+    "tools/verify_media_extensions.py": "b62373a6ade3a4e57d48421caaea22abe7793c3d0ee105c0b72058f5dc5fe3cd",
     "tools/verify_stills.py": "72de5a2ba17361f66eec1c5f872cf317b102e7e3a0c9c7e6bd69ba54ab006ecf",
     "tools/verify_video_pixels.py": "4d93ed63697cb8a2feeb1beefd0c17e93ac368ddb667dbed058a53d0048bf643"
   },
-  "source_matches_current_main": true,
-  "cpu_thread_limit_after_resume": 2,
-  "render_cache_resumed": true,
-  "timing_scope": "Recorded successful invocations; render caches resumed after interruptions, whose elapsed time is excluded. Full decode, pixel QA, release packaging and enhanced portable-open were repeated successfully after the decode-fit fix; repeat timings are omitted.",
-  "pure_tests": {
-    "main": {
-      "ran": 40,
-      "passed": 40
+  "source_changed_after_snapshot": [],
+  "isolated_root": "C:\\TolegenManassov\\Educataion\\ENU\\4 \u041a\u0443\u0440\u0441\\1 \u0421\u0435\u043c\u0435\u0441\u0442\u0440\\MAVR \u0421\u043c\u0435\u0448\u0430\u043d\u043d\u0430\u044f, \u0434\u043e\u043f\u043e\u043b\u043d\u0435\u043d\u043d\u0430\u044f \u0438 \u0432\u0438\u0440\u0442\u0443\u0430\u043b\u044c\u043d\u0430\u044f \u0440\u0435\u0430\u043b\u044c\u043d\u043e\u0441\u0442\u044c\\PK\\research\\config_smoke_v1_2",
+  "commands": [
+    {
+      "action": "Build",
+      "command": [
+        "C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe",
+        "--background",
+        "--threads",
+        "2",
+        "--python-exit-code",
+        "1",
+        "--python",
+        "C:\\TolegenManassov\\Educataion\\ENU\\4 \u041a\u0443\u0440\u0441\\1 \u0421\u0435\u043c\u0435\u0441\u0442\u0440\\MAVR \u0421\u043c\u0435\u0448\u0430\u043d\u043d\u0430\u044f, \u0434\u043e\u043f\u043e\u043b\u043d\u0435\u043d\u043d\u0430\u044f \u0438 \u0432\u0438\u0440\u0442\u0443\u0430\u043b\u044c\u043d\u0430\u044f \u0440\u0435\u0430\u043b\u044c\u043d\u043e\u0441\u0442\u044c\\PK\\research\\config_smoke_v1_2\\build_tower_bridge.py"
+      ],
+      "returncode": 0,
+      "seconds": 4.321,
+      "expected_success": true
     },
-    "alternate_configuration": {
-      "ran": 40,
-      "passed": 40
+    {
+      "action": "finalize",
+      "command": [
+        "C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe",
+        "--background",
+        "--threads",
+        "2",
+        "--python-exit-code",
+        "1",
+        "--python",
+        "C:\\TolegenManassov\\Educataion\\ENU\\4 \u041a\u0443\u0440\u0441\\1 \u0421\u0435\u043c\u0435\u0441\u0442\u0440\\MAVR \u0421\u043c\u0435\u0448\u0430\u043d\u043d\u0430\u044f, \u0434\u043e\u043f\u043e\u043b\u043d\u0435\u043d\u043d\u0430\u044f \u0438 \u0432\u0438\u0440\u0442\u0443\u0430\u043b\u044c\u043d\u0430\u044f \u0440\u0435\u0430\u043b\u044c\u043d\u043e\u0441\u0442\u044c\\PK\\research\\config_smoke_v1_2\\render_tower_bridge.py",
+        "--",
+        "finalize"
+      ],
+      "returncode": 0,
+      "seconds": 1.594,
+      "expected_success": true
+    },
+    {
+      "action": "validate",
+      "command": [
+        "C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe",
+        "--background",
+        "--threads",
+        "2",
+        "--python-exit-code",
+        "1",
+        "--python",
+        "C:\\TolegenManassov\\Educataion\\ENU\\4 \u041a\u0443\u0440\u0441\\1 \u0421\u0435\u043c\u0435\u0441\u0442\u0440\\MAVR \u0421\u043c\u0435\u0448\u0430\u043d\u043d\u0430\u044f, \u0434\u043e\u043f\u043e\u043b\u043d\u0435\u043d\u043d\u0430\u044f \u0438 \u0432\u0438\u0440\u0442\u0443\u0430\u043b\u044c\u043d\u0430\u044f \u0440\u0435\u0430\u043b\u044c\u043d\u043e\u0441\u0442\u044c\\PK\\research\\config_smoke_v1_2\\render_tower_bridge.py",
+        "--",
+        "validate"
+      ],
+      "returncode": 0,
+      "seconds": 9.314,
+      "expected_success": true
+    },
+    {
+      "action": "preview",
+      "command": [
+        "C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe",
+        "--background",
+        "--threads",
+        "2",
+        "--python-exit-code",
+        "1",
+        "--python",
+        "C:\\TolegenManassov\\Educataion\\ENU\\4 \u041a\u0443\u0440\u0441\\1 \u0421\u0435\u043c\u0435\u0441\u0442\u0440\\MAVR \u0421\u043c\u0435\u0448\u0430\u043d\u043d\u0430\u044f, \u0434\u043e\u043f\u043e\u043b\u043d\u0435\u043d\u043d\u0430\u044f \u0438 \u0432\u0438\u0440\u0442\u0443\u0430\u043b\u044c\u043d\u0430\u044f \u0440\u0435\u0430\u043b\u044c\u043d\u043e\u0441\u0442\u044c\\PK\\research\\config_smoke_v1_2\\render_tower_bridge.py",
+        "--",
+        "preview"
+      ],
+      "returncode": 0,
+      "seconds": 147.159,
+      "expected_success": true
+    },
+    {
+      "action": "preview_encode",
+      "command": [
+        "C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe",
+        "--background",
+        "--threads",
+        "2",
+        "--python-exit-code",
+        "1",
+        "--python",
+        "C:\\TolegenManassov\\Educataion\\ENU\\4 \u041a\u0443\u0440\u0441\\1 \u0421\u0435\u043c\u0435\u0441\u0442\u0440\\MAVR \u0421\u043c\u0435\u0448\u0430\u043d\u043d\u0430\u044f, \u0434\u043e\u043f\u043e\u043b\u043d\u0435\u043d\u043d\u0430\u044f \u0438 \u0432\u0438\u0440\u0442\u0443\u0430\u043b\u044c\u043d\u0430\u044f \u0440\u0435\u0430\u043b\u044c\u043d\u043e\u0441\u0442\u044c\\PK\\research\\config_smoke_v1_2\\render_tower_bridge.py",
+        "--",
+        "preview_encode"
+      ],
+      "returncode": 0,
+      "seconds": 2.426,
+      "expected_success": true
+    },
+    {
+      "action": "animation",
+      "command": [
+        "C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe",
+        "--background",
+        "--threads",
+        "2",
+        "--python-exit-code",
+        "1",
+        "--python",
+        "C:\\TolegenManassov\\Educataion\\ENU\\4 \u041a\u0443\u0440\u0441\\1 \u0421\u0435\u043c\u0435\u0441\u0442\u0440\\MAVR \u0421\u043c\u0435\u0448\u0430\u043d\u043d\u0430\u044f, \u0434\u043e\u043f\u043e\u043b\u043d\u0435\u043d\u043d\u0430\u044f \u0438 \u0432\u0438\u0440\u0442\u0443\u0430\u043b\u044c\u043d\u0430\u044f \u0440\u0435\u0430\u043b\u044c\u043d\u043e\u0441\u0442\u044c\\PK\\research\\config_smoke_v1_2\\render_tower_bridge.py",
+        "--",
+        "animation"
+      ],
+      "returncode": 0,
+      "seconds": 190.663,
+      "expected_success": true
+    },
+    {
+      "action": "encode",
+      "command": [
+        "C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe",
+        "--background",
+        "--threads",
+        "2",
+        "--python-exit-code",
+        "1",
+        "--python",
+        "C:\\TolegenManassov\\Educataion\\ENU\\4 \u041a\u0443\u0440\u0441\\1 \u0421\u0435\u043c\u0435\u0441\u0442\u0440\\MAVR \u0421\u043c\u0435\u0448\u0430\u043d\u043d\u0430\u044f, \u0434\u043e\u043f\u043e\u043b\u043d\u0435\u043d\u043d\u0430\u044f \u0438 \u0432\u0438\u0440\u0442\u0443\u0430\u043b\u044c\u043d\u0430\u044f \u0440\u0435\u0430\u043b\u044c\u043d\u043e\u0441\u0442\u044c\\PK\\research\\config_smoke_v1_2\\render_tower_bridge.py",
+        "--",
+        "encode"
+      ],
+      "returncode": 0,
+      "seconds": 2.25,
+      "expected_success": true
+    },
+    {
+      "action": "video_check",
+      "command": [
+        "C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe",
+        "--background",
+        "--threads",
+        "2",
+        "--python-exit-code",
+        "1",
+        "--python",
+        "C:\\TolegenManassov\\Educataion\\ENU\\4 \u041a\u0443\u0440\u0441\\1 \u0421\u0435\u043c\u0435\u0441\u0442\u0440\\MAVR \u0421\u043c\u0435\u0448\u0430\u043d\u043d\u0430\u044f, \u0434\u043e\u043f\u043e\u043b\u043d\u0435\u043d\u043d\u0430\u044f \u0438 \u0432\u0438\u0440\u0442\u0443\u0430\u043b\u044c\u043d\u0430\u044f \u0440\u0435\u0430\u043b\u044c\u043d\u043e\u0441\u0442\u044c\\PK\\research\\config_smoke_v1_2\\render_tower_bridge.py",
+        "--",
+        "video_check"
+      ],
+      "returncode": 0,
+      "seconds": 1.932,
+      "expected_success": true
+    },
+    {
+      "action": "full_decode",
+      "command": [
+        "C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe",
+        "--background",
+        "--threads",
+        "2",
+        "--python-exit-code",
+        "1",
+        "--python",
+        "C:\\TolegenManassov\\Educataion\\ENU\\4 \u041a\u0443\u0440\u0441\\1 \u0421\u0435\u043c\u0435\u0441\u0442\u0440\\MAVR \u0421\u043c\u0435\u0448\u0430\u043d\u043d\u0430\u044f, \u0434\u043e\u043f\u043e\u043b\u043d\u0435\u043d\u043d\u0430\u044f \u0438 \u0432\u0438\u0440\u0442\u0443\u0430\u043b\u044c\u043d\u0430\u044f \u0440\u0435\u0430\u043b\u044c\u043d\u043e\u0441\u0442\u044c\\PK\\research\\config_smoke_v1_2\\tools\\check_video_full.py"
+      ],
+      "returncode": 0,
+      "seconds": 1.77,
+      "expected_success": true
+    },
+    {
+      "action": "stills",
+      "command": [
+        "C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe",
+        "--background",
+        "--threads",
+        "2",
+        "--python-exit-code",
+        "1",
+        "--python",
+        "C:\\TolegenManassov\\Educataion\\ENU\\4 \u041a\u0443\u0440\u0441\\1 \u0421\u0435\u043c\u0435\u0441\u0442\u0440\\MAVR \u0421\u043c\u0435\u0448\u0430\u043d\u043d\u0430\u044f, \u0434\u043e\u043f\u043e\u043b\u043d\u0435\u043d\u043d\u0430\u044f \u0438 \u0432\u0438\u0440\u0442\u0443\u0430\u043b\u044c\u043d\u0430\u044f \u0440\u0435\u0430\u043b\u044c\u043d\u043e\u0441\u0442\u044c\\PK\\research\\config_smoke_v1_2\\render_tower_bridge.py",
+        "--",
+        "stills"
+      ],
+      "returncode": 0,
+      "seconds": 10.075,
+      "expected_success": true
+    },
+    {
+      "action": "verify_stills",
+      "command": [
+        "C:\\Python314\\python.exe",
+        "tools/verify_stills.py"
+      ],
+      "returncode": 0,
+      "seconds": 0.072,
+      "expected_success": true
+    },
+    {
+      "action": "reject_missing_full_decode",
+      "command": [
+        "C:\\Python314\\python.exe",
+        "tools/package_release.py",
+        "--core-only"
+      ],
+      "returncode": 1,
+      "seconds": 0.124,
+      "expected_success": false
+    },
+    {
+      "action": "reject_stale_full_decode",
+      "command": [
+        "C:\\Python314\\python.exe",
+        "tools/package_release.py",
+        "--core-only"
+      ],
+      "returncode": 1,
+      "seconds": 0.103,
+      "expected_success": false
+    },
+    {
+      "action": "package",
+      "command": [
+        "C:\\Python314\\python.exe",
+        "tools/package_release.py",
+        "--core-only"
+      ],
+      "returncode": 0,
+      "seconds": 0.475,
+      "expected_success": true
+    },
+    {
+      "action": "portable_open",
+      "command": [
+        "C:\\Python314\\python.exe",
+        "tools/check_release.py",
+        "--blender",
+        "C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe"
+      ],
+      "returncode": 0,
+      "seconds": 1.618,
+      "expected_success": true
+    },
+    {
+      "action": "cpu_diagnostics",
+      "command": [
+        "C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe",
+        "--background",
+        "--threads",
+        "2",
+        "--python-exit-code",
+        "1",
+        "--python",
+        "C:\\TolegenManassov\\Educataion\\ENU\\4 \u041a\u0443\u0440\u0441\\1 \u0421\u0435\u043c\u0435\u0441\u0442\u0440\\MAVR \u0421\u043c\u0435\u0448\u0430\u043d\u043d\u0430\u044f, \u0434\u043e\u043f\u043e\u043b\u043d\u0435\u043d\u043d\u0430\u044f \u0438 \u0432\u0438\u0440\u0442\u0443\u0430\u043b\u044c\u043d\u0430\u044f \u0440\u0435\u0430\u043b\u044c\u043d\u043e\u0441\u0442\u044c\\PK\\research\\config_smoke_v1_2\\tools\\diagnose_scene.py"
+      ],
+      "returncode": 0,
+      "seconds": 2.221,
+      "expected_success": true
+    },
+    {
+      "action": "latest_packager_reject_missing_full_decode",
+      "command": [
+        "C:\\Python314\\python.exe",
+        "tools/package_release.py",
+        "--core-only"
+      ],
+      "returncode": 1,
+      "seconds": 0.104,
+      "expected_success": false
+    },
+    {
+      "action": "latest_packager_reject_stale_full_decode",
+      "command": [
+        "C:\\Python314\\python.exe",
+        "tools/package_release.py",
+        "--core-only"
+      ],
+      "returncode": 1,
+      "seconds": 0.109,
+      "expected_success": false
+    },
+    {
+      "action": "latest_packager",
+      "command": [
+        "C:\\Python314\\python.exe",
+        "tools/package_release.py",
+        "--core-only"
+      ],
+      "returncode": 0,
+      "seconds": 0.454,
+      "expected_success": true
+    },
+    {
+      "action": "latest_portable_open",
+      "command": [
+        "C:\\Python314\\python.exe",
+        "tools/check_release.py"
+      ],
+      "returncode": 0,
+      "seconds": 1.643,
+      "expected_success": true
+    },
+    {
+      "action": "core_unit_tests",
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-c",
+        "import unittest; from pathlib import Path; names=[p.name for p in Path('tests').glob('test_*.py') if p.stem not in ('test_unity_export','test_media_extensions')]; suite=unittest.TestSuite(unittest.defaultTestLoader.discover('tests',pattern=n) for n in names); r=unittest.TextTestRunner().run(suite); raise SystemExit(not r.wasSuccessful())"
+      ],
+      "returncode": 0,
+      "seconds": 2.855,
+      "expected_success": true
+    },
+    {
+      "action": "documentation_refresh_package",
+      "command": [
+        "C:\\Python314\\python.exe",
+        "tools/package_release.py",
+        "--core-only"
+      ],
+      "returncode": 0,
+      "seconds": 0.444,
+      "expected_success": true
+    },
+    {
+      "action": "documentation_refresh_portable",
+      "command": [
+        "C:\\Python314\\python.exe",
+        "tools/check_release.py"
+      ],
+      "returncode": 0,
+      "seconds": 1.695,
+      "expected_success": true
+    },
+    {
+      "action": "final_package",
+      "command": [
+        "C:\\Python314\\python.exe",
+        "tools/package_release.py",
+        "--core-only"
+      ],
+      "returncode": 0,
+      "seconds": 0.581,
+      "expected_success": true
+    },
+    {
+      "action": "final_portable",
+      "command": [
+        "C:\\Python314\\python.exe",
+        "tools/check_release.py"
+      ],
+      "returncode": 0,
+      "seconds": 1.715,
+      "expected_success": true
     }
+  ],
+  "scope": "Actual complete core CPU pipeline, preview and final encoding, complete video decode integrity, six stills and portable scene opening. Does not establish visual correctness of every frame or optional extensions/Unity.",
+  "threads": 2,
+  "executed_runner_sha256": "70548531c409470853dbc11c09fc65af1ff27fcb4fa051fe3dd147ebc7a2b160",
+  "core_unit_tests": {
+    "passed": true,
+    "count": 48,
+    "excluded": [
+      "test_unity_export",
+      "test_media_extensions"
+    ]
   },
-  "negative_full_decode_gate_tests": {
-    "missing": {
-      "rejected": true,
-      "exit_code": 1
-    },
-    "incomplete": {
-      "rejected": true,
-      "exit_code": 1
-    },
-    "stale_video": {
-      "rejected": true,
-      "exit_code": 1
-    }
-  },
-  "negative_crop_regression": {
-    "expected_rejection": true,
-    "cause": "Native-size VSE movie strip was center-cropped at a smaller decode output before explicit fit scaling was added.",
-    "frames_checked": 120,
-    "mean_rgb_error_255": 38.70073121388753,
-    "p95_rgb_error_255": 54.7956729888916,
-    "maximum_rgb_error_255": 55.45823669433594,
-    "worst_frame": 64,
-    "threshold_rgb_error_255": 8,
-    "scene_sha256": "19951b37bbe97273c79b751183685f3225edaaa0ed654a7c26df36bca5e13d35",
-    "video_sha256": "5e41359edc20668cb0a0a458977d207e5b678003947800f6ad75e84c65461675",
-    "fixed_by": "Fit movie strip transform to decoded output size; encoder and rendered frames unchanged.",
-    "pair_image": "decoder_crop_regression.png",
-    "pair_layout": "Left: source downsample. Right: actual original cropped decode. Both images from frame64 before the fix.",
-    "pair_sha256": "1a8a79fb5bc4c6bb2daae3959f3d10fef5ce81b94d6fd6686acf687b9a0385dd"
-  }
+  "alternate_scene_sha256": "d3e7c50991cfd6ac3683b213ed5dd9903d071e47558366e0e78c4e56c7b15d17",
+  "alternate_config_sha256": "02f8e947d073062564fcb7d19c3252766a72cbded033927c2c60a7d909e87213",
+  "source_updates_after_render": [
+    "tools/package_release.py (retested packaging and portable opening)",
+    "tools/patch_bus_camera.py (unused utility; only repackaged)",
+    "tools/run_configuration_smoke.py (runner adds core tests, explicitly executed separately)",
+    "docs/UNITY.md (documentation only; repackaged)"
+  ]
 }

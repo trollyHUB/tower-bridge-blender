@@ -36,7 +36,7 @@ assert abs(s.render.fps_base-1.0)<1e-7
 assert [s.render.resolution_x,s.render.resolution_y]==[cfg['render']['width'],cfg['render']['height']]
 assert all(i.source!='FILE' or i.packed_file for i in bpy.data.images)
 vehicles=[o for o in s.objects if o.get('actor_type')=='vehicle']
-assert len(vehicles)==(14 if cfg['features'].get('traffic',True) else 0)
+assert len(vehicles)==(2*cfg['traffic'].get('vehicles_per_direction',7) if cfg['features'].get('traffic',True) else 0)
 frames=sorted(set(max(1,round(count*t)) for t in (0,.3,.5,11/15,1)))
 for f in frames:
     s.frame_set(f)

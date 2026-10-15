@@ -1,0 +1,4 @@
+# Versions used for the release's external Python image/pixel QA tools.
+# Blender provides its own bpy; do not install bpy through pip.
+Pillow==12.3.0
+numpy==2.3.5

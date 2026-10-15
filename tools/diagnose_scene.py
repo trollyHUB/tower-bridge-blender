@@ -3,6 +3,7 @@
 Reads the finalized scene without modifying it. The memory value describes the
 whole Blender process lifetime, including scene load and the diagnostic render.
 """
+import hashlib
 import ctypes
 import json
 import platform
@@ -80,7 +81,7 @@ usage = {}
 for obj in meshes:
     usage[obj.data.as_pointer()] = usage.get(obj.data.as_pointer(), 0) + 1
 report = {'blender_version': bpy.app.version_string, 'platform': platform.platform(),
-          'scene_file_bytes': SCENE.stat().st_size, 'frame': 1,
+          'scene_sha256': hashlib.sha256(SCENE.read_bytes()).hexdigest(), 'scene_file_bytes': SCENE.stat().st_size, 'frame': 1,
           'engine': 'CYCLES', 'device': 'CPU', 'samples': 1,
           'render_percentage': 10,
           'render_size': png_size(image), 'configured_frames': frame_count(cfg), 'fps': cfg['fps'],
