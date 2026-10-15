@@ -208,25 +208,32 @@ def arch_x(cx,r,zspring,thick,depth):
         meshpart(v,[(0,3,2,1),(4,5,6,7),(0,1,5,4),(1,2,6,5),(2,3,7,6),(3,0,4,7)],trim)
 
 # Foundation and water ---------------------------------------------------------
-group('Display base','01 | Diorama')
-ellipse_slab(145,69,-4.2,5.0,navy)
-ellipse_ring(145.2,69.2,.35,-1.78,.18,gold)
-ellipse_slab(142,66,-1.2,.8,foundation)
-ellipse_slab(138,62,.25,1.3,watermat)
-ellipse_ring(143,67,5,1.4,2.1,stone)
-ellipse_ring(143.6,67.6,5.5,2.5,.35,trim)
-for i in range(168):
-    a=2*pi*i/168
-    beam((138.3*cos(a),62.3*sin(a),2.69),(143.3*cos(a),67.3*sin(a),2.69),.05,foundation)
-
-# Small geometrical water ripples, below the bump-mapped surface highlights.
-group('River surface ripples','01 | Diorama')
-for i in range(85):
-    x=random.uniform(-115,115); y=random.uniform(-53,53)
-    if x*x/132**2+y*y/58**2>.87:continue
-    points=[(x+j*.8,y+.2*sin(j*.7+i),.91+.015*sin(j)) for j in range(5)]
-    polyline(points,.026,lightblue)
-
+if CONFIG['features'].get('city'):
+    group('London display plinth','01 | Diorama')
+    box((0,0,-4.2),(438,180,5),navy)
+    box((0,0,-1.7),(437,179,.2),gold)
+    box((0,0,-1.1),(434,176,1),foundation)
+    for yy in [-87,87]:box((0,yy,-.2),(434,1.2,.7),trim)
+else:
+    group('Display base','01 | Diorama')
+    ellipse_slab(145,69,-4.2,5.0,navy)
+    ellipse_ring(145.2,69.2,.35,-1.78,.18,gold)
+    ellipse_slab(142,66,-1.2,.8,foundation)
+    ellipse_slab(138,62,.25,1.3,watermat)
+    ellipse_ring(143,67,5,1.4,2.1,stone)
+    ellipse_ring(143.6,67.6,5.5,2.5,.35,trim)
+    for i in range(168):
+        a=2*pi*i/168
+        beam((138.3*cos(a),62.3*sin(a),2.69),(143.3*cos(a),67.3*sin(a),2.69),.05,foundation)
+    
+    # Small geometrical water ripples, below the bump-mapped surface highlights.
+    group('River surface ripples','01 | Diorama')
+    for i in range(85):
+        x=random.uniform(-115,115); y=random.uniform(-53,53)
+        if x*x/132**2+y*y/58**2>.87:continue
+        points=[(x+j*.8,y+.2*sin(j*.7+i),.91+.015*sin(j)) for j in range(5)]
+        polyline(points,.026,lightblue)
+    
 for sign in [-1,1]:
     group(('North' if sign<0 else 'South')+' approach island','02 | Approaches')
     box((sign*116,0,4.9),(34,30,9.2),stone)
@@ -304,6 +311,8 @@ for tx,label in [(-39,'North'),(39,'South')]:
             sphere((tx+dx,y,56.8),.2,gold)
     beam((tx,0,60.8),(tx,0,67.1),.12,gold)
     sphere((tx,0,67.2),.25,gold)
+    flag=empty(label+' wind flag','Environment | flags',(tx,0,65.6))
+    group(label+' flag','Environment | flags')
     # Union flag represented as original simple geometry, not an external image.
     box((tx+1.4,0,65.6),(2.8,.05,1.5),blue)
     box((tx+1.4,-.04,65.6),(2.8,.035,.27),white)
@@ -432,32 +441,7 @@ group('Bridge lanterns','09 | Street furniture')
 for x in [-124,-110,-96,-81,-64,64,81,96,110,124]:
     for y in [-7,7]:lamp(x,y,10.5)
 group('Quayside lanterns','09 | Street furniture')
-for a in [pi*.16,pi*.32,pi*.5,pi*.68,pi*.84,pi*1.16,pi*1.32,pi*1.68,pi*1.84]:lamp(140*cos(a),64.5*sin(a),2.7)
-
-# Closed traffic barriers stand outside the moving deck (no cars on bascules).
-group('Safety barriers','09 | Street furniture')
-for x in [-50,50]:
-    for y in [-5.6,5.6]:
-        box((x,y,11),(.65,.65,2),blue)
-        sphere((x,y,12.2),.22,red)
-    box((x,0,11.65),(.20,11,.26),white)
-    for y in range(-5,6,2):box((x-.12,y,11.65),(.06,.65,.27),red)
-
-def bus(cx,cy,reverse=False):
-    group('Double decker '+str(cx),'10 | London traffic')
-    box((cx,cy,11.0),(8.5,2.55,1.3),red)
-    box((cx,cy,12.8),(8.4,2.52,2.9),red)
-    box((cx,cy,14.35),(8.3,2.48,.22),ivory)
-    for side in [-1,1]:
-        for xx in [-3.2,-1.7,-.2,1.3,2.8]:
-            for zz in [11.9,13.5]:box((cx+xx,cy+side*1.28,zz),(1.22,.04,1.0),glass)
-        for xx in [-2.6,2.6]:
-            cyl((cx+xx,cy+side*1.27,10.65),.62,.28,rubber,20,axis=(0,1,0))
-            cyl((cx+xx,cy+side*1.43,10.65),.28,.04,gold,16,axis=(0,1,0))
-    for side in [-1,1]:
-        for zz in [11.9,13.5]:box((cx+side*4.22,cy,zz),(.04,2.15,1.0),glass)
-        for yy in [-.8,.8]:box((cx+side*4.27,cy+yy,11.0),(.06,.28,.24),lampmat)
-bus(-68,-2.8);bus(82,2.8)
+for a in ([] if CONFIG['features'].get('city') else [pi*.16,pi*.32,pi*.5,pi*.68,pi*.84,pi*1.16,pi*1.32,pi*1.68,pi*1.84]):lamp(140*cos(a),64.5*sin(a),2.7)
 
 # A small sailing boat crosses only while the bridge is fully raised.
 boat=empty('Sailing boat | crossing route','11 | River boat')
@@ -472,8 +456,10 @@ for i in range(7):beam(v[i+7],v[(i+1)%7+7],.14,gold)
 box((0,-1,2.5),(3.1,5.5,.8),navy);box((0,-1,3),(3.3,5.6,.24),trim)
 beam((0,.8,2.2),(0,.8,25),.20,slate)
 beam((0,.8,5),(-5.7,.8,5),.16,slate)
+group('Sailing canvas','11 | River boat',boat)
 meshpart([(-.2,.85,24),(-5.65,.85,5.2),(-.2,.85,5.2)],[(0,1,2)],white)
 meshpart([(.25,.85,22),(5.1,.85,4),(.25,.85,4)],[(0,1,2)],ivory)
+group('Standing rigging','11 | River boat',boat)
 for a,b in [((0,.8,24),(0,7.2,2.1)),((0,.8,24),(0,-5.5,2.1))]:beam(a,b,.035,gold)
 
 # Extension components share the geometry batch API.
@@ -498,8 +484,8 @@ def text_obj(name,body,location,size,mat,rotation=(pi/2,0,0)):
     data=bpy.data.curves.new(name,'FONT');data.body=body;data.align_x='CENTER';data.align_y='CENTER';data.size=size;data.extrude=.012;data.bevel_depth=.004;data.materials.append(mat)
     obj=bpy.data.objects.new(name,data);coll('12 | Display lettering').objects.link(obj);obj.location=location;obj.rotation_euler=rotation
     return obj
-text_obj('Title','T O W E R   B R I D G E',(0,-69.05,-3.1),2.25,gold)
-text_obj('Subtitle','L O N D O N   /   1 8 9 4',(0,-69.1,-4.8),.76,ivory)
+text_obj('Title','T O W E R   B R I D G E',(0,-90.05,-3.1),2.25,gold)
+text_obj('Subtitle','L O N D O N   /   1 8 9 4',(0,-90.1,-4.8),.76,ivory)
 
 # Studio floor, lighting and cameras ------------------------------------------
 mesh=bpy.data.meshes.new('floor');mesh.from_pydata([(-2000,-2000,-6.75),(2000,-2000,-6.75),(2000,2000,-6.75),(-2000,2000,-6.75)],[],[(0,1,2,3)]);mesh.materials.append(groundmat)
@@ -530,6 +516,13 @@ for f,angle in [(1,-66),(120,-62),(288,-73),(456,-99),(624,-107),(720,-112)]:
 scene.camera=hero
 
 for seconds,name in PHASES:scene.timeline_markers.new(name,frame=frame(seconds))
+from scene_components import cameras
+cameras.build(globals())
+if CONFIG['features'].get('lighting'):
+    from scene_components import lighting
+    lighting.build(globals())
+from scene_components import finish
+finish.build(globals())
 linear_keys()
 
 readme='''TOWER BRIDGE / LONDON 1894

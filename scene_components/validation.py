@@ -23,5 +23,8 @@ def validate(scene, out):
     assert height<43.1, ('upper walkway clearance',height)
     assert all(i.source!='FILE' or i.packed_file for i in bpy.data.images)
     report={'passed':True,'frames_checked':END,'hinge_samples':records,'raised_max_z':height}
+    if any(o.get('actor_type')=='vehicle' for o in bpy.data.objects):
+        from .traffic_validation import validate as traffic_validate
+        report['traffic']=traffic_validate(scene)
     (out/'validation.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
     print('VALIDATION_OK',json.dumps(report),flush=True)
