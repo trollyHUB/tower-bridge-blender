@@ -29,5 +29,18 @@ def validate(scene, out):
     if scene.get('City buildings'):
         from .environment_validation import validate as environment_validate
         report['environment']=environment_validate(scene)
+    lamps=[o for o in scene.objects if o.type=='LIGHT' and o.name.startswith('Practical lantern')]
+    if lamps:
+        scene.frame_set(1)
+        assert all(o.data.energy<.001 for o in lamps)
+        scene.frame_set(END)
+        assert all(o.data.energy>200 for o in lamps)
+        report['practical_lights']={'count':len(lamps),'day_off_evening_on':True}
+    snapshots=[]
+    for f in [1,round(END/4),round(END/2),END]:
+        scene.frame_set(f);bpy.context.view_layer.update()
+        snapshots.append([(o.name,tuple(round(v,5) for row in o.matrix_world for v in row)) for o in sorted(scene.objects,key=lambda o:o.name)])
+    report['deterministic_transform_sha256']=hashlib.sha256(json.dumps(snapshots).encode()).hexdigest()
+    report['scene_sha256']=hashlib.sha256((out/'Tower_Bridge.blend').read_bytes()).hexdigest()
     (out/'validation.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
     print('VALIDATION_OK',json.dumps(report),flush=True)

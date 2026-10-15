@@ -1,7 +1,6 @@
 """Reproducible rendering, resumable frame caches, encoding and verification."""
 import hashlib
 import json
-import struct
 import sys
 import time
 from pathlib import Path
@@ -9,6 +8,7 @@ import bpy
 
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
+from scene_components.render_manifest import sha, make_identity, cache_directory, png_size, check_frames
 OUT = ROOT / 'Tower_Bridge'
 CONFIG = ROOT / 'config' / 'scene.json'
 cfg = json.loads(CONFIG.read_text(encoding='utf-8-sig'))
@@ -17,38 +17,15 @@ COUNT = int(FPS * cfg['duration_seconds'])
 WIDTH, HEIGHT = int(cfg['render']['width']), int(cfg['render']['height'])
 args = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else ['stills']
 mode = args[0]
-profile = 'preview' if mode == 'preview' else 'final'
-
-def sha(path):
-    h = hashlib.sha256()
-    with path.open('rb') as stream:
-        for block in iter(lambda: stream.read(1024 * 1024), b''):
-            h.update(block)
-    return h.hexdigest()
+profile = 'preview' if mode in ('preview', 'preview_encode') else 'final'
 
 def identity(profile='final'):
-    return {'scene_sha256': sha(OUT / 'Tower_Bridge.blend'),
-            'config_sha256': sha(CONFIG), 'profile': profile,
-            'fps': FPS, 'frames': COUNT, 'size': [WIDTH, HEIGHT],
-            'blender_version': bpy.app.version_string}
+    data = make_identity(OUT / 'Tower_Bridge.blend', CONFIG, Path(__file__), profile, bpy.app.version_string)
+    data['manifest_implementation_sha256'] = sha(ROOT / 'scene_components' / 'render_manifest.py')
+    return data
 
 def cache(profile):
-    data = identity(profile)
-    key = hashlib.sha256(json.dumps(data, sort_keys=True).encode()).hexdigest()[:20]
-    directory = ROOT / 'research' / 'render_runs' / key
-    directory.mkdir(parents=True, exist_ok=True)
-    manifest = directory / 'manifest.json'
-    if manifest.exists():
-        assert json.loads(manifest.read_text()) == data, 'Incompatible frame cache'
-    else:
-        manifest.write_text(json.dumps(data, indent=2), encoding='utf-8')
-    return directory
-
-def png_size(path):
-    with path.open('rb') as stream:
-        header = stream.read(24)
-    assert header[:8] == b'\x89PNG\r\n\x1a\n' and len(header) == 24, f'Invalid PNG: {path}'
-    return list(struct.unpack('>II', header[16:24]))
+    return cache_directory(ROOT / 'research' / 'render_runs', identity(profile))
 
 def engine(scene, still=False):
     if still:
@@ -158,22 +135,20 @@ elif mode in ('animation', 'preview', 'benchmark'):
         except ImportError:
             report['memory_note'] = 'Peak RSS is unavailable through Python resource on this platform.'
         (OUT / 'benchmark.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
-elif mode in ('encode', 'video_check'):
-    target = OUT / 'Tower_Bridge_Animation.mp4'
-    signature = identity()
-    if mode == 'encode':
-        directory = cache('final')
-        for frame in range(1, COUNT + 1):
-            path = directory / f'{frame:04d}.png'
-            assert path.is_file(), f'Missing frame: {path}'
-            assert png_size(path) == [WIDTH, HEIGHT], f'Wrong frame dimensions: {path}'
+elif mode in ('encode', 'preview_encode', 'video_check'):
+    target = OUT / ('Tower_Bridge_Preview.mp4' if profile == 'preview' else 'Tower_Bridge_Animation.mp4')
+    signature = identity(profile)
+    video_width, video_height = signature['size']
+    if mode in ('encode', 'preview_encode'):
+        directory = cache(profile)
+        check_frames(directory, COUNT, signature['size'])
     else:
         report = json.loads((OUT / 'video_validation.json').read_text())
         assert report['identity'] == signature, 'Video belongs to an earlier scene/configuration'
         assert report['video_sha256'] == sha(target), 'Video hash mismatch'
     bpy.ops.wm.read_factory_settings(use_empty=True)
     s = bpy.context.scene
-    s.render.resolution_x, s.render.resolution_y = WIDTH, HEIGHT
+    s.render.resolution_x, s.render.resolution_y = video_width, video_height
     s.render.resolution_percentage = 100
     s.render.fps = FPS
     s.frame_start, s.frame_end = 1, COUNT
@@ -181,7 +156,7 @@ elif mode in ('encode', 'video_check'):
     s.view_settings.view_transform = 'Standard'
     seq = s.sequence_editor_create()
     collection = seq.strips if hasattr(seq, 'strips') else seq.sequences
-    if mode == 'encode':
+    if mode in ('encode', 'preview_encode'):
         strip = collection.new_image('Tower Bridge animation', str(directory / '0001.png'), channel=1, frame_start=1)
         for frame in range(2, COUNT + 1):
             strip.elements.append(f'{frame:04d}.png')
@@ -213,10 +188,10 @@ elif mode in ('encode', 'video_check'):
     clip = bpy.data.movieclips.load(str(target), check_existing=False)
     info = {'frames': clip.frame_duration, 'size': list(clip.size), 'fps': clip.fps,
             'bytes': target.stat().st_size, 'video_sha256': sha(target), 'identity': signature}
-    assert info['frames'] == COUNT and info['size'] == [WIDTH, HEIGHT], info
+    assert info['frames'] == COUNT and info['size'] == [video_width, video_height], info
     assert abs(info['fps'] - FPS) < .001, info
-    if mode == 'encode':
-        (OUT / 'video_validation.json').write_text(json.dumps(info, indent=2), encoding='utf-8')
+    if mode in ('encode', 'preview_encode'):
+        (OUT / ('preview_validation.json' if profile == 'preview' else 'video_validation.json')).write_text(json.dumps(info, indent=2), encoding='utf-8')
     print('VIDEO_OK', json.dumps(info), flush=True)
 elif mode == 'finalize':
     s.camera = bpy.data.objects['04 | Animated camera']

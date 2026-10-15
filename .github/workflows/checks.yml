@@ -19,7 +19,9 @@ jobs:
         with:
           python-version: '3.13'
       - name: Check Python syntax
-        run: python -m compileall -q build_tower_bridge.py render_tower_bridge.py tools/package_release.py
+        run: python -m compileall -q build_tower_bridge.py render_tower_bridge.py tools scene_components tests
+      - name: Test scenario and rendering invariants
+        run: python -m unittest discover -s tests -v
       - name: Read project metadata
         run: |
           python - <<'PY'

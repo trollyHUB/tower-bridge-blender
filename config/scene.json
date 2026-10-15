@@ -14,7 +14,7 @@
     "traffic": true,
     "city": true,
     "river": true,
-    "lighting": false
+    "lighting": true
   },
   "wind": {
     "strength": 0.12,

@@ -20,8 +20,8 @@ scene.unit_settings.scale_length=1
 scene.render.engine='CYCLES'
 scene.cycles.samples=48
 scene.cycles.use_denoising=True
-scene.render.resolution_x=1920
-scene.render.resolution_y=1080
+scene.render.resolution_x=CONFIG['render']['width']
+scene.render.resolution_y=CONFIG['render']['height']
 scene.render.resolution_percentage=100
 scene.render.fps=FPS
 scene.frame_start=1
@@ -385,7 +385,7 @@ for start,end,name in [(-132,-30.5,'North fixed deck'),(30.5,132,'South fixed de
 
 ctrl=empty('BRIDGE CONTROL | Opening degrees','07 | Bascule animation')
 ctrl['Opening degrees']=0.0
-ctrl.id_properties_ui('Opening degrees').update(min=0,max=68,description='Animated lift angle in degrees; both bascules follow this control.')
+ctrl.id_properties_ui('Opening degrees').update(min=0,max=CONFIG['opening_degrees'],description='Animated lift angle in degrees; both bascules follow this control.')
 for f in range(1,END+1):
     deg=opening(f)
     ctrl['Opening degrees']=float(deg); ctrl.keyframe_insert(data_path='["Opening degrees"]',frame=f)
@@ -530,8 +530,8 @@ Original procedural architectural study created in Blender.
 No geometry or textures from the supplied FBX or GLB were used in this project.
 Architectural proportions and details are an artistic reconstruction, not surveyed drawings.
 
-PLAY: Space in the Timeline. Animation: frames 1-720, 24 fps (30 s).
-Frame 1 or 720: closed. Frame 360: open, 68 degrees.
+PLAY: Space in the Timeline. Animation: frames 1-1440, 24 fps (60 s).
+Frame 1: day/closed. Frame 720: ship/open. Frame 1440: blue hour/closed.
 Control: select BRIDGE CONTROL | Opening degrees and inspect Object > Custom Properties.
 Both moving decks are children of hinge empties driven by the control.
 The two upper walkways and side suspension spans remain fixed.

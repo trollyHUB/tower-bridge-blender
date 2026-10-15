@@ -215,7 +215,14 @@
     "vessel_surface_test_scope": "World-space triangle intersections with moving leaves; sampled every 12 frames and phase boundaries",
     "minimum_launch_closed_deck_vertical_margin_m": 4.4817163944244385,
     "minimum_waiting_sailboat_channel_distance_m": 22.96519660949707,
+    "minimum_vessel_fixed_walkway_vertical_margin_m": 17.940401077270508,
     "direct_seek_checks": 38,
     "maximum_direct_seek_matrix_error": 0.0
-  }
+  },
+  "practical_lights": {
+    "count": 36,
+    "day_off_evening_on": true
+  },
+  "deterministic_transform_sha256": "47a2c30b1692e3b7f20c556c4094bb78cb325bac507107b577ddd35fb663fe6f",
+  "scene_sha256": "1351c33eaaa5ec81d500332a418bd3a7c790700ac6a0272d6c3d13e68d2a9ee1"
 }

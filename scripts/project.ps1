@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('Build', 'Validate', 'Stills', 'Animation', 'Encode', 'Finalize', 'Benchmark', 'VideoCheck', 'Preview')]
+    [ValidateSet('Build', 'Validate', 'Stills', 'Animation', 'Encode', 'Finalize', 'Benchmark', 'VideoCheck', 'Preview', 'PreviewEncode')]
     [string]$Action = 'Validate',
     [string]$BlenderPath,
     [ValidateRange(1, 1000000)]
@@ -36,7 +36,7 @@ if ($Action -eq 'Build') {
     $blenderArgs += Join-Path $projectRoot 'build_tower_bridge.py'
 } else {
     $blenderArgs += Join-Path $projectRoot 'render_tower_bridge.py'
-    $mode = if ($Action -eq 'VideoCheck') { 'video_check' } else { $Action.ToLowerInvariant() }
+    $mode = if ($Action -eq 'VideoCheck') { 'video_check' } elseif ($Action -eq 'PreviewEncode') { 'preview_encode' } else { $Action.ToLowerInvariant() }
     $blenderArgs += @('--', $mode)
     if ($Action -in @('Animation', 'Preview')) {
         $blenderArgs += @([string]$StartFrame, [string]$EndFrame)
