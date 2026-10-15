@@ -9,6 +9,10 @@ def build(g):
     water=camera('06 | Water camera',(94,-125,53),(0,0,21),48,ortho=150)
     evening=camera('07 | Evening camera',(285,-400,255),(0,0,16),48,ortho=485)
     traffic=camera('08 | Traffic camera',(-73,-70,36),(-57,0,13),48,ortho=105)
+    bus=camera('09 | Bus stop camera',(177,27,22),(157,3,12),48,ortho=29)
     for seconds,cam in [(0,anim),(8,traffic),(18,hero),(26,water),(36,hero),(44,traffic),(50,city),(55,evening)]:
         marker=scene.timeline_markers.new('SHOT | '+cam.name,frame=max(1,frame(seconds)+ (1 if seconds else 0)));marker.camera=cam
+    if g['CONFIG']['traffic'].get('bus_stop',True):
+        marker=scene.timeline_markers.new('SHOT | Bus dwell and doors',frame=frame(14.65));marker.camera=bus
+        marker=scene.timeline_markers.new('SHOT | Gates closing',frame=frame(17));marker.camera=traffic
     scene.camera=anim

@@ -2,7 +2,8 @@
 import math
 
 from .scenario import reference_frame
-from .traffic import barrier_angle, signal_state, vehicle_specs, longitudinal_position
+from .traffic import (barrier_angle, signal_state, vehicle_specs, longitudinal_position,
+                      bus_door_fraction, serves_bus_stop, BUS_STOP_POSITION)
 
 
 def validate(scene):
@@ -11,8 +12,8 @@ def validate(scene):
 
     actors = [o for o in scene.objects if o.get('actor_type') == 'vehicle']
     gates = [o for o in scene.objects if o.get('actor_type') == 'barrier']
-    assert len(actors) == 14, ('vehicle count', len(actors))
-    assert {o['vehicle_type'] for o in actors} == {'bus', 'taxi', 'car', 'truck'}
+    assert len(actors) == len(vehicle_specs()), ('vehicle count', len(actors))
+    assert {o['vehicle_type'] for o in actors} == {s['kind'] for s in vehicle_specs()}
     assert len(gates) == 2, ('barrier count', len(gates))
     meshes = {actor: [o for o in actor.children_recursive if o.type == 'MESH'] for actor in actors}
     wheels = {actor: [o for o in actor.children if o.get('actor_type') == 'wheel'] for actor in actors}
@@ -33,6 +34,13 @@ def validate(scene):
             ref = reference_frame(frame)
             bounds = []
             for actor in actors:
+                spec = next(s for s in vehicle_specs() if s['name'] == actor.name)
+                opening = bus_door_fraction(spec, ref)
+                for door in (o for o in actor.children if o.get('actor_type') == 'bus_door'):
+                    actual_open = abs(door.location.x-door['closed_x'])/.70
+                    assert abs(actual_open-opening) < .005, ('bus door timing', frame, actor.name)
+                if opening > 0:
+                    assert abs(longitudinal_position(spec, ref)-BUS_STOP_POSITION) < 1e-5, ('bus moves with door open', frame)
                 direction = int(actor['direction'])
                 position = actor.matrix_world.translation.x
                 angles = [w.rotation_euler.y for w in wheels[actor]]
@@ -107,4 +115,4 @@ def validate(scene):
             'maximum_wheel_distance_error_m': worst_wheel_error,
             'checks': ['evaluated_mesh_bounds', 'full_body_span_clearance', 'stop_lines',
                        'barrier_intersections', 'barrier_timing', 'signal_interlock',
-                       'wheel_distance', 'no_reverse', 'hidden_portal_recycling']}
+                       'wheel_distance', 'no_reverse', 'hidden_portal_recycling', 'bus_stop_doors']}

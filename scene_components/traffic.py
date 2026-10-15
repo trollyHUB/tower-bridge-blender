@@ -55,7 +55,50 @@ def vehicle_specs():
                               kind=kind, direction=direction, mode='queue',
                               start=target-150.0, target=target, index=i))
             front -= length+_settings().get('minimum_gap',4.0)
-    return specs
+    count = int(_settings().get("vehicles_per_direction", 7))
+    return [s for direction in (1, -1) for s in [v for v in specs if v["direction"] == direction][:count]]
+
+
+BUS_STOP_POSITION = 157.0
+BUS_STOP_BRAKING_DISTANCE = 18.0
+BUS_STOP_DWELL = 48  # reference frames (two seconds)
+
+
+def serves_bus_stop(spec):
+    return (spec['kind'] == 'bus' and spec['mode'] == 'through'
+            and spec['direction'] == 1 and _settings().get('bus_stop', True))
+
+
+def bus_stop_times(speed=None):
+    speed = float(_settings().get('speed', 18) if speed is None else speed)
+    approach = (BUS_STOP_POSITION-BUS_STOP_BRAKING_DISTANCE+90)/speed*FPS+1
+    duration = 2*BUS_STOP_BRAKING_DISTANCE/speed*FPS
+    return approach, approach+duration, approach+duration+BUS_STOP_DWELL, approach+2*duration+BUS_STOP_DWELL
+
+
+def bus_stop_path(frame, speed):
+    """Analytic distance profile: constant speed, quadratic braking, dwell,
+    quadratic departure, cruise. Position and velocity are continuous."""
+    begin, arrival, departure, end = bus_stop_times(speed)
+    duration = arrival-begin
+    if frame <= begin:
+        return -90+(frame-1)*speed/FPS
+    if frame < arrival:
+        u = (frame-begin)/duration
+        return 139+18*(2*u-u*u)
+    if frame <= departure:
+        return BUS_STOP_POSITION
+    if frame < end:
+        return BUS_STOP_POSITION+18*((frame-departure)/duration)**2
+    return BUS_STOP_POSITION+18+(frame-end)*speed/FPS
+
+
+def bus_door_fraction(spec, frame):
+    if not serves_bus_stop(spec):
+        return 0.0
+    _, arrival, departure, _ = bus_stop_times()
+    # Leave stationary margins on either side; open/close over eight frames.
+    return smoothstep((frame-arrival-2)/8)*smoothstep((departure-2-frame)/8)
 
 
 def _settings():
@@ -67,7 +110,7 @@ from functools import lru_cache
 
 
 @lru_cache(maxsize=16)
-def _schedule(speed, gap, stop_line, recycle):
+def _schedule(speed, gap, stop_line, recycle, bus_stop=True, density=7):
     specs = vehicle_specs()
     positions = [s['start'] for s in specs]
     odometers = [0.0]*len(specs)
@@ -82,6 +125,8 @@ def _schedule(speed, gap, stop_line, recycle):
                 half = VEHICLE_TYPES[spec['kind']][0]/2
                 old = positions[i]
                 movement = speed/FPS
+                if bus_stop and spec['kind'] == 'bus' and spec['mode'] == 'through' and spec['direction'] == 1:
+                    movement = bus_stop_path(frame, speed)-bus_stop_path(frame-1, speed)
                 if spec['mode'] == 'queue' and frame <= 336:
                     t0, t1 = (frame-2)/335, (frame-1)/335
                     movement = 150*((2*t1-t1*t1)-(2*t0-t0*t0))
@@ -115,7 +160,7 @@ def _schedule(speed, gap, stop_line, recycle):
 def vehicle_sample(spec, frame):
     settings = _settings()
     records = _schedule(float(settings.get('speed',18)), float(settings.get('minimum_gap',4)),
-                        float(settings.get('stop_line',55)), bool(settings.get('recycle',True)))
+                        float(settings.get('stop_line',55)), bool(settings.get('recycle',True)), bool(settings.get('bus_stop',True)), int(settings.get('vehicles_per_direction',7)))
     index = next(i for i,s in enumerate(vehicle_specs()) if s['name'] == spec['name'])
     f = max(1.0, min(float(frame), LAST_FRAME))
     lo, hi = int(f)-1, min(int(f), LAST_FRAME-1)
@@ -137,7 +182,8 @@ def vehicle_position(spec, frame):
 
 
 def braking(spec, frame):
-    return signal_state(frame) == 'red' and longitudinal_position(spec,frame) < -_settings().get('stop_line',55)
+    return ((signal_state(frame) == 'red' and longitudinal_position(spec,frame) < -_settings().get('stop_line',55))
+            or (serves_bus_stop(spec) and bus_stop_times()[0] <= frame <= bus_stop_times()[2]))
 
 
 def _linear(ob):
@@ -202,6 +248,7 @@ def build(g):
         mat = bodymats[kind]
         radius = .50 if kind in ('bus', 'truck') else .35
         box((0, 0, .65), (length, width, .65), mat)
+        doors = []
         if kind == 'bus':
             box((-.2, 0, 2.45), (length-.6, width, 3.5), mat)
             for z in (1.9, 3.35):
@@ -210,6 +257,20 @@ def build(g):
                         box((x, side*(width/2+.012), z), (1.16, .035, .9), glass)
                 box((length/2-.28, 0, z), (.04, width-.25, .85), glass)
             box((length/2-.24, 0, 2.65), (.05, 1.65, .32), dark)
+            # Two sliding panels on the pavement side; bright frames make the
+            # opening readable even in an overview. Dark recess lies behind.
+            box((3.5, width/2+.035, 1.65), (1.55, .045, 2.2), dark)
+            for panel in (-1, 1):
+                door = empty(spec['name']+f' door {panel}', 'Traffic')
+                door.parent = root
+                door.location = (3.5+panel*.38, width/2+.08, 1.65)
+                door['actor_type'] = 'bus_door'
+                door['closed_x'] = door.location.x
+                group(door.name, 'Traffic', door)
+                box((0, 0, 0), (.73, .08, 2.15), g['gold'])
+                box((0, .05, .2), (.58, .025, 1.45), glass)
+                doors.append((door, panel))
+            group(spec['name']+' body detail', 'Traffic', root)
         elif kind == 'truck':
             box((-1, 0, 1.95), (length-2.1, width, 2.4), mat)
             box((length/2-1.0, 0, 1.42), (1.9, width-.1, 1.9), mat)
@@ -276,11 +337,16 @@ def build(g):
             root.keyframe_insert('scale', frame=frame)
             root['odometer'] = vehicle_sample(spec, ref)[1]
             root.keyframe_insert(data_path='["odometer"]', frame=frame)
+            for door, panel in doors:
+                door.location.x = door['closed_x']+panel*.70*bus_door_fraction(spec, ref)
+                door.keyframe_insert('location', frame=frame, index=0)
             angle = vehicle_sample(spec, ref)[1]/radius
             for wheel in wheels:
                 wheel.rotation_euler.y = angle
                 wheel.keyframe_insert('rotation_euler', frame=frame, index=1)
         _linear(root)
+        for door, panel in doors:
+            _linear(door)
         for wheel in wheels:
             _linear(wheel)
         actors.append(root)

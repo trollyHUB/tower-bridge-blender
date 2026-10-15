@@ -92,6 +92,51 @@ class TrafficScheduleTests(unittest.TestCase):
                         self.assertGreaterEqual(len(recycled),6)
         _schedule.cache_clear()
 
+    def test_bus_stop_profile_and_doors_all_speed_presets(self):
+        from unittest.mock import patch
+        from scene_components.traffic import bus_stop_times, bus_door_fraction, serves_bus_stop, _schedule
+        for speed in (13, 18, 26):
+            with patch.dict(CONFIG['traffic'], {'speed': speed, 'bus_stop': True}):
+                _schedule.cache_clear()
+                bus = next(s for s in vehicle_specs() if serves_bus_stop(s))
+                begin, arrival, departure, end = bus_stop_times()
+                positions = [longitudinal_position(bus, f) for f in range(1, LAST_FRAME+1)]
+                for f in range(math.ceil(arrival), math.floor(departure)+1):
+                    self.assertAlmostEqual(positions[f-1], 157)
+                    self.assertGreaterEqual(positions[f-1]-5.4, 151)
+                    self.assertLessEqual(positions[f-1]+5.4, 163)
+                self.assertEqual(bus_door_fraction(bus, arrival), 0)
+                self.assertEqual(bus_door_fraction(bus, departure), 0)
+                self.assertAlmostEqual(bus_door_fraction(bus, (arrival+departure)/2), 1)
+                for f in range(2, LAST_FRAME):
+                    delta = positions[f-1]-positions[f-2]
+                    if delta >= 0:
+                        self.assertLessEqual(delta, speed/24+1e-7)
+                    if bus_door_fraction(bus, f) > 0:
+                        self.assertAlmostEqual(delta, 0)
+                # Analytic deceleration and departure are smooth, including
+                # fractional frame boundaries, independent of seek order.
+                for f in (begin, arrival, departure, end):
+                    from scene_components.traffic import bus_stop_path
+                    eps=.001
+                    left=(bus_stop_path(f,speed)-bus_stop_path(f-eps,speed))/eps
+                    right=(bus_stop_path(f+eps,speed)-bus_stop_path(f,speed))/eps
+                    self.assertLess(abs(left-right), .001)
+        _schedule.cache_clear()
+
+    def test_density_presets_have_safe_gaps(self):
+        from unittest.mock import patch
+        from scene_components.traffic import _schedule
+        for count in (3, 5, 7):
+            with patch.dict(CONFIG['traffic'], {'vehicles_per_direction': count}):
+                _schedule.cache_clear()
+                specs = vehicle_specs()
+                self.assertEqual(len(specs), count*2)
+                for f in range(1, LAST_FRAME+1):
+                    for direction in (-1, 1):
+                        self.assertGreaterEqual(lane_clearance(specs, f, direction), CONFIG['traffic']['minimum_gap']-1e-7)
+        _schedule.cache_clear()
+
     def test_signal_and_barrier_interlock(self):
         self.assertEqual(signal_state(192), 'green')
         self.assertEqual(signal_state(193), 'red')
